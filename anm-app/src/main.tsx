@@ -2,7 +2,7 @@ import { StrictMode, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./styles.css";
-import { ContentProvider, Offline } from "./ui";
+import { ContentProvider, Offline, TabBar } from "./ui";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import MePage from "./pages/Me";
@@ -37,6 +37,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <TabBar />
         <Offline />
       </ContentProvider>
     </BrowserRouter>

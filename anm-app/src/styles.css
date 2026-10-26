@@ -230,12 +230,31 @@ th { font: 600 10.5px var(--latin); letter-spacing: 0.18em; text-transform: uppe
 
 .place-grid, .split { display: flex; flex-direction: column; gap: 32px; }
 
+/* ── 하단 탭 바 (폰) ── */
+.tabbar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  padding: 6px max(8px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px));
+  background: rgba(251, 251, 247, 0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--hair);
+}
+.tabbar a { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 4px 0; color: var(--mute); font-size: 10.5px; font-weight: 500; letter-spacing: -0.1px; }
+.tabbar svg { width: 23px; height: 23px; }
+.tabbar a.on { color: var(--deep); }
+.tabbar a.on svg { stroke-width: 1.9; }
+.body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+.offline { bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+html { -webkit-user-select: none; user-select: none; }
+.prose, .notice, .rows dd, input, .qr, .code { -webkit-user-select: text; user-select: text; }
+a, button { -webkit-touch-callout: none; }
+
 /* ── 화면 크기별 표시 ── */
 .sitenav, .wide-only { display: none; }
 
 /* ═════════ 아이패드 · 컴퓨터 (768px 이상): 웹사이트 레이아웃 ═════════ */
 @media (min-width: 768px) {
-  .narrow-only, .cover-top, .head .bar { display: none !important; }
+  .narrow-only, .cover-top, .head .bar, .tabbar { display: none !important; }
+  html { -webkit-user-select: auto; user-select: auto; }
   .wide-only { display: block; }
   .app, .app.home { max-width: none; box-shadow: none; }
   .wrap-w { max-width: 1080px; margin: 0 auto; }
@@ -266,6 +285,7 @@ th { font: 600 10.5px var(--latin); letter-spacing: 0.18em; text-transform: uppe
   .mast-aside { padding-top: 6px; }
 
   .body { max-width: 1080px; margin: 0 auto; padding: 48px 40px 56px; gap: 48px; }
+  .offline { bottom: 16px; }
   .wide-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); gap: 64px; }
   .col { display: flex; flex-direction: column; }
   .col-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; border-bottom: 1px solid var(--ink); }

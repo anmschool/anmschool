@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { cachedContent, cachedMe, fetchContent, getToken, refreshMe } from "./api";
 import type { Content, Me, Project } from "./types";
 import { setLang, useLang, type Lang } from "./i18n";
@@ -92,12 +92,14 @@ export function SiteNav() {
 export function Head({ label, title, back = "/" }: { label?: string; title: string; back?: string }) {
   const nav = useNavigate();
   const { t } = useLang();
+  const { pathname } = useLocation();
+  const isTab = TAB_PATHS.includes(pathname);
   return (
     <>
     <SiteNav />
     <header className="head">
       <div className="bar">
-        <button className="icon-btn" aria-label={t("back")} onClick={() => (history.length > 1 ? nav(-1) : nav(back))}>{Icon.back}</button>
+        {isTab ? <span className="brand">ANM</span> : <button className="icon-btn" aria-label={t("back")} onClick={() => (history.length > 1 ? nav(-1) : nav(back))}>{Icon.back}</button>}
         <LangToggle />
       </div>
       <div className="head-in">
@@ -172,5 +174,34 @@ export function Footer() {
       <span className="small">7000school@gmail.com · +82 (0)2 796 9700</span>
       <Link to="/admin" className="small" style={{ opacity: 0.5 }}>admin</Link>
     </footer>
+  );
+}
+
+/* ── 폰 전용 하단 탭 바 (앱처럼) ── */
+const TAB_PATHS = ["/", "/notices", "/schedule", "/me", "/login"];
+const tabIcon = {
+  home: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"><path d="M4 10.5 12 4l8 6.5V20h-5.5v-5.5h-5V20H4z" /></svg>,
+  notice: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z" /><path d="M10 20.5a2.2 2.2 0 0 0 4 0" /></svg>,
+  cal: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="4" y="5.5" width="16" height="14.5" rx="1.5" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /></svg>,
+  me: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><rect x="4.5" y="3.5" width="15" height="17" rx="1.5" /><circle cx="12" cy="10" r="2.6" /><path d="M8 17c.8-2 2.2-3 4-3s3.2 1 4 3" /></svg>,
+};
+export function TabBar() {
+  const { pathname } = useLocation();
+  const { t } = useLang();
+  const s = useSeason();
+  if (!TAB_PATHS.includes(pathname)) return null;
+  const meTo = s && getToken(s.id) ? "/me" : "/login";
+  const tabs: [string, string, JSX.Element, boolean][] = [
+    ["/", t("home"), tabIcon.home, pathname === "/"],
+    ["/notices", t("notices"), tabIcon.notice, pathname === "/notices"],
+    ["/schedule", t("schedule"), tabIcon.cal, pathname === "/schedule"],
+    [meTo, t("myShort"), tabIcon.me, pathname === "/me" || pathname === "/login"],
+  ];
+  return (
+    <nav className="tabbar" aria-label="tabs">
+      {tabs.map(([to, label, icon, on]) => (
+        <Link key={label} to={to} className={on ? "on" : ""} aria-current={on ? "page" : undefined}>{icon}<span>{label}</span></Link>
+      ))}
+    </nav>
   );
 }
