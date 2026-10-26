@@ -46,37 +46,30 @@ export default function Home() {
   const schedCount = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track)).length;
 
   const menu: [string, string, string, string, string?][] = [
-    ["/notices", "Notices", t("notices"), t("capNotices"), notices.length ? String(notices.length) : undefined],
+    ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin"), notices.length ? String(notices.length) : undefined],
     ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
     ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
     ["/guide", "Guide", t("guide"), t("capGuide")],
     ["/places", "Campus", t("places"), t("capPlaces")],
-    ["/notices#ministries", "Ministries", t("ministries"), t("capMinistries")],
   ];
 
   const lead = title.match(/^(.*?향한)\s+(.+)$/);
   const venue = s?.venue?.match(/^(.*?캠퍼스)\s+(.+)$/);
 
   return (
-    <div className="app">
+    <div className="app home">
       <header className="cover">
         <div className="cover-wash">
           <div className="cover-top">
-            <Link to="/" className="brand"><img src="/ANM-logo-circle.png" alt="" /><span>ANM</span></Link>
+            <Link to="/" className="brand">ANM</Link>
             <LangToggle />
           </div>
-          {s && (
-            <div className="cover-mark" aria-label={`${year} ${season}`}>
-              <span className="cover-year">{year}</span>
-              {season && <span className="cover-season">{season.charAt(0) + season.slice(1).toLowerCase()}</span>}
-            </div>
-          )}
         </div>
         <div className="cover-paper">
           {!s && loading && <Skeleton lines={4} />}
           {s && (
             <>
-              <span className="label">Worship &amp; Praise School</span>
+              <span className="label">{year} {season.toUpperCase()}</span>
               <h1 className="cover-title">
                 {lead ? <><span className="lead">{lead[1]}</span>{lead[2]}</> : (title || s.title)}
               </h1>

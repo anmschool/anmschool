@@ -5,7 +5,7 @@ export type Lang = "ko" | "en" | "zh";
 /** UI 문구만 번역 (공지·안내 본문은 관리 시트에 쓴 그대로 표시) */
 const T = {
   ko: {
-    capNotices: "이번 학교 소식", capSchedule: "트랙별 일정", capSoon: "확정되면 공개", capMe: "숙소 · 훈련비 · 현장 QR", capLogin: "이름과 전화번호로", capGuide: "복장 · 식사 · 숙소 예절", capPlaces: "채플관 · 숙소 · 이동 영상", capMinistries: "큰잔치 · 훈련 안내", otherMinistries: "ANM 사역 안내", church: "교회", state: "상태", trackOnly: "과정 일정만 보여 드립니다", openMap: "지도 열기", theme: "주제",
+    noticesMinistries: "공지 · 사역 안내", capNoticesMin: "학교 소식 · 7000훈련학교 · 큰잔치", capNotices: "이번 학교 소식", capSchedule: "트랙별 일정", capSoon: "확정되면 공개", capMe: "숙소 · 훈련비 · 현장 QR", capLogin: "이름과 전화번호로", capGuide: "복장 · 식사 · 숙소 예절", capPlaces: "채플관 · 숙소 · 이동 영상", capMinistries: "큰잔치 · 훈련 안내", otherMinistries: "ANM 사역 안내", church: "교회", state: "상태", trackOnly: "과정 일정만 보여 드립니다", openMap: "지도 열기", theme: "주제",
     ministries: "사역", now: "진행 중", soon: "준비 중", past: "지난 사역", apply: "신청하기", myInfo: "내 등록 확인",
     notices: "공지", schedule: "시간표", guide: "안내", places: "장소·길찾기", home: "홈", back: "뒤로",
     loginTitle: "내 등록 정보", loginLede: "신청할 때 적은 이름과 전화번호로 확인합니다.", name: "이름", phone: "전화번호",
@@ -19,7 +19,7 @@ const T = {
     admin: "관리자", pin: "관리자 PIN", refresh: "새로고침", total: "등록", lodgingDone: "숙소 배정", groups: "단체", comingSoon: "곧 안내가 올라옵니다",
   },
   en: {
-    capNotices: "News for this school", capSchedule: "By course", capSoon: "Coming soon", capMe: "Room · fee · check-in QR", capLogin: "With name and phone", capGuide: "Dress · meals · rooms", capPlaces: "Chapel · rooms · route videos", capMinistries: "Celebrations · training", otherMinistries: "ANM Ministries", church: "Church", state: "Status", trackOnly: "schedule only", openMap: "Open map", theme: "Theme",
+    noticesMinistries: "Notices & Ministries", capNoticesMin: "School news · training · celebrations", capNotices: "News for this school", capSchedule: "By course", capSoon: "Coming soon", capMe: "Room · fee · check-in QR", capLogin: "With name and phone", capGuide: "Dress · meals · rooms", capPlaces: "Chapel · rooms · route videos", capMinistries: "Celebrations · training", otherMinistries: "ANM Ministries", church: "Church", state: "Status", trackOnly: "schedule only", openMap: "Open map", theme: "Theme",
     ministries: "Ministries", now: "Now", soon: "Coming up", past: "Past", apply: "Apply", myInfo: "My registration",
     notices: "Notices", schedule: "Schedule", guide: "Guide", places: "Places & routes", home: "Home", back: "Back",
     loginTitle: "My registration", loginLede: "Use the name and phone number you registered with.", name: "Name", phone: "Phone",
@@ -33,7 +33,7 @@ const T = {
     admin: "Admin", pin: "Admin PIN", refresh: "Refresh", total: "Registered", lodgingDone: "Rooms assigned", groups: "Groups", comingSoon: "Details coming soon",
   },
   zh: {
-    capNotices: "本期学校消息", capSchedule: "按课程", capSoon: "确定后公布", capMe: "宿舍 · 培训费 · 报到码", capLogin: "姓名和电话", capGuide: "着装 · 用餐 · 宿舍", capPlaces: "礼拜堂 · 宿舍 · 路线视频", capMinistries: "大聚会 · 培训", otherMinistries: "ANM 事工", church: "教会", state: "状态", trackOnly: "的日程", openMap: "打开地图", theme: "主题",
+    noticesMinistries: "公告与事工", capNoticesMin: "学校消息 · 培训 · 大聚会", capNotices: "本期学校消息", capSchedule: "按课程", capSoon: "确定后公布", capMe: "宿舍 · 培训费 · 报到码", capLogin: "姓名和电话", capGuide: "着装 · 用餐 · 宿舍", capPlaces: "礼拜堂 · 宿舍 · 路线视频", capMinistries: "大聚会 · 培训", otherMinistries: "ANM 事工", church: "教会", state: "状态", trackOnly: "的日程", openMap: "打开地图", theme: "主题",
     ministries: "事工", now: "进行中", soon: "即将举行", past: "往期", apply: "报名", myInfo: "我的报名",
     notices: "公告", schedule: "日程", guide: "须知", places: "场所与路线", home: "首页", back: "返回",
     loginTitle: "我的报名信息", loginLede: "请输入报名时填写的姓名和电话号码。", name: "姓名", phone: "电话",

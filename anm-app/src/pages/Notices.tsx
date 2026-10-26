@@ -19,7 +19,7 @@ export default function Notices() {
 
   return (
     <div className="app">
-      <Head label="Notices" title={t("notices")} />
+      <Head label="Notices & Ministries" title={t("noticesMinistries")} />
       <main className="body">
         <div>
           {notices.length === 0 && <div className="empty">{t("noNotice")}</div>}

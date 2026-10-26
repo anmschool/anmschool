@@ -142,7 +142,7 @@ export const todayIso = () => new Date(Date.now() + 9 * 3600e3).toISOString().sl
 export function Footer() {
   return (
     <footer className="footer">
-      <span className="label mute">All Nations Worship &amp; Praise</span>
+      <span className="org">All Nations Worship &amp; Praise Ministries</span>
       <span className="small">7000school@gmail.com · +82 (0)2 796 9700</span>
       <Link to="/admin" className="small" style={{ opacity: 0.5 }}>admin</Link>
     </footer>
