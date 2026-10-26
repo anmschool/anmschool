@@ -21,6 +21,7 @@ export default function Notices() {
     <div className="app">
       <Head label="Notices & Ministries" title={t("noticesMinistries")} />
       <main className="body">
+        <div className="split">
         <div>
           {notices.length === 0 && <div className="empty">{t("noNotice")}</div>}
           {notices.map((n, i) => (
@@ -51,6 +52,7 @@ export default function Notices() {
             </Section>
           </div>
         )}
+        </div>
         <Footer />
       </main>
     </div>

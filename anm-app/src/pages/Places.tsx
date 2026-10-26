@@ -15,6 +15,7 @@ export default function Places() {
       <main className="body">
         {s?.venue && <p className="sub" style={{ margin: 0 }}>{s.venue}</p>}
         {places.length === 0 && <div className="empty">{t("comingSoon")}</div>}
+        <div className="place-grid">
         {places.map(p => (
           <article key={p.name} className="place">
             <div className="place-head"><span className="t">{p.name}</span>{isMine(p.name) ? <span className="mine">My Room</span> : p.kind && <span className="label mute">{p.kind}</span>}</div>
@@ -24,6 +25,7 @@ export default function Places() {
             {p.map && <a className="btn text" style={{ justifyContent: "flex-start", padding: 0 }} href={p.map} target="_blank" rel="noreferrer">{t("openMap")} ↗</a>}
           </article>
         ))}
+        </div>
         <Footer />
       </main>
     </div>

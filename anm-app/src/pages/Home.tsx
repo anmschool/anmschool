@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import type { Me } from "../types";
-import { fmtRange, Footer, Icon, LangToggle, Skeleton, useContent, useMe, useSeason } from "../ui";
+import { fmtRange, Footer, Icon, LangToggle, SiteNav, Skeleton, useContent, useMe, useSeason } from "../ui";
 import { forTrack, payView } from "./shared";
 
 function Pass({ me }: { me: Me }) {
@@ -56,8 +56,16 @@ export default function Home() {
   const lead = title.match(/^(.*?향한)\s+(.+)$/);
   const venue = s?.venue?.match(/^(.*?캠퍼스)\s+(.+)$/);
 
+  const others = (content?.projects ?? []).filter(p => p.id !== s?.id);
+  const tiles: [string, string, string, string][] = [
+    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
+    ["/guide", "Guide", t("guide"), t("capGuide")],
+    ["/places", "Campus", t("places"), t("capPlaces")],
+  ];
+
   return (
     <div className="app home">
+      <SiteNav />
       <header className="cover">
         <div className="cover-wash">
           <div className="cover-top">
@@ -65,6 +73,9 @@ export default function Home() {
             <LangToggle />
           </div>
         </div>
+      </header>
+
+      <section className="masthead">
         <div className="cover-paper">
           {!s && loading && <Skeleton lines={4} />}
           {s && (
@@ -79,24 +90,28 @@ export default function Home() {
                   {themeRef && <span className="ref">{themeRef}</span>}
                 </div>
               )}
-              <dl className="facts">
-                {s.start && <div><dt>Date</dt><dd className="num">{fmtRange(s.start, s.end)}</dd></div>}
-                {s.venue && <div><dt>Location</dt><dd>{venue ? <>{venue[1]}<br />{venue[2]}</> : s.venue}</dd></div>}
-              </dl>
             </>
           )}
         </div>
-      </header>
+        {s && (
+          <aside className="mast-aside">
+            <dl className="facts">
+              {s.start && <div><dt>Date</dt><dd className="num">{fmtRange(s.start, s.end)}</dd></div>}
+              {s.venue && <div><dt>Location</dt><dd>{venue ? <>{venue[1]}<br />{venue[2]}</> : s.venue}</dd></div>}
+            </dl>
+            {me ? <Pass me={me} /> : (
+              <div className="cta">
+                {s.login && <Link className="btn" to="/login">{t("myInfo")}</Link>}
+                {s.applyUrl && s.status !== "종료" && <a className="link-cta" href={s.applyUrl} target="_blank" rel="noreferrer">{t("apply")} <span aria-hidden>→</span></a>}
+              </div>
+            )}
+          </aside>
+        )}
+      </section>
 
       <main className="body">
-        {me ? <Pass me={me} /> : s && (
-          <div className="cta">
-            {s.login && <Link className="btn" to="/login">{t("myInfo")}</Link>}
-            {s.applyUrl && s.status !== "종료" && <a className="link-cta" href={s.applyUrl} target="_blank" rel="noreferrer">{t("apply")} <span aria-hidden>→</span></a>}
-          </div>
-        )}
-
-        <nav className="toc" aria-label="menu">
+        {/* 폰: 목차형 메뉴 */}
+        <nav className="toc narrow-only" aria-label="menu">
           {menu.map(([to, en, kr, cap, badge]) => (
             <Link key={to} to={to}>
               <span className="toc-main">
@@ -108,14 +123,51 @@ export default function Home() {
             </Link>
           ))}
         </nav>
-
         {notices[0] && (
-          <Link to="/notices" className="latest">
+          <Link to="/notices" className="latest narrow-only">
             <span className="label">Latest</span>
             <span className="latest-t">{notices[0].title}</span>
             <span className="small num">{notices[0].date.replace(/-/g, ". ")}</span>
           </Link>
         )}
+
+        {/* 아이패드·컴퓨터: 공지 | 사역 안내, 아래 바로가기 */}
+        <div className="wide-only wide-grid">
+          <section className="col">
+            <div className="col-head"><span className="label">Notices</span><Link to="/notices" className="more">{t("seeAll")} →</Link></div>
+            {notices.length === 0 && <div className="empty">{t("noNotice")}</div>}
+            {notices.slice(0, 3).map((n, i) => (
+              <Link key={i} to="/notices" className="notice">
+                <span className="when">{n.pinned && <span className="pin">Pinned</span>}{n.date.replace(/-/g, ".")}</span>
+                <h3>{n.title}</h3>
+                {n.body && <span className="sub clamp">{n.body}</span>}
+              </Link>
+            ))}
+          </section>
+          <section className="col">
+            <div className="col-head"><span className="label">Ministries</span><Link to="/notices#ministries" className="more">{t("otherMinistries")} →</Link></div>
+            {others.map(p => (
+              <Link key={p.id} to={`/p/${encodeURIComponent(p.id)}`} className="ministry" style={{ ["--c" as string]: p.color }}>
+                <span className="bar-c" />
+                <span>
+                  <span className="t">{p.title}</span>
+                  {(p.start || p.subtitle) && <span className="small" style={{ display: "block" }}>{p.start ? fmtRange(p.start, p.end) : p.subtitle}</span>}
+                </span>
+                <span className="arrow">{Icon.arrow}</span>
+              </Link>
+            ))}
+          </section>
+        </div>
+        <div className="wide-only tiles">
+          {tiles.map(([to, en, kr, cap]) => (
+            <Link key={to} to={to} className="tile">
+              <span className="label mute">{en}</span>
+              <span className="t">{kr}</span>
+              <span className="c">{cap}</span>
+              <span className="tile-arrow">{Icon.arrow}</span>
+            </Link>
+          ))}
+        </div>
         <Footer />
       </main>
     </div>

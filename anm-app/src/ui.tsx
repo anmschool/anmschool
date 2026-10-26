@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { cachedContent, cachedMe, fetchContent, getToken, refreshMe } from "./api";
 import type { Content, Me, Project } from "./types";
 import { setLang, useLang, type Lang } from "./i18n";
@@ -68,18 +68,44 @@ export function LangToggle() {
 }
 
 /** 하위 화면 머리: 시즌 워터컬러 띠 + 뒤로 + 제목 */
+/** 아이패드·컴퓨터용 상단 내비 (폰에서는 숨김) */
+export function SiteNav() {
+  const s = useSeason();
+  const { t } = useLang();
+  const loggedIn = !!(s && getToken(s.id));
+  const me = s ? cachedMe(s.id) : null;
+  const links: [string, string][] = [["/notices", t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", t("places")]];
+  return (
+    <nav className="sitenav" aria-label="site">
+      <div className="sitenav-in">
+        <Link to="/" className="sitenav-brand"><span className="anm">ANM</span>{s && <span className="season">{s.title.match(/^\d{4}\s+\w+/)?.[0] ?? ""} {t("schoolShort")}</span>}</Link>
+        <div className="sitenav-links">{links.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}</div>
+        <div className="sitenav-right">
+          <LangToggle />
+          <Link to={loggedIn ? "/me" : "/login"} className="btn small">{loggedIn && me ? me.name : t("myInfo")}</Link>
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 export function Head({ label, title, back = "/" }: { label?: string; title: string; back?: string }) {
   const nav = useNavigate();
   const { t } = useLang();
   return (
+    <>
+    <SiteNav />
     <header className="head">
       <div className="bar">
         <button className="icon-btn" aria-label={t("back")} onClick={() => (history.length > 1 ? nav(-1) : nav(back))}>{Icon.back}</button>
         <LangToggle />
       </div>
-      {label && <span className="label light">{label}</span>}
-      <h1>{title}</h1>
+      <div className="head-in">
+        {label && <span className="label light">{label}</span>}
+        <h1>{title}</h1>
+      </div>
     </header>
+    </>
   );
 }
 
