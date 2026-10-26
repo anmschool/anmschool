@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useLang } from "../i18n";
 import type { Me } from "../types";
-import { fmtRange, Footer, LangToggle, Skeleton, useContent, useMe, useSeason } from "../ui";
+import { fmtRange, Footer, Icon, LangToggle, Skeleton, useContent, useMe, useSeason } from "../ui";
 import { forTrack, payView } from "./shared";
 
 function Pass({ me }: { me: Me }) {
@@ -54,16 +54,19 @@ export default function Home() {
     ["/notices#ministries", "Ministries", t("ministries"), t("capMinistries")],
   ];
 
+  const lead = title.match(/^(.*?향한)\s+(.+)$/);
+  const venue = s?.venue?.match(/^(.*?캠퍼스)\s+(.+)$/);
+
   return (
     <div className="app">
       <header className="cover">
         <div className="cover-wash">
           <div className="cover-top">
-            <span className="label light">All Nations</span>
+            <Link to="/" className="brand"><img src="/ANM-logo-circle.png" alt="" /><span>ANM</span></Link>
             <LangToggle />
           </div>
           {s && (
-            <div className="cover-mark">
+            <div className="cover-mark" aria-label={`${year} ${season}`}>
               <span className="cover-year">{year}</span>
               {season && <span className="cover-season">{season.charAt(0) + season.slice(1).toLowerCase()}</span>}
             </div>
@@ -73,11 +76,19 @@ export default function Home() {
           {!s && loading && <Skeleton lines={4} />}
           {s && (
             <>
-              <h1 className="cover-title">{title || s.title}</h1>
-              {themeText && <div className="theme"><span className="q">‘{themeText}’</span>{themeRef && <span className="ref">{themeRef}</span>}</div>}
+              <span className="label">Worship &amp; Praise School</span>
+              <h1 className="cover-title">
+                {lead ? <><span className="lead">{lead[1]}</span>{lead[2]}</> : (title || s.title)}
+              </h1>
+              {themeText && (
+                <div className="theme">
+                  <span className="q">‘{themeText}’</span>
+                  {themeRef && <span className="ref">{themeRef}</span>}
+                </div>
+              )}
               <dl className="facts">
-                {s.start && <><dt>Date</dt><dd className="num">{fmtRange(s.start, s.end)}</dd></>}
-                {s.venue && <><dt>Venue</dt><dd>{s.venue}</dd></>}
+                {s.start && <div><dt>Date</dt><dd className="num">{fmtRange(s.start, s.end)}</dd></div>}
+                {s.venue && <div><dt>Location</dt><dd>{venue ? <>{venue[1]}<br />{venue[2]}</> : s.venue}</dd></div>}
               </dl>
             </>
           )}
@@ -87,26 +98,29 @@ export default function Home() {
       <main className="body">
         {me ? <Pass me={me} /> : s && (
           <div className="cta">
-            {s.login && <Link className="btn" to="/login"><small>My Page</small>{t("myInfo")}</Link>}
-            {s.applyUrl && s.status !== "종료" && <a className={s.login ? "btn line" : "btn"} href={s.applyUrl} target="_blank" rel="noreferrer">{t("apply")}</a>}
+            {s.login && <Link className="btn" to="/login">{t("myInfo")}</Link>}
+            {s.applyUrl && s.status !== "종료" && <a className="link-cta" href={s.applyUrl} target="_blank" rel="noreferrer">{t("apply")} <span aria-hidden>→</span></a>}
           </div>
         )}
 
-        <nav className="menu" aria-label="menu">
+        <nav className="toc" aria-label="menu">
           {menu.map(([to, en, kr, cap, badge]) => (
             <Link key={to} to={to}>
-              <span className="label mute">{en}</span>
-              <span className="t">{kr}</span>
-              <span className="c">{cap}</span>
-              {badge && <span className="badge">{badge}</span>}
+              <span className="toc-main">
+                <span className="t">{kr}{badge && <sup>{badge}</sup>}</span>
+                <span className="c">{cap}</span>
+              </span>
+              <span className="toc-en">{en}</span>
+              <span className="toc-arrow">{Icon.arrow}</span>
             </Link>
           ))}
         </nav>
 
         {notices[0] && (
-          <Link to="/notices" className="notice" style={{ borderTop: "1px solid var(--line)", paddingTop: 16 }}>
-            <span className="when"><span className="pin">Latest</span>{notices[0].date.replace(/-/g, ".")}</span>
-            <h3>{notices[0].title}</h3>
+          <Link to="/notices" className="latest">
+            <span className="label">Latest</span>
+            <span className="latest-t">{notices[0].title}</span>
+            <span className="small num">{notices[0].date.replace(/-/g, ". ")}</span>
           </Link>
         )}
         <Footer />

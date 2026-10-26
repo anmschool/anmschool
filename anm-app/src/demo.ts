@@ -5,13 +5,13 @@ export const DEMO_CONTENT: Content = {
   updatedAt: new Date().toISOString(),
   projects: [
     {
-      id: "2027W", kind: "경배와찬양학교", title: "2027 WINTER 경배와찬양학교 및 7000학교", subtitle: "얽매이지 않는 삶 (고전 6:12)",
+      id: "2027W", kind: "경배와찬양학교", title: "2027 WINTER 새 예루살렘을 향한 경배와찬양학교 및 7000학교", subtitle: "얽매이지 않는 삶 (고전 6:12)",
       start: "2027-01-11", end: "2027-01-21", venue: "명지대학교 자연캠퍼스 60주년 기념 채플관", status: "진행", order: 1,
       applyUrl: "https://forms.gle/rdfXzXvHyYnkXaQv7", login: true, color: "#6E1F3A",
       about: "하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 미래세대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/18~21 · 청지기 1/11~16, 18~21",
     },
     { id: "2026-11-큰잔치", kind: "큰잔치", title: "경배와찬양 큰잔치 · 시편학교", status: "준비", order: 2, login: false, color: "#3A1022" },
-    { id: "7000훈련", kind: "훈련", title: "7000훈련", status: "준비", order: 3, login: false, color: "#8A3554" },
+    { id: "7000훈련", kind: "훈련", title: "7000훈련학교 및 어린이·십대 훈련", subtitle: "매주 토요일 · 서빙고 경배와찬양 훈련원", venue: "서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)", status: "진행", order: 3, login: false, color: "#8A3554", about: "7000훈련학교\n- 일시: 매주 토요일 오전 9시\n- 장소: 서빙고 경배와찬양 훈련원\n어린이·십대 훈련\n- 일시: 매주 토요일 오후 2시\n- 장소: 서빙고 경배와찬양 훈련원\n주소: 서울 용산구 서빙고로59길 21-2 (서빙고동)" },
   ],
   notices: [
     { project: "2027W", date: "2026-10-26", title: "2027 WINTER 경배와찬양학교 신청이 열렸습니다", body: "선등록은 12월 27일(주일)까지입니다. 신청 후 안내된 계좌로 훈련비를 입금해 주세요.", pinned: true, track: "전체" },
