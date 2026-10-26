@@ -1,0 +1,379 @@
+/**
+ * ANM 앱 — 관리 시트 + API (Apps Script 웹앱)
+ * ------------------------------------------------------------
+ * 실행 계정: anmschool@anminspirational.com  /  01·02·03과 같은 프로젝트에 새 파일로 추가
+ *
+ * 함수
+ *   setupApp      : 00_시스템/앱/'ANM 앱' 관리 시트 생성 (프로젝트·공지·시간표·안내·장소·관리자 탭) + 비밀키 생성 (1회)
+ *   testApi       : 배포 전 점검 — 관리 시트·운영 시트를 읽어 앱이 받을 데이터를 실행 로그에 출력
+ *   doGet/doPost  : 웹앱 진입점 (배포 → 웹 앱 → 실행: 나 / 액세스: 모든 사용자)
+ *
+ * API (앱이 부르는 것)
+ *   GET  ?action=content                       → 공개 프로젝트·공지·시간표·안내·장소 (2분 캐시)
+ *   POST {action:'login', project, name, phone} → {token, me}   이름 + 전화번호 전체 (단체는 인솔자·교역자 번호도 허용)
+ *   POST {action:'me', token}                   → {me}          로그인 유지 (토큰 60일)
+ *   POST {action:'admin', pin, project}         → {stats}       관리자 탭의 PIN
+ *
+ * 원칙
+ *   - 운영 시트는 공개하지 않는다. API가 본인 행만 골라 필요한 칸만 내보낸다 (주소·생년월일·기도제목·연락처는 절대 안 보냄)
+ *   - 관리자는 'ANM 앱' 시트에서 프로젝트별로 상태(준비/진행/종료/숨김)와 공지·시간표·안내·장소를 관리한다
+ */
+
+const APP_SHEET_NAME = 'ANM 앱';
+const APP_TABS = {
+  프로젝트: ['ID', '종류', '제목', '부제', '시작일', '종료일', '장소', '상태', '순서', '신청 링크', '대표 이미지', '운영 시트 ID', '로그인', '색', '소개'],
+  공지: ['프로젝트ID', '날짜', '제목', '내용', '고정', '대상 트랙', '공개'],
+  시간표: ['프로젝트ID', '트랙', '날짜', '시작', '끝', '제목', '장소', '메모'],
+  안내: ['프로젝트ID', '섹션', '제목', '내용', '순서'],
+  장소: ['프로젝트ID', '이름', '종류', '설명', '지도 링크', '이미지', '영상', '순서'],
+  관리자: ['이름', 'PIN', '프로젝트', '메모'],
+  '접속 로그': ['시각', '프로젝트', '결과', '코드'],
+};
+const STATUS_VISIBLE = { 진행: 1, 준비: 1, 종료: 1 };   // 숨김은 앱에 안 나옴
+const TOKEN_DAYS = 60;
+
+/* ═════════════════════════ setup ═════════════════════════ */
+
+function setupApp() {
+  runSafely_('ANM 앱 관리 시트 만들기', () => {
+    step_(1, 4, '00_시스템/앱 폴더에 관리 시트 찾기/만들기');
+    const root = DriveApp.getFolderById(ROOT_ID);
+    const sys = getOrCreate_(root, '00_시스템');
+    LOG_FOLDER = getOrCreate_(sys, '로그');
+    const ss = getOrCreateSheet_(getOrCreate_(sys, '앱'), APP_SHEET_NAME);
+
+    step_(2, 4, '탭 만들기');
+    Object.keys(APP_TABS).forEach(n => ensureTab_(ss, n, APP_TABS[n]));
+    const def = ss.getSheetByName('Sheet1') || ss.getSheetByName('시트1');
+    if (def && ss.getSheets().length > 1) ss.deleteSheet(def);
+
+    step_(3, 4, '기본 내용 채우기 (2027W · 큰잔치 · 훈련, 2027W 안내·장소)');
+    let opsId = '';
+    try { opsId = openOps_().getId(); } catch (e) { log_('운영 시트', '2027W 운영 시트를 못 찾음', '', '', '건너뜀', '나중에 프로젝트 탭에 ID 입력'); }
+    seedApp_(ss, opsId);
+    styleApp_(ss);
+
+    step_(4, 4, '비밀키 · 관리자 PIN');
+    const props = PropertiesService.getScriptProperties();
+    if (!props.getProperty('APP_SECRET')) props.setProperty('APP_SECRET', Utilities.getUuid() + Utilities.getUuid());
+    props.setProperty('APP_SHEET_ID', ss.getId());
+    const adm = ss.getSheetByName('관리자');
+    if (adm.getLastRow() < 2) {
+      const pin = String(Math.floor(100000 + Math.random() * 900000));
+      adm.getRange(2, 1, 1, 4).setValues([['니들', pin, '전체', '앱 관리자 화면 PIN (6자리)']]);
+      say_('관리자 PIN: ' + pin + '  (관리자 탭에서 바꿀 수 있음)');
+    }
+    say_('👉 관리 시트: ' + ss.getUrl());
+    say_('다음: 배포 → 새 배포 → 유형 "웹 앱" → 실행: 나 / 액세스: 모든 사용자 → 웹 앱 URL을 앱 설정에 넣기');
+  });
+}
+
+function seedApp_(ss, opsId) {
+  const P = ss.getSheetByName('프로젝트');
+  if (P.getLastRow() < 2) {
+    P.getRange(2, 1, 4, APP_TABS.프로젝트.length).setValues([
+      ['2027W', '경배와찬양학교', '2027 WINTER 경배와찬양학교 및 7000학교', '얽매이지 않는 삶 (고전 6:12)', '2027-01-11', '2027-01-21',
+        '명지대학교 자연캠퍼스 60주년 기념 채플관', '진행', 1, 'https://forms.gle/rdfXzXvHyYnkXaQv7', '', opsId, 'ON', '#6E1F3A',
+        '하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 미래세대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/18~21 · 청지기 1/11~16, 18~21'],
+      ['2026-11-큰잔치', '큰잔치', '경배와찬양 큰잔치 · 시편학교', '', '', '', '', '준비', 2, '', '', '', 'OFF', '#3A1022', ''],
+      ['7000훈련', '훈련', '7000훈련', '', '', '', '', '준비', 3, '', '', '', 'OFF', '#8A3554', ''],
+      ['어린이훈련', '훈련', '어린이·십대 훈련', '', '', '', '', '준비', 4, '', '', '', 'OFF', '#A55A74', ''],
+    ]);
+    P.getRange('E2:F50').setNumberFormat('yyyy-mm-dd');
+  }
+  const G = ss.getSheetByName('안내');
+  if (G.getLastRow() < 2) {
+    const rows = [
+      ['훈련 안내', '경배와찬양학교를 기도로 준비하며', '- 훈련 가운데 하나님의 임재해주시기를 간절히 기도합니다.\n- 모든 훈련은 시작 전에 미리 와서, 기도로 준비해 주십시오.\n- 훈련 기간 중에는 언어 사용과 행동에 주의하여 주시기 바랍니다.'],
+      ['훈련 안내', '복장', '- 형제는 운동복이 아닌 긴바지, 자매는 긴 치마를 준비해 주시기 바랍니다.\n- 예배에 동참할 때 운동화를 착용해 주시기 바랍니다.'],
+      ['훈련 안내', '식사예절', '- 식탁의 모든 자리가 채워지면 함께 식사 기도를 드린 다음 식사합니다.\n- 같은 식탁의 지체들이 식사를 마칠 때까지 기다렸다가 질서 있게 식기를 반납해 주십시오.\n- 큰 소리나 주변을 흩트리는 언어에 주의해 주십시오.'],
+      ['훈련 안내', '숙소에서', '- 서로 안식할 수 있도록 배려해 주십시오.\n- 취침 및 기상 시간을 지켜 주십시오.\n- 잠옷 차림으로 숙소 내를 다니지 않도록 주의해 주십시오.\n- 숙소를 나가실 때는 항상 소등해 주십시오.\n- 훈련이 끝나는 날은 숙소 정리를 함께 해 주십시오.'],
+      ['훈련비', '입금 계좌', '- 청지기·미래세대·대학 청년 및 일반인·온라인: 우리은행 1005-604-700231 경배와찬양\n- 어린이: 우리은행 1005-404-679551 경배와찬양\n- 입금자명은 "이름(교회)"로 적어 주세요.'],
+      ['훈련비', '환불 규정', '- 12월 27일까지 100% 환불\n- 12월 28일 ~ 1월 10일 50% 환불\n- 당일 환불 불가\n- 모든 환불은 훈련이 마무리된 후 계좌이체로 진행됩니다 (수수료 공제).'],
+      ['문의', '연락처', '- 이메일 7000school@gmail.com\n- 한국 +82 (0)2 796 9700\n- 독일 +49 (0)179 5705756'],
+    ];
+    G.getRange(2, 1, rows.length, 5).setValues(rows.map((r, i) => ['2027W', r[0], r[1], r[2], i + 1]));
+  }
+  const L = ss.getSheetByName('장소');
+  if (L.getLastRow() < 2) {
+    const rows = [
+      ['60주년 기념 채플관', '예배', '모든 예배와 강의가 열리는 곳', '/images/facility/chapel_back-to-stage.jpg', '/videos/course1_main_gate_to_chapel.mp4'],
+      ['식당', '식당', '채플관에서 걸어서 이동', '/images/facility/dining_interior.jpg', '/videos/course2_chapel_to_restaurant.mp4'],
+      ['5동', '숙소', '생활관 5동', '/images/facility/dorm5_entrance.jpg', '/videos/course2_chapel_to_restaurant.mp4'],
+      ['명덕관', '숙소', '명덕관 숙소', '/images/facility/myeongdeok_entrance.jpg', '/videos/course3_main_gate_to_myeongdeok.mp4'],
+    ];
+    L.getRange(2, 1, rows.length, 8).setValues(rows.map((r, i) => ['2027W', r[0], r[1], r[2], 'https://map.naver.com/p/search/명지대학교%20자연캠퍼스', r[3], r[4], i + 1]));
+  }
+  const N = ss.getSheetByName('공지');
+  if (N.getLastRow() < 2) {
+    N.getRange(2, 1, 1, 7).setValues([['2027W', new Date(), '2027 WINTER 경배와찬양학교 신청이 열렸습니다', '선등록은 12월 27일(주일)까지입니다. 신청 후 안내된 계좌로 훈련비를 입금해 주세요.', true, '전체', true]]);
+  }
+}
+
+function styleApp_(ss) {
+  ss.getSheetByName('공지').getRange('E2:E500').insertCheckboxes();
+  ss.getSheetByName('공지').getRange('G2:G500').insertCheckboxes();
+  ss.getSheetByName('공지').getRange('B2:B500').setNumberFormat('yyyy-mm-dd');
+  ss.getSheetByName('시간표').getRange('C2:C2000').setNumberFormat('yyyy-mm-dd');
+  ss.getSheetByName('시간표').getRange('D2:E2000').setNumberFormat('@');
+  const st = SpreadsheetApp.newDataValidation().requireValueInList(['준비', '진행', '종료', '숨김'], true).build();
+  ss.getSheetByName('프로젝트').getRange('H2:H100').setDataValidation(st);
+  const on = SpreadsheetApp.newDataValidation().requireValueInList(['ON', 'OFF'], true).build();
+  ss.getSheetByName('프로젝트').getRange('M2:M100').setDataValidation(on);
+  const kind = SpreadsheetApp.newDataValidation().requireValueInList(['경배와찬양학교', '큰잔치', '훈련', '기타'], true).setAllowInvalid(true).build();
+  ss.getSheetByName('프로젝트').getRange('B2:B100').setDataValidation(kind);
+  ['프로젝트', '공지', '안내'].forEach(n => ss.getSheetByName(n).getRange('A1:Z1000').setWrap(true).setVerticalAlignment('top'));
+  ss.getSheetByName('관리자').setTabColor('#999999');
+}
+
+/* ═════════════════════════ 웹앱 진입점 ═════════════════════════ */
+
+function doGet(e) {
+  const p = (e && e.parameter) || {};
+  try {
+    if (p.action === 'content' || !p.action) return json_({ ok: true, data: getContent_() });
+    if (p.action === 'ping') return json_({ ok: true, time: new Date().toISOString() });
+    return json_({ ok: false, error: 'unknown_action' });
+  } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
+}
+
+function doPost(e) {
+  let body = {};
+  try { body = JSON.parse((e && e.postData && e.postData.contents) || '{}'); } catch (x) { return json_({ ok: false, error: 'bad_json' }); }
+  try {
+    if (body.action === 'login') return json_(apiLogin_(body));
+    if (body.action === 'me') return json_(apiMe_(body));
+    if (body.action === 'admin') return json_(apiAdmin_(body));
+    if (body.action === 'content') return json_({ ok: true, data: getContent_() });
+    return json_({ ok: false, error: 'unknown_action' });
+  } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
+}
+
+function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+
+/* ═════════════════════════ 콘텐츠 ═════════════════════════ */
+
+function appSheet_() {
+  const id = PropertiesService.getScriptProperties().getProperty('APP_SHEET_ID');
+  if (!id) throw new Error('setupApp을 먼저 실행하세요');
+  return SpreadsheetApp.openById(id);
+}
+
+function getContent_() {
+  const cache = CacheService.getScriptCache();
+  const hit = cache.get('content_v1');
+  if (hit) return JSON.parse(hit);
+  const ss = appSheet_();
+  const data = buildContent_({
+    projects: rows_(ss.getSheetByName('프로젝트')), notices: rows_(ss.getSheetByName('공지')),
+    schedule: rows_(ss.getSheetByName('시간표')), guides: rows_(ss.getSheetByName('안내')), places: rows_(ss.getSheetByName('장소')),
+  });
+  const s = JSON.stringify(data);
+  if (s.length < 95000) cache.put('content_v1', s, 120);
+  return data;
+}
+
+/** 순수 함수: 관리 시트 행 → 앱용 JSON (숨김 프로젝트·비공개 공지 제외) */
+function buildContent_(t) {
+  const d = v => (v instanceof Date ? Utilities.formatDate(v, 'Asia/Seoul', 'yyyy-MM-dd') : String(v || '').trim());
+  const tm = v => (v instanceof Date ? Utilities.formatDate(v, 'Asia/Seoul', 'HH:mm') : String(v || '').trim());
+  const projects = t.projects.filter(r => r.ID && STATUS_VISIBLE[r.상태]).map(r => ({
+    id: String(r.ID), kind: r.종류, title: r.제목, subtitle: r.부제, start: d(r.시작일), end: d(r.종료일), venue: r.장소,
+    status: r.상태, order: Number(r.순서) || 99, applyUrl: r['신청 링크'], image: r['대표 이미지'], login: String(r.로그인).toUpperCase() === 'ON' && !!r['운영 시트 ID'],
+    color: r.색 || '#6E1F3A', about: r.소개,
+  })).sort((a, b) => a.order - b.order);
+  const ok = {}; projects.forEach(p => (ok[p.id] = 1));
+  const inScope = id => id === '전체' || ok[id];
+  const truthy = v => v === true || String(v).toUpperCase() === 'TRUE';
+  return {
+    updatedAt: new Date().toISOString(),
+    projects,
+    notices: t.notices.filter(r => r.제목 && inScope(String(r.프로젝트ID)) && (r.공개 === '' || truthy(r.공개))).map(r => ({
+      project: String(r.프로젝트ID), date: d(r.날짜), title: r.제목, body: r.내용, pinned: truthy(r.고정), track: r['대상 트랙'] || '전체',
+    })).sort((a, b) => (b.pinned - a.pinned) || (a.date < b.date ? 1 : -1)),
+    schedule: t.schedule.filter(r => r.제목 && inScope(String(r.프로젝트ID))).map(r => ({
+      project: String(r.프로젝트ID), track: r.트랙 || '전체', date: d(r.날짜), start: tm(r.시작), end: tm(r.끝), title: r.제목, place: r.장소, note: r.메모,
+    })).sort((a, b) => (a.date + a.start < b.date + b.start ? -1 : 1)),
+    guides: t.guides.filter(r => r.제목 && inScope(String(r.프로젝트ID))).map(r => ({
+      project: String(r.프로젝트ID), section: r.섹션, title: r.제목, body: r.내용, order: Number(r.순서) || 99,
+    })).sort((a, b) => a.order - b.order),
+    places: t.places.filter(r => r.이름 && inScope(String(r.프로젝트ID))).map(r => ({
+      project: String(r.프로젝트ID), name: r.이름, kind: r.종류, body: r.설명, map: r['지도 링크'], image: r.이미지, video: r.영상, order: Number(r.순서) || 99,
+    })).sort((a, b) => a.order - b.order),
+  };
+}
+
+/* ═════════════════════════ 로그인 · 내 정보 ═════════════════════════ */
+
+function apiLogin_(b) {
+  const name = normName_(b.name), phone = normDigits_(b.phone);
+  if (!name || phone.length < 9) return { ok: false, error: 'invalid_input' };
+  const cache = CacheService.getScriptCache();
+  const fk = 'fail_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, name + '|' + b.project)).slice(0, 20);
+  const fails = Number(cache.get(fk) || 0);
+  if (fails >= 8) return { ok: false, error: 'too_many' };
+  const proj = projectRow_(b.project);
+  if (!proj || !proj.login) return { ok: false, error: 'no_project' };
+  const ops = readOps_(proj.opsId);
+  const hit = findPerson_(ops, name, phone);
+  appLog_(b.project, hit.ok ? '성공' : hit.error, hit.ok ? hit.code : '');
+  if (!hit.ok) { cache.put(fk, String(fails + 1), 600); return { ok: false, error: hit.error }; }
+  cache.remove(fk);
+  return { ok: true, token: signToken_({ p: proj.id, c: hit.code, x: Date.now() + TOKEN_DAYS * 864e5 }), me: buildMe_(ops, hit.code, proj) };
+}
+
+function apiMe_(b) {
+  const t = verifyToken_(b.token);
+  if (!t) return { ok: false, error: 'bad_token' };
+  const proj = projectRow_(t.p);
+  if (!proj || !proj.login) return { ok: false, error: 'no_project' };
+  const ops = readOps_(proj.opsId);
+  const me = buildMe_(ops, t.c, proj);
+  if (!me) return { ok: false, error: 'not_found' };
+  return { ok: true, me };
+}
+
+function apiAdmin_(b) {
+  const ss = appSheet_();
+  const admins = rows_(ss.getSheetByName('관리자'));
+  const a = admins.find(r => String(r.PIN).trim() && String(r.PIN).trim() === String(b.pin || '').trim());
+  if (!a) return { ok: false, error: 'bad_pin' };
+  if (a.프로젝트 !== '전체' && String(a.프로젝트) !== String(b.project)) return { ok: false, error: 'forbidden' };
+  const proj = projectRow_(b.project);
+  if (!proj || !proj.opsId) return { ok: false, error: 'no_project' };
+  return { ok: true, admin: a.이름, stats: buildStats_(readOps_(proj.opsId)) };
+}
+
+function projectRow_(id) {
+  const r = rows_(appSheet_().getSheetByName('프로젝트')).find(x => String(x.ID) === String(id));
+  if (!r) return null;
+  return { id: String(r.ID), title: r.제목, opsId: String(r['운영 시트 ID'] || '').trim(), login: String(r.로그인).toUpperCase() === 'ON' && !!r['운영 시트 ID'] };
+}
+
+/** 운영 시트에서 필요한 탭만 읽기 (머리글 이름 기준) */
+function readOps_(opsId) {
+  const ss = SpreadsheetApp.openById(opsId);
+  const get = (n) => { const sh = ss.getSheetByName(n); return sh ? rows_(sh) : []; };
+  return { reg: get('Master_DB(등록)'), lod: get('숙소'), grp: get('단체교회별 확인 표'), trk: get('트랙') };
+}
+
+/** 순수 함수: 이름 + 전화(본인 / 단체 인솔자 / 교역자)로 찾기 */
+function findPerson_(ops, name, phone) {
+  const grpPhones = {};
+  ops.grp.forEach(g => { grpPhones[g.단체ID] = [normDigits_(g['인솔자 연락처']), normDigits_(g['교역자 연락처'])].filter(x => x.length >= 9); });
+  const cands = ops.reg.filter(r => r.코드 && normName_(r.이름) === name);
+  if (!cands.length) return { ok: false, error: 'not_found' };
+  const match = cands.filter(r => {
+    const own = String(r.연락처 || '').split('/').map(normDigits_);
+    return own.indexOf(phone) !== -1 || (r.단체ID && (grpPhones[r.단체ID] || []).indexOf(phone) !== -1);
+  });
+  if (!match.length) return { ok: false, error: 'not_found' };
+  const live = match.filter(r => r.상태 !== '취소');
+  if (!live.length) return { ok: false, error: 'cancelled' };
+  return { ok: true, code: String(live[0].코드) };
+}
+
+/** 순수 함수: 본인 화면에 보낼 정보만 (연락처·주소·생년월일·기도제목 제외) */
+function buildMe_(ops, code, proj) {
+  const r = ops.reg.find(x => String(x.코드) === String(code));
+  if (!r) return null;
+  const d = v => (v instanceof Date ? Utilities.formatDate(v, 'Asia/Seoul', 'yyyy-MM-dd') : String(v || ''));
+  const pay = String(r.입금여부 || '');
+  const state = /^O/.test(pay) ? 'paid' : /부분/.test(pay) ? 'partial' : /미납/.test(pay) ? 'unpaid' : /취소/.test(pay) ? 'cancelled' : 'checking';
+  const track = String(r['경배와찬양학교 구분'] || '');
+  const t = ops.trk.find(x => x.트랙 === track) || {};
+  const g = r.단체ID ? ops.grp.find(x => x.단체ID === r.단체ID) : null;
+  const lodging = ops.lod.filter(x => String(x.코드) === String(code) && x.입금여부 !== '취소').map(x => ({
+    segment: String(x.구간 || '1'), checkIn: d(x.입실), checkOut: d(x.퇴실), building: String(x.동 || ''), room: String(x.호실 || ''),
+  })).sort((a, b) => (a.segment < b.segment ? -1 : 1));
+  return {
+    project: proj.id, projectTitle: proj.title, code: String(r.코드), name: r.이름, church: r.교회, track, kind: r.구분, gender: r.성별,
+    online: t.형태 === '온라인' || /온라인/.test(track),
+    period: [[d(t.입실1), d(t.퇴실1)], [d(t.입실2), d(t.퇴실2)]].filter(p => p[0]),
+    payment: { state, label: pay || '확인 중', fee: Number(r.훈련비) || null, account: r.계좌 || t.계좌 || '', depositorHint: r.이름 + (r.교회 ? '(' + r.교회 + ')' : ''), groupPaid: !!r.단체ID },
+    group: g ? { id: g.단체ID, name: g['교회/단체명'], status: g['단체별 입금 완료 여부'] } : null,
+    lodging,
+    checkedIn: r['현장등록 확인여부'] === true,
+    cancelled: r.상태 === '취소',
+  };
+}
+
+/** 순수 함수: 관리자 화면 숫자 */
+function buildStats_(ops) {
+  const live = ops.reg.filter(r => r.코드 && r.상태 !== '취소');
+  const by = {};
+  live.forEach(r => {
+    const k = r['경배와찬양학교 구분'] || '기타';
+    const o = by[k] = by[k] || { track: k, total: 0, paid: 0, partial: 0, unpaid: 0, brother: 0, sister: 0 };
+    o.total++;
+    const p = String(r.입금여부 || '');
+    if (/^O/.test(p)) o.paid++; else if (/부분/.test(p)) o.partial++; else o.unpaid++;
+    if (r.성별 === '형제') o.brother++; else if (r.성별 === '자매') o.sister++;
+  });
+  const lod = ops.lod.filter(x => x.코드 && x.입금여부 !== '취소');
+  return {
+    total: live.length, cancelled: ops.reg.filter(r => r.상태 === '취소').length,
+    tracks: Object.keys(by).map(k => by[k]),
+    lodging: { lines: lod.length, assigned: lod.filter(x => x.호실 !== '' && x.호실 != null).length },
+    groups: ops.grp.filter(g => g.단체ID).length,
+    checkedIn: live.filter(r => r['현장등록 확인여부'] === true).length,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/* ═════════════════════════ 토큰 · 도우미 ═════════════════════════ */
+
+function signToken_(payload) {
+  const secret = PropertiesService.getScriptProperties().getProperty('APP_SECRET');
+  const body = Utilities.base64EncodeWebSafe(JSON.stringify(payload), Utilities.Charset.UTF_8).replace(/=+$/, '');
+  const sig = Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(body, secret)).replace(/=+$/, '');
+  return body + '.' + sig;
+}
+
+function verifyToken_(tok) {
+  if (!tok || String(tok).indexOf('.') < 0) return null;
+  const [body, sig] = String(tok).split('.');
+  const secret = PropertiesService.getScriptProperties().getProperty('APP_SECRET');
+  const want = Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(body, secret)).replace(/=+$/, '');
+  if (want !== sig) return null;
+  try {
+    const p = JSON.parse(Utilities.newBlob(Utilities.base64DecodeWebSafe(body + '==='.slice((body.length + 3) % 4))).getDataAsString());
+    return p.x > Date.now() ? p : null;
+  } catch (e) { return null; }
+}
+
+function normName_(s) { return String(s || '').replace(/\s/g, '').trim(); }
+function normDigits_(s) {
+  let d = String(s == null ? '' : (typeof s === 'number' ? Math.round(s) : s)).replace(/\(?\+82\)?/, '').replace(/\D/g, '');
+  if (d && d[0] !== '0') d = '0' + d;
+  return d;
+}
+
+/** 머리글 → 객체 배열 (빈 행 제외) */
+function rows_(sh) {
+  const v = sh.getDataRange().getValues();
+  if (v.length < 2) return [];
+  const h = v[0].map(x => String(x).trim());
+  return v.slice(1).filter(r => r.some(x => x !== '' && x !== null)).map(r => { const o = {}; h.forEach((k, i) => { if (k && !(k in o)) o[k] = r[i]; }); return o; });
+}
+
+function appLog_(project, result, code) {
+  try {
+    const sh = appSheet_().getSheetByName('접속 로그');
+    sh.appendRow([new Date(), project, result, code]);
+  } catch (e) {}
+}
+
+function testApi() {
+  const c = getContent_();
+  console.log('프로젝트 ' + c.projects.length + '개: ' + c.projects.map(p => p.id + '(' + p.status + (p.login ? ', 로그인' : '') + ')').join(' · '));
+  console.log('공지 ' + c.notices.length + ' · 시간표 ' + c.schedule.length + ' · 안내 ' + c.guides.length + ' · 장소 ' + c.places.length);
+  const p = c.projects.find(x => x.login);
+  if (!p) { console.log('로그인 켜진 프로젝트 없음'); return; }
+  const proj = projectRow_(p.id);
+  const ops = readOps_(proj.opsId);
+  console.log(p.id + ' 운영 시트: 등록 ' + ops.reg.length + '명 · 숙소 ' + ops.lod.length + '줄 · 단체 ' + ops.grp.length);
+  console.log('관리자 통계: ' + JSON.stringify(buildStats_(ops)));
+  const tok = signToken_({ p: p.id, c: 'TEST', x: Date.now() + 1000 });
+  console.log('토큰 서명·검증: ' + (verifyToken_(tok) ? 'OK' : '실패'));
+}
