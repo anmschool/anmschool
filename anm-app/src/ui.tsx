@@ -28,6 +28,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   }, []);
   useEffect(load, [load]);
   const season = pickSeason(content);
+  useEffect(() => {
+    // 시즌 대표 이미지(관리 시트 '대표 이미지')를 워터컬러 배경으로
+    const img = season?.image;
+    if (img) document.documentElement.style.setProperty("--hero", `url("${img}")`);
+    else document.documentElement.style.removeProperty("--hero");
+  }, [season?.image]);
   return <Ctx.Provider value={{ content, loading, offline, season, reload: load }}>{children}</Ctx.Provider>;
 }
 export const useContent = () => useContext(Ctx);

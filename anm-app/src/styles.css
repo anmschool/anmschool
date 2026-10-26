@@ -51,7 +51,7 @@ img, video { max-width: 100%; display: block; }
 .cover { position: relative; }
 .cover-wash {
   position: relative; height: 210px; padding: calc(16px + env(safe-area-inset-top, 0px)) var(--gutter) 22px;
-  background: url(/images/season-2027w-hero.jpg) center 34% / cover no-repeat, #8a3a5c;
+  background: var(--hero, url(/images/season-2027w-hero.jpg)) center 34% / cover no-repeat, #8a3a5c;
   color: #fff; display: flex; flex-direction: column; justify-content: space-between;
 }
 .cover-top { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 2; }
@@ -75,7 +75,7 @@ img, video { max-width: 100%; display: block; }
 /* ── 하위 화면 머리 ── */
 .head {
   position: relative; color: #fff; padding: calc(14px + env(safe-area-inset-top, 0px)) var(--gutter) 30px;
-  background: url(/images/season-2027w-hero.jpg) center 22% / cover no-repeat, #8a3a5c;
+  background: var(--hero, url(/images/season-2027w-hero.jpg)) center 22% / cover no-repeat, #8a3a5c;
 }
 .head::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(58, 16, 34, 0.05), rgba(58, 16, 34, 0.28)); pointer-events: none; }
 .head > * { position: relative; z-index: 1; }
@@ -288,7 +288,7 @@ a, button { -webkit-touch-callout: none; }
     position: relative;
     background:
       linear-gradient(to bottom, rgba(58, 16, 34, 0.18) 0%, rgba(58, 16, 34, 0.30) 55%, rgba(110, 31, 58, 0.10) 78%, var(--paper) 100%),
-      url(/images/season-2027w-hero.jpg) center 28% / cover no-repeat, #8a3a5c;
+      var(--hero, url(/images/season-2027w-hero.jpg)) center 28% / cover no-repeat, #8a3a5c;
   }
   .masthead { max-width: 1080px; margin: 0 auto; padding: 150px 40px 170px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); gap: 72px; align-items: end; color: #fff; }
   .masthead .label { color: rgba(255, 255, 255, 0.86); }
@@ -329,7 +329,7 @@ a, button { -webkit-touch-callout: none; }
 
   /* 하위 화면 */
   .head { padding: 0 40px; height: 330px; display: flex; align-items: flex-end;
-    background: linear-gradient(to bottom, rgba(58, 16, 34, 0.18) 0%, rgba(58, 16, 34, 0.28) 55%, rgba(110, 31, 58, 0.08) 80%, var(--paper) 100%), url(/images/season-2027w-hero.jpg) center 28% / cover no-repeat, #8a3a5c; }
+    background: linear-gradient(to bottom, rgba(58, 16, 34, 0.18) 0%, rgba(58, 16, 34, 0.28) 55%, rgba(110, 31, 58, 0.08) 80%, var(--paper) 100%), var(--hero, url(/images/season-2027w-hero.jpg)) center 28% / cover no-repeat, #8a3a5c; }
   .head::after { display: none; }
   .head-in { max-width: 1000px; width: 100%; margin: 0 auto; padding-bottom: 110px; }
   .app:not(.home) .body { padding-top: 8px; }

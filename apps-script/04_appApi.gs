@@ -13,6 +13,7 @@
  *   POST {action:'login', project, name, phone} → {token, me}   이름 + 전화번호 전체 (단체는 인솔자·교역자 번호도 허용)
  *   POST {action:'me', token}                   → {me}          로그인 유지 (토큰 60일)
  *   POST {action:'admin', pin, project}         → {stats}       관리자 탭의 PIN
+ *   POST {action:'apply', key, ops:[…]}          → 관리 시트 내용 일괄 반영 (시즌 세팅 도구용, ADMIN_KEY 필요)
  *
  * 원칙
  *   - 운영 시트는 공개하지 않는다. API가 본인 행만 골라 필요한 칸만 내보낸다 (주소·생년월일·기도제목·연락처는 절대 안 보냄)
@@ -146,6 +147,7 @@ function doPost(e) {
     if (body.action === 'me') return json_(apiMe_(body));
     if (body.action === 'admin') return json_(apiAdmin_(body));
     if (body.action === 'content') return json_({ ok: true, data: getContent_() });
+    if (body.action === 'apply') return json_(apiApply_(body));
     return json_({ ok: false, error: 'unknown_action' });
   } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
 }
@@ -416,4 +418,81 @@ function applyUpdate1026() {
   if (!has) L.appendRow(['7000훈련', '서빙고 경배와찬양 훈련원', '훈련원', '서울 용산구 서빙고로59길 21-2 (서빙고동)', 'https://map.naver.com/p/search/서울%20용산구%20서빙고로59길%2021-2', '', '', 1]);
   CacheService.getScriptCache().remove('content_v1');
   console.log('✅ 반영 완료 — 앱에 바로 보입니다 (캐시 비움)');
+}
+
+/* ═════════════════════════ 시즌 세팅 도구용: 관리 시트 일괄 반영 ═════════════════════════
+ * 실행은 anmschool(이 웹앱의 소유자)로 일어나고, 호출하는 쪽은 ADMIN_KEY만 가지면 된다.
+ * → 개인 계정으로 작업해도 시트·파일은 전부 anmschool 소유로 바뀜.
+ *
+ * ops 예:
+ *   {op:'upsert', tab:'프로젝트', keys:['ID'], rows:[{ID:'2027W', 제목:'…'}]}     키가 같으면 준 칸만 고침, 없으면 추가
+ *   {op:'replace', tab:'안내', where:{프로젝트ID:'2027W'}, rows:[{…}, …]}          조건에 맞는 줄을 지우고 새로 채움
+ *   {op:'update', tab:'프로젝트', where:{종류:'경배와찬양학교', 상태:'진행'}, except:{ID:'2027W'}, set:{상태:'종료'}}
+ *   {op:'delete', tab:'공지', where:{프로젝트ID:'2027W', 제목:'…'}}
+ */
+const APPLY_TABS = { 프로젝트: 1, 공지: 1, 시간표: 1, 안내: 1, 장소: 1 };
+
+/** 시즌 세팅 도구가 쓸 비밀키 만들기/보기 (실행 로그에 출력) */
+function showAdminKey() {
+  const props = PropertiesService.getScriptProperties();
+  let k = props.getProperty('ADMIN_KEY');
+  if (!k) { k = Utilities.getUuid().replace(/-/g, '') + Utilities.getUuid().replace(/-/g, ''); props.setProperty('ADMIN_KEY', k); }
+  // 00_시스템/🔒 보안/앱 관리 키.txt 로 저장 → 맥의 Drive 앱에서 Claude가 읽어 시즌 도구에 연결
+  const sys = DriveApp.getFolderById(ROOT_ID).getFoldersByName('00_시스템').next();
+  const it = sys.getFoldersByName('🔒 보안');
+  const sec = it.hasNext() ? it.next() : sys.createFolder('🔒 보안');
+  const body = JSON.stringify({ api: ScriptApp.getService().getUrl() || '', key: k }, null, 2);
+  const f = sec.getFilesByName('앱 관리 키.txt');
+  if (f.hasNext()) f.next().setContent(body); else sec.createFile('앱 관리 키.txt', body, MimeType.PLAIN_TEXT);
+  console.log('✅ 관리 키 저장: 00_시스템/🔒 보안/앱 관리 키.txt (공유 금지)');
+}
+
+function apiApply_(b) {
+  const want = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
+  if (!want || String(b.key || '') !== want) return { ok: false, error: 'bad_key' };
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    const ss = appSheet_();
+    const report = (b.ops || []).map(op => applyOp_(ss, op));
+    CacheService.getScriptCache().remove('content_v1');
+    return { ok: true, report };
+  } finally { lock.releaseLock(); }
+}
+
+function applyOp_(ss, op) {
+  if (!APPLY_TABS[op.tab]) return { tab: op.tab, error: 'tab_not_allowed' };
+  const sh = ss.getSheetByName(op.tab);
+  const v = sh.getDataRange().getValues();
+  const h = v[0].map(x => String(x).trim());
+  let rows = v.slice(1);
+  const norm = x => (x instanceof Date ? Utilities.formatDate(x, 'Asia/Seoul', 'yyyy-MM-dd') : String(x == null ? '' : x).trim());
+  const match = (r, where) => Object.keys(where || {}).every(k => h.indexOf(k) >= 0 && norm(r[h.indexOf(k)]) === norm(where[k]));
+  const toRow = (obj, base) => { const r = base ? base.slice() : new Array(h.length).fill(''); Object.keys(obj).forEach(k => { const i = h.indexOf(k); if (i >= 0) r[i] = obj[k]; }); return r; };
+  let added = 0, changed = 0, removed = 0;
+  if (op.op === 'upsert') {
+    (op.rows || []).forEach(o => {
+      const where = {}; (op.keys || []).forEach(k => (where[k] = o[k]));
+      const i = rows.findIndex(r => match(r, where));
+      if (i >= 0) { rows[i] = toRow(o, rows[i]); changed++; } else { rows.push(toRow(o)); added++; }
+    });
+  } else if (op.op === 'replace') {
+    const before = rows.length;
+    rows = rows.filter(r => !match(r, op.where));
+    removed = before - rows.length;
+    (op.rows || []).forEach(o => { rows.push(toRow(o)); added++; });
+  } else if (op.op === 'update') {
+    rows = rows.map(r => { if (match(r, op.where) && !(op.except && match(r, op.except))) { changed++; return toRow(op.set || {}, r); } return r; });
+  } else if (op.op === 'delete') {
+    const before = rows.length;
+    rows = rows.filter(r => !match(r, op.where));
+    removed = before - rows.length;
+  } else return { tab: op.tab, error: 'unknown_op' };
+  // 다시 쓰기 (머리글 아래 전체)
+  const n = Math.max(v.length - 1, rows.length);
+  if (n > 0) {
+    const out = rows.concat(new Array(Math.max(0, n - rows.length)).fill(0).map(() => new Array(h.length).fill('')));
+    sh.getRange(2, 1, n, h.length).setValues(out.map(r => r.slice(0, h.length)));
+  }
+  return { tab: op.tab, op: op.op, added, changed, removed };
 }
