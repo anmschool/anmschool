@@ -1,8 +1,11 @@
 import type { Content, Me, Stats } from "./types";
 import { DEMO_CONTENT, demoLogin, demoStats } from "./demo";
 
-const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.trim() || "";
-export const DEMO = !API_URL || new URLSearchParams(location.search).has("demo");
+// Apps Script 웹앱 (anmschool). Vercel 환경변수 VITE_API_URL이 있으면 그것을 우선
+const DEFAULT_API = "https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec";
+const API_URL = (import.meta.env.VITE_API_URL as string | undefined)?.trim() || DEFAULT_API;
+export const DEMO = new URLSearchParams(location.search).has("demo") || (() => { try { return sessionStorage.getItem("anm.demo") === "1"; } catch { return false; } })();
+if (DEMO) { try { sessionStorage.setItem("anm.demo", "1"); } catch { /* */ } }
 
 type Fail = { ok: false; error: string; message?: string };
 

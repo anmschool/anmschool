@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: "autoUpdate",
       includeAssets: ["icons/apple-touch-icon.png", "ANM-logo-circle.png"],
       manifest: {
-        name: "올네이션스 경배와찬양",
+        name: "경배와찬양학교 · ANM",
         short_name: "ANM",
         description: "경배와찬양학교 · 큰잔치 · 훈련 안내와 내 등록 정보",
         lang: "ko",
@@ -24,7 +24,7 @@ export default defineConfig({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,png,svg,woff2}"],
+        globPatterns: ["**/*.{js,css,html,svg,woff2}", "icons/*.png", "images/season-*.jpg"],
         navigateFallback: "/index.html",
         runtimeCaching: [
           { urlPattern: /\/images\//, handler: "CacheFirst", options: { cacheName: "images", expiration: { maxEntries: 60 } } },

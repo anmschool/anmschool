@@ -1,23 +1,34 @@
 import { Link } from "react-router-dom";
-import { getToken } from "../api";
 import { useLang } from "../i18n";
-import type { Project } from "../types";
-import { Footer, fmtRange, Section, Skeleton, useContent, Wash } from "../ui";
+import type { Me } from "../types";
+import { fmtRange, Footer, LangToggle, Skeleton, useContent, useMe, useSeason } from "../ui";
+import { forTrack, payView } from "./shared";
 
-const KIND_EN: Record<string, string> = { 경배와찬양학교: "Worship & Praise School", 큰잔치: "Great Celebration", 훈련: "Training" };
-
-function ProjectCard({ p }: { p: Project }) {
+function Pass({ me }: { me: Me }) {
   const { t } = useLang();
-  const mine = getToken(p.id);
+  const pv = payView(me, t);
+  const room = me.lodging.find(l => l.room);
   return (
-    <Link className="card link stripe" style={{ ["--c" as string]: p.color }} to={mine ? `/p/${p.id}/me` : `/p/${p.id}`}>
-      <span className="kind" style={{ color: p.color }}>{KIND_EN[p.kind] ?? p.kind}</span>
-      <span className="title">{p.title}</span>
-      {p.subtitle && <span className="sub">{p.subtitle}</span>}
-      <div className="row">
-        {p.start && <span className="pill plain dim num">{fmtRange(p.start, p.end)}</span>}
-        {mine && <span className="pill ok">{t("myInfo")}</span>}
-        {!p.start && p.status === "준비" && <span className="pill plain dim">{t("comingSoon")}</span>}
+    <Link to="/me" className="pass" aria-label={t("myInfo")}>
+      <div className="pass-top">
+        <div>
+          <div className="label">My Registration</div>
+          <div className="pass-name">{me.name}</div>
+          <div className="pass-meta">{[me.church, me.kind].filter(Boolean).join(" · ")}</div>
+        </div>
+        <span className="track-chip">{me.track}</span>
+      </div>
+      <div className="pass-cells">
+        <div>
+          <span className="label mute">Fee</span>
+          <span className={`state ${pv.cls}`}>{pv.label}</span>
+        </div>
+        <div>
+          <span className="label mute">Room</span>
+          {me.online ? <span className="sub">{t("online")}</span>
+            : room ? <span className="big"><span className="kr">{room.building}</span> {room.room}</span>
+            : <span className="state dim">{t("pending")}</span>}
+        </div>
       </div>
     </Link>
   );
@@ -25,34 +36,81 @@ function ProjectCard({ p }: { p: Project }) {
 
 export default function Home() {
   const { content, loading } = useContent();
+  const s = useSeason();
   const { t } = useLang();
-  const ps = content?.projects ?? [];
-  const groups: [string, Project[]][] = [
-    [t("now"), ps.filter(p => p.status === "진행")],
-    [t("soon"), ps.filter(p => p.status === "준비")],
-    [t("past"), ps.filter(p => p.status === "종료")],
+  const { me, loggedIn } = useMe(s?.id);
+  const [year, season] = (s?.title.match(/^(\d{4})\s+(\w+)/)?.slice(1) ?? [s?.start?.slice(0, 4) ?? "", ""]) as [string, string];
+  const title = s?.title.replace(/^\d{4}\s+\w+\s*/, "") ?? "";
+  const [themeText, themeRef] = (s?.subtitle?.match(/^(.*?)\s*\(([^)]+)\)\s*$/)?.slice(1) ?? [s?.subtitle ?? "", ""]) as [string, string];
+  const notices = (content?.notices ?? []).filter(n => (n.project === s?.id || n.project === "전체") && forTrack(n.track, me?.track));
+  const schedCount = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track)).length;
+
+  const menu: [string, string, string, string, string?][] = [
+    ["/notices", "Notices", t("notices"), t("capNotices"), notices.length ? String(notices.length) : undefined],
+    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
+    ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
+    ["/guide", "Guide", t("guide"), t("capGuide")],
+    ["/places", "Campus", t("places"), t("capPlaces")],
+    ["/notices#ministries", "Ministries", t("ministries"), t("capMinistries")],
   ];
-  const pinned = (content?.notices ?? []).filter(n => n.pinned && n.track === "전체").slice(0, 2);
+
   return (
-    <main className="page">
-      <Wash>
-        <h1>올네이션스 경배와찬양</h1>
-        <p className="lede">경배와찬양학교 · 큰잔치 · 훈련 안내와 내 등록 정보</p>
-      </Wash>
-      {!content && loading && <Skeleton lines={4} />}
-      {pinned.map(n => (
-        <Link key={n.title} className="card link" to={`/p/${n.project}`}>
-          <span className="kind" style={{ color: "var(--wine)" }}>Notice</span>
-          <span className="title">{n.title}</span>
-          {n.body && <span className="sub">{n.body}</span>}
-        </Link>
-      ))}
-      {groups.filter(([, list]) => list.length).map(([label, list]) => (
-        <Section key={label} title={label} eyebrow={t("ministries")}>
-          <div className="stack">{list.map(p => <ProjectCard key={p.id} p={p} />)}</div>
-        </Section>
-      ))}
-      <Footer />
-    </main>
+    <div className="app">
+      <header className="cover">
+        <div className="cover-wash">
+          <div className="cover-top">
+            <span className="label light">All Nations</span>
+            <LangToggle />
+          </div>
+          {s && (
+            <div className="cover-mark">
+              <span className="cover-year">{year}</span>
+              {season && <span className="cover-season">{season.charAt(0) + season.slice(1).toLowerCase()}</span>}
+            </div>
+          )}
+        </div>
+        <div className="cover-paper">
+          {!s && loading && <Skeleton lines={4} />}
+          {s && (
+            <>
+              <h1 className="cover-title">{title || s.title}</h1>
+              {themeText && <div className="theme"><span className="q">‘{themeText}’</span>{themeRef && <span className="ref">{themeRef}</span>}</div>}
+              <dl className="facts">
+                {s.start && <><dt>Date</dt><dd className="num">{fmtRange(s.start, s.end)}</dd></>}
+                {s.venue && <><dt>Venue</dt><dd>{s.venue}</dd></>}
+              </dl>
+            </>
+          )}
+        </div>
+      </header>
+
+      <main className="body">
+        {me ? <Pass me={me} /> : s && (
+          <div className="cta">
+            {s.login && <Link className="btn" to="/login"><small>My Page</small>{t("myInfo")}</Link>}
+            {s.applyUrl && s.status !== "종료" && <a className={s.login ? "btn line" : "btn"} href={s.applyUrl} target="_blank" rel="noreferrer">{t("apply")}</a>}
+          </div>
+        )}
+
+        <nav className="menu" aria-label="menu">
+          {menu.map(([to, en, kr, cap, badge]) => (
+            <Link key={to} to={to}>
+              <span className="label mute">{en}</span>
+              <span className="t">{kr}</span>
+              <span className="c">{cap}</span>
+              {badge && <span className="badge">{badge}</span>}
+            </Link>
+          ))}
+        </nav>
+
+        {notices[0] && (
+          <Link to="/notices" className="notice" style={{ borderTop: "1px solid var(--line)", paddingTop: 16 }}>
+            <span className="when"><span className="pin">Latest</span>{notices[0].date.replace(/-/g, ".")}</span>
+            <h3>{notices[0].title}</h3>
+          </Link>
+        )}
+        <Footer />
+      </main>
+    </div>
   );
 }
