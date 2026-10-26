@@ -29,6 +29,7 @@ const APP_TABS = {
   관리자: ['이름', 'PIN', '프로젝트', '메모'],
   '접속 로그': ['시각', '프로젝트', '결과', '코드'],
 };
+const KIND_LIST = ['경배와찬양학교', '예배', '큰잔치', '훈련', '기타'];
 const STATUS_VISIBLE = { 진행: 1, 준비: 1, 종료: 1 };   // 숨김은 앱에 안 나옴
 const TOKEN_DAYS = 60;
 
@@ -71,10 +72,11 @@ function setupApp() {
 function seedApp_(ss, opsId) {
   const P = ss.getSheetByName('프로젝트');
   if (P.getLastRow() < 2) {
-    P.getRange(2, 1, 3, APP_TABS.프로젝트.length).setValues([
+    P.getRange(2, 1, 4, APP_TABS.프로젝트.length).setValues([
       ['2027W', '경배와찬양학교', '2027 WINTER 새 예루살렘을 향한 경배와찬양학교 및 7000학교', '얽매이지 않는 삶 (고전 6:12)', '2027-01-11', '2027-01-21',
         '명지대학교 자연캠퍼스 60주년 기념 채플관', '진행', 1, 'https://forms.gle/rdfXzXvHyYnkXaQv7', '', opsId, 'ON', '#6E1F3A',
         '하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 미래세대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/18~21 · 청지기 1/11~16, 18~21'],
+      ['매주예배', '예배', '매주 예배 · 목요모임 · 7000모임', '목요일 오후 7시 · 토요일 오후 4시', '', '', '서빙고 온누리교회 · 서빙고 경배와찬양 훈련원', '진행', 2, '', '', '', 'OFF', '#6E1F3A', '목요모임\n- 일시: 매주 목요일 오후 7시 (18:30부터 기도모임으로 시작합니다)\n- 장소: 서빙고 온누리교회 (서울 용산구 이촌로 347-11)\n7000모임\n- 일시: 매주 토요일 오후 4시\n- 장소: 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)'],
       ['2026-11-큰잔치', '큰잔치', '경배와찬양 큰잔치 · 시편학교', '', '', '', '', '준비', 2, '', '', '', 'OFF', '#3A1022', ''],
       ['7000훈련', '훈련', '7000훈련학교 및 어린이·십대 훈련', '매주 토요일 · 서빙고 경배와찬양 훈련원', '', '', '서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)', '진행', 3, '', '', '', 'OFF', '#8A3554', '7000훈련학교\n- 일시: 매주 토요일 오전 9시\n- 장소: 서빙고 경배와찬양 훈련원\n어린이·십대 훈련\n- 일시: 매주 토요일 오후 2시\n- 장소: 서빙고 경배와찬양 훈련원\n주소: 서울 용산구 서빙고로59길 21-2 (서빙고동)'],
     ]);
@@ -119,7 +121,7 @@ function styleApp_(ss) {
   ss.getSheetByName('프로젝트').getRange('H2:H100').setDataValidation(st);
   const on = SpreadsheetApp.newDataValidation().requireValueInList(['ON', 'OFF'], true).build();
   ss.getSheetByName('프로젝트').getRange('M2:M100').setDataValidation(on);
-  const kind = SpreadsheetApp.newDataValidation().requireValueInList(['경배와찬양학교', '큰잔치', '훈련', '기타'], true).setAllowInvalid(true).build();
+  const kind = SpreadsheetApp.newDataValidation().requireValueInList(KIND_LIST, true).setAllowInvalid(true).build();
   ss.getSheetByName('프로젝트').getRange('B2:B100').setDataValidation(kind);
   ['프로젝트', '공지', '안내'].forEach(n => ss.getSheetByName(n).getRange('A1:Z1000').setWrap(true).setVerticalAlignment('top'));
   ss.getSheetByName('관리자').setTabColor('#999999');
@@ -379,7 +381,7 @@ function testApi() {
 
 /* ═════════════════════════ 1회성 내용 수정 (2026-10-26) ═════════════════════════ */
 
-/** 이미 만든 'ANM 앱' 시트에 10/26 수정 반영: 2027W 제목, 7000훈련학교 및 어린이·십대 훈련 통합 · 일시·장소, 훈련원 장소 */
+/** 이미 만든 'ANM 앱' 시트에 10/26 수정 반영: 2027W 제목, 7000훈련학교 및 어린이·십대 훈련, 매주 예배(목요모임·7000모임), 장소 — 여러 번 실행해도 안전 */
 function applyUpdate1026() {
   const ss = appSheet_();
   const P = ss.getSheetByName('프로젝트');
@@ -398,8 +400,19 @@ function applyUpdate1026() {
     if (id === '어린이훈련') v[i][c('상태')] = '숨김';
   }
   P.getRange(1, 1, v.length, h.length).setValues(v);
+  if (!v.some(r => String(r[c('ID')]) === '매주예배')) {
+    const nr = new Array(h.length).fill('');
+    const vals = ['매주예배', '예배', '매주 예배 · 목요모임 · 7000모임', '목요일 오후 7시 · 토요일 오후 4시', '', '', '서빙고 온누리교회 · 서빙고 경배와찬양 훈련원', '진행', 2, '', '', '', 'OFF', '#6E1F3A', '목요모임\n- 일시: 매주 목요일 오후 7시 (18:30부터 기도모임으로 시작합니다)\n- 장소: 서빙고 온누리교회 (서울 용산구 이촌로 347-11)\n7000모임\n- 일시: 매주 토요일 오후 4시\n- 장소: 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)'];
+    APP_TABS.프로젝트.forEach((k, i) => { if (c(k) >= 0) nr[c(k)] = vals[i]; });
+    P.appendRow(nr);
+  }
   const L = ss.getSheetByName('장소');
   const has = L.getDataRange().getValues().some(r => String(r[0]) === '7000훈련');
+  const rowsL = L.getDataRange().getValues();
+  if (!rowsL.some(r => String(r[0]) === '매주예배')) {
+    L.appendRow(['매주예배', '서빙고 온누리교회', '목요모임', '서울 용산구 이촌로 347-11', 'https://map.naver.com/p/search/서빙고%20온누리교회', '', '', 1]);
+    L.appendRow(['매주예배', '서빙고 경배와찬양 훈련원', '7000모임', '서울 용산구 서빙고로59길 21-2 (서빙고동)', 'https://map.naver.com/p/search/서울%20용산구%20서빙고로59길%2021-2', '', '', 2]);
+  }
   if (!has) L.appendRow(['7000훈련', '서빙고 경배와찬양 훈련원', '훈련원', '서울 용산구 서빙고로59길 21-2 (서빙고동)', 'https://map.naver.com/p/search/서울%20용산구%20서빙고로59길%2021-2', '', '', 1]);
   CacheService.getScriptCache().remove('content_v1');
   console.log('✅ 반영 완료 — 앱에 바로 보입니다 (캐시 비움)');

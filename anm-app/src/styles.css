@@ -259,24 +259,50 @@ a, button { -webkit-touch-callout: none; }
   .app, .app.home { max-width: none; box-shadow: none; }
   .wrap-w { max-width: 1080px; margin: 0 auto; }
 
-  /* 상단 내비 */
-  .sitenav { display: block; position: sticky; top: 0; z-index: 30; background: rgba(251, 251, 247, 0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--hair); }
-  .sitenav-in { max-width: 1080px; margin: 0 auto; padding: 0 40px; height: 64px; display: flex; align-items: center; gap: 32px; }
+  /* 상단 내비: 워터컬러 위에 투명 + 흰 글씨, 스크롤하면 종이색 */
+  .sitenav { display: block; position: fixed; top: 0; left: 0; right: 0; z-index: 30; background: transparent; border-bottom: 1px solid transparent; transition: background 0.25s, border-color 0.25s; }
+  .sitenav-in { max-width: 1080px; margin: 0 auto; padding: 0 40px; height: 68px; display: flex; align-items: center; gap: 32px; }
   .sitenav-brand { display: flex; align-items: baseline; gap: 14px; flex: none; }
-  .sitenav-brand .anm { font: 600 16px/1 var(--latin); letter-spacing: 0.34em; color: var(--deep); }
-  .sitenav-brand .season { font-size: 13px; color: var(--sub); }
-  .sitenav-links { display: flex; gap: 26px; margin-left: auto; }
-  .sitenav-links a { font-size: 14.5px; font-weight: 500; color: var(--ink); padding: 4px 0; border-bottom: 1px solid transparent; }
-  .sitenav-links a.active, .sitenav-links a:hover { color: var(--wine); border-bottom-color: var(--wine); }
+  .sitenav-brand .anm { font: 600 16px/1 var(--latin); letter-spacing: 0.34em; color: #fff; }
+  .sitenav-brand .season { font-size: 13px; color: rgba(255, 255, 255, 0.82); }
+  .sitenav-links { display: flex; gap: 28px; margin-left: auto; }
+  .sitenav-links a { font-size: 14.5px; font-weight: 500; color: #fff; padding: 4px 0; border-bottom: 1px solid transparent; }
+  .sitenav-links a.active, .sitenav-links a:hover { border-bottom-color: currentColor; }
   .sitenav-right { display: flex; align-items: center; gap: 18px; }
-  .sitenav .lang button { color: var(--mute); }
-  .sitenav .lang button[aria-pressed="true"] { color: var(--deep); border-bottom-color: var(--deep); }
+  .sitenav .btn.small { background: #fff; color: var(--deep); border: 0; }
+  .sitenav.solid { background: rgba(251, 251, 247, 0.94); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom-color: var(--hair); }
+  .sitenav.solid .anm { color: var(--deep); }
+  .sitenav.solid .season { color: var(--sub); }
+  .sitenav.solid .sitenav-links a { color: var(--ink); }
+  .sitenav.solid .sitenav-links a.active, .sitenav.solid .sitenav-links a:hover { color: var(--wine); }
+  .sitenav.solid .lang button { color: var(--mute); }
+  .sitenav.solid .lang button[aria-pressed="true"] { color: var(--deep); border-bottom-color: var(--deep); }
+  .sitenav.solid .btn.small { background: var(--deep); color: #fff; }
   .btn.small { min-height: 38px; padding: 0 16px; font-size: 13.5px; }
   @media (max-width: 960px) { .sitenav-brand .season { display: none; } .sitenav-links { gap: 18px; } }
 
   /* 홈: 워터컬러 띠 + 2단 머리 */
-  .cover-wash { height: 260px; padding: 0; background-position: center 38%; }
-  .masthead { max-width: 1080px; margin: 0 auto; padding: 44px 40px 8px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); gap: 64px; align-items: start; }
+  /* 홈: 포스터처럼 — 워터컬러가 내비 뒤까지 덮고, 아래로 종이색 그라데이션 */
+  .cover { display: none; }
+  .top {
+    position: relative;
+    background:
+      linear-gradient(to bottom, rgba(58, 16, 34, 0.18) 0%, rgba(58, 16, 34, 0.30) 55%, rgba(110, 31, 58, 0.10) 78%, var(--paper) 100%),
+      url(/images/season-2027w-hero.jpg) center 28% / cover no-repeat, #8a3a5c;
+  }
+  .masthead { max-width: 1080px; margin: 0 auto; padding: 150px 40px 170px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(320px, 1fr); gap: 72px; align-items: end; color: #fff; }
+  .masthead .label { color: rgba(255, 255, 255, 0.86); }
+  .masthead .cover-title { color: #fff; text-shadow: 0 2px 24px rgba(58, 16, 34, 0.35); }
+  .masthead .cover-title .lead { color: rgba(255, 255, 255, 0.88); }
+  .masthead .theme .q { color: #fff; }
+  .masthead .theme .ref { color: rgba(255, 255, 255, 0.75); }
+  .masthead .facts { border-color: rgba(255, 255, 255, 0.45); }
+  .masthead .facts > div + div { border-left-color: rgba(255, 255, 255, 0.3); }
+  .masthead .facts dt { color: rgba(255, 255, 255, 0.72); }
+  .masthead .facts dd { color: #fff; }
+  .masthead .btn { background: #fff; color: var(--deep); }
+  .masthead .link-cta { color: #fff; }
+  .masthead .pass { color: var(--ink); }
   .cover-title { font-size: clamp(32px, 3.6vw, 40px); letter-spacing: -1.2px; line-height: 1.28; }
   .cover-title .lead { font-size: 18px; margin-bottom: 6px; }
   .theme .q { font-size: 19px; }
@@ -284,7 +310,7 @@ a, button { -webkit-touch-callout: none; }
   .cover-paper > .label { font-size: 12.5px; }
   .mast-aside { padding-top: 6px; }
 
-  .body { max-width: 1080px; margin: 0 auto; padding: 48px 40px 56px; gap: 48px; }
+  .body { max-width: 1080px; margin: 0 auto; padding: 8px 40px 56px; gap: 48px; }
   .offline { bottom: 16px; }
   .wide-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr); gap: 64px; }
   .col { display: flex; flex-direction: column; }
@@ -302,8 +328,11 @@ a, button { -webkit-touch-callout: none; }
   .tile:hover .t, .ministry:hover .t, .col .notice:hover h3 { color: var(--wine); }
 
   /* 하위 화면 */
-  .head { padding: 0 40px; height: 200px; display: flex; align-items: flex-end; background-position: center 30%; }
-  .head-in { max-width: 1000px; width: 100%; margin: 0 auto; padding-bottom: 30px; }
+  .head { padding: 0 40px; height: 330px; display: flex; align-items: flex-end;
+    background: linear-gradient(to bottom, rgba(58, 16, 34, 0.18) 0%, rgba(58, 16, 34, 0.28) 55%, rgba(110, 31, 58, 0.08) 80%, var(--paper) 100%), url(/images/season-2027w-hero.jpg) center 28% / cover no-repeat, #8a3a5c; }
+  .head::after { display: none; }
+  .head-in { max-width: 1000px; width: 100%; margin: 0 auto; padding-bottom: 110px; }
+  .app:not(.home) .body { padding-top: 8px; }
   .head .label { margin-top: 0; }
   .head h1 { font-size: 34px; letter-spacing: -1px; }
   .app:not(.home) .body { max-width: 1080px; }

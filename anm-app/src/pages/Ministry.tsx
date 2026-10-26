@@ -14,7 +14,7 @@ export default function Ministry() {
   const places = content!.places.filter(x => x.project === p.id);
   return (
     <div className="app">
-      <Head label={({ 경배와찬양학교: "Worship & Praise School", 큰잔치: "Great Celebration", 훈련: "Training" } as Record<string, string>)[p.kind] ?? "Ministry"} title={p.title} back="/notices" />
+      <Head label={({ 경배와찬양학교: "Worship & Praise School", 예배: "Weekly Worship", 큰잔치: "Great Celebration", 훈련: "Training" } as Record<string, string>)[p.kind] ?? "Ministry"} title={p.title} back="/notices" />
       <main className="body">
         {!p.about && (p.subtitle || p.start || p.venue) && (
           <dl className="rows">
@@ -38,7 +38,7 @@ export default function Ministry() {
         )}
         {places.map(pl => (
           <div key={pl.name} className="place">
-            <div className="place-head"><span className="t">{pl.name}</span><span className="label mute">Location</span></div>
+            <div className="place-head"><span className="t">{pl.name}</span><span className="label kr mute">{pl.kind || "Location"}</span></div>
             {pl.image && <img src={pl.image} alt={pl.name} loading="lazy" />}
             {pl.body && <span className="sub">{pl.body}</span>}
             {pl.map && <a className="link-cta" style={{ alignSelf: "flex-start" }} href={pl.map} target="_blank" rel="noreferrer">{t("openMap")} ↗</a>}

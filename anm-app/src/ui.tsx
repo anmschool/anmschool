@@ -74,9 +74,15 @@ export function SiteNav() {
   const { t } = useLang();
   const loggedIn = !!(s && getToken(s.id));
   const me = s ? cachedMe(s.id) : null;
+  const [solid, setSolid] = useState(false);
+  useEffect(() => {
+    const on = () => setSolid(window.scrollY > 24);
+    on(); window.addEventListener("scroll", on, { passive: true });
+    return () => window.removeEventListener("scroll", on);
+  }, []);
   const links: [string, string][] = [["/notices", t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", t("places")]];
   return (
-    <nav className="sitenav" aria-label="site">
+    <nav className={"sitenav" + (solid ? " solid" : "")} aria-label="site">
       <div className="sitenav-in">
         <Link to="/" className="sitenav-brand"><span className="anm">ANM</span>{s && <span className="season">{s.title.match(/^\d{4}\s+\w+/)?.[0] ?? ""} {t("schoolShort")}</span>}</Link>
         <div className="sitenav-links">{links.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}</div>

@@ -66,6 +66,7 @@ export default function Home() {
   return (
     <div className="app home">
       <SiteNav />
+      <div className="top">
       <header className="cover">
         <div className="cover-wash">
           <div className="cover-top">
@@ -108,6 +109,7 @@ export default function Home() {
           </aside>
         )}
       </section>
+      </div>
 
       <main className="body">
         {/* 폰: 목차형 메뉴 */}
