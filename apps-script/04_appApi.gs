@@ -627,3 +627,32 @@ function applyOp_(ss, op) {
   }
   return { tab: op.tab, op: op.op, added, changed, removed };
 }
+
+/** 11/04: 매주 예배(목요모임) 소개·시간 갱신 — 편집기에서 한 번 실행. 여러 번 실행해도 안전 */
+function applyUpdate1104() {
+  const P = appSheet_().getSheetByName('프로젝트');
+  const v = P.getDataRange().getValues(), h = v[0];
+  const c = n => h.indexOf(n);
+  const about = [
+    '목요모임',
+    '하나님의 임재를 경험하는 예배, 영적 회복과 치유가 있는 예배, 십자가의 길과 순교자의 삶을 살기로 결단하는 예배.',
+    '하나님께서는 이 세대에 ‘교회는 선교’임을 깨닫고 하나님의 부르심을 따라갈 수 있는 사람들을 찾고 계십니다. 주님을 위해 생명을 바치겠다는 결단으로 열방을 향해 행진하기 원하는 모든 하나님의 사람들을 주님의 이름으로 경배와찬양 목요모임에 초대합니다.',
+    '- 일시: 매주 목요일 오후 6시 30분',
+    '- 오후 5시부터 6시까지 중보기도로 예배를 준비합니다',
+    '- 장소: 온누리교회 서빙고성전 (서울 용산구 이촌로 347-11)',
+    '7000모임',
+    '- 일시: 매주 토요일 오후 4시',
+    '- 장소: 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)',
+  ].join('\n');
+  let hit = false;
+  for (let i = 1; i < v.length; i++) {
+    if (String(v[i][c('ID')]) !== '매주예배') continue;
+    v[i][c('부제')] = '목요일 오후 6시 30분 · 토요일 오후 4시';
+    v[i][c('소개')] = about;
+    hit = true;
+  }
+  if (!hit) throw new Error('프로젝트 탭에 매주예배 줄이 없습니다. applyUpdate1026을 먼저 실행하세요');
+  P.getRange(1, 1, v.length, h.length).setValues(v);
+  CacheService.getScriptCache().remove('content_v1');
+  console.log('✅ 목요모임 안내 반영 완료 — 앱에 바로 보입니다');
+}
