@@ -415,3 +415,13 @@ a, button { -webkit-touch-callout: none; }
 }
 @media (prefers-reduced-motion: reduce) { .slides img { transition: none; } }
 @media (min-width: 768px) { .masthead .slides { aspect-ratio: auto; min-height: 380px; width: 100%; min-width: 0; } }
+
+/* 11/04 입금 계좌 */
+.acc-grid { display: grid; grid-template-columns: 1fr; }
+.acc-card { display: flex; flex-direction: column; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
+.acc-card .n { font-size: 12.5px; color: var(--wine); line-height: 1.5; }
+.acc-card .t { font: 600 18px/1.4 var(--sans); letter-spacing: -0.2px; }
+.acc-card .d { font-size: 13px; color: var(--sub); }
+.acc-copy { margin-top: 8px; }
+.acc-note { margin: 12px 0 0; font-size: 13px; line-height: 1.7; color: var(--sub); word-break: keep-all; }
+@media (min-width: 768px) { .acc-grid { grid-template-columns: 1fr 1fr; column-gap: 40px; } }

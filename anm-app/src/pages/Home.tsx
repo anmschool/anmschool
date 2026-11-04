@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useLang } from "../i18n";
+import { useLang, type Lang } from "../i18n";
 import type { Me } from "../types";
-import { Footer, Icon, LangToggle, SiteNav, Skeleton, todayIso, useContent, useMe, useSeason } from "../ui";
+import { CopyButton, Footer, Icon, LangToggle, SiteNav, Skeleton, todayIso, useContent, useMe, useSeason } from "../ui";
 import { forTrack, payView } from "./shared";
 
 const SLIDES = [1, 2, 3, 4, 5].map(n => `/images/slides/${n}.jpg`);
@@ -32,16 +32,40 @@ function Slides() {
   );
 }
 
-const TRACKS: { name: string; dates: string; nights: string }[] = [
-  { name: "청지기를 위한 경배와찬양학교", dates: "1/11(월) ~ 1/16(토), 1/18(월) ~ 1/21(목)", nights: "8박 10일" },
-  { name: "미래세대를 위한 경배와찬양학교", dates: "1/11(월) ~ 1/14(목)", nights: "3박 4일" },
-  { name: "어린이를 위한 경배와찬양학교", dates: "1/14(목) ~ 1/16(토)", nights: "2박 3일" },
-  { name: "대학 청년 및 일반인을 위한 경배와찬양학교", dates: "1/18(월) ~ 1/21(목)", nights: "3박 4일" },
+type L = Record<Lang, string>;
+const TRACKS: { name: L; dates: L; nights: L }[] = [
+  { name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
+    dates: { ko: "1/11(월) ~ 1/16(토), 1/18(월) ~ 1/21(목)", en: "Jan 11 (Mon) – 16 (Sat), Jan 18 (Mon) – 21 (Thu)", zh: "1月11日(周一) ~ 16日(周六)，1月18日(周一) ~ 21日(周四)" },
+    nights: { ko: "8박 10일", en: "8 nights · 10 days", zh: "8晚10天" } },
+  { name: { ko: "미래세대를 위한 경배와찬양학교", en: "Worship & Praise School for the Next Generation", zh: "为下一代的敬拜赞美学校" },
+    dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
+    nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
+  { name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
+    dates: { ko: "1/14(목) ~ 1/16(토)", en: "Jan 14 (Thu) – 16 (Sat)", zh: "1月14日(周四) ~ 16日(周六)" },
+    nights: { ko: "2박 3일", en: "2 nights · 3 days", zh: "2晚3天" } },
+  { name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
+    dates: { ko: "1/18(월) ~ 1/21(목)", en: "Jan 18 (Mon) – 21 (Thu)", zh: "1月18日(周一) ~ 21日(周四)" },
+    nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
 ];
-const WEEKLY: { name: string; when: string; where: string }[] = [
-  { name: "목요모임", when: "매주 목요일 오후 6시 30분", where: "온누리교회 서빙고성전" },
-  { name: "7000모임", when: "매주 토요일 오후 4시", where: "서빙고 경배와찬양 훈련원" },
+const WEEKLY: { name: L; when: L; where: L }[] = [
+  { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
+    when: { ko: "매주 목요일 오후 6시 30분", en: "Every Thursday, 6:30 PM", zh: "每周四 下午6:30" },
+    where: { ko: "온누리교회", en: "Onnuri Church", zh: "온누리教会" } },
+  { name: { ko: "7000모임", en: "7000 Gathering", zh: "7000聚会" },
+    when: { ko: "매주 토요일 오후 4시", en: "Every Saturday, 4:00 PM", zh: "每周六 下午4:00" },
+    where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
 ];
+const ACCOUNTS: { who: L; bank: L; no: string }[] = [
+  { who: { ko: "청지기 · 미래세대 · 대학 청년 및 일반인 · 온라인", en: "Stewards · Next Generation · University Students, Young Adults & General · Online", zh: "管家 · 下一代 · 大学青年及一般成人 · 线上" },
+    bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-604-700231" },
+  { who: { ko: "어린이", en: "Children", zh: "儿童" },
+    bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-404-679551" },
+];
+const ACC_TEXT = {
+  title: { ko: "훈련비 입금 계좌", en: "Fee payment accounts", zh: "培训费汇款账户" } as L,
+  holder: { ko: "예금주 경배와찬양", en: "Account holder: 경배와찬양 (Worship & Praise)", zh: "户名：경배와찬양 (敬拜赞美)" } as L,
+  note: { ko: "입금자명은 ‘이름(교회)’로 적어 주세요. 금액은 신청서와 ‘내 등록 확인’에서 볼 수 있습니다.", en: "Please write the depositor name as ‘Name (Church)’. The amount is shown on the application and in My registration.", zh: "汇款人姓名请填写“姓名(教会)”。金额可在报名页和“我的报名”中查看。" } as L,
+};
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
 function krDate(iso: string, year = true) {
@@ -82,7 +106,7 @@ function Pass({ me }: { me: Me }) {
 export default function Home() {
   const { content, loading } = useContent();
   const s = useSeason();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { me, loggedIn } = useMe(s?.id);
   const [year, season] = (s?.title.match(/^(\d{4})\s+(\w+)/)?.slice(1) ?? [s?.start?.slice(0, 4) ?? "", ""]) as [string, string];
   const title = s?.title.replace(/^\d{4}\s+\w+\s*/, "") ?? "";
@@ -191,23 +215,39 @@ export default function Home() {
             <div className="col-head"><span className="label">Programs</span></div>
             <div className="track-grid">
               {TRACKS.map(x => (
-                <Link key={x.name} to="/schedule" className="track-card">
-                  <span className="n">{x.nights}</span>
-                  <span className="t">{x.name}</span>
-                  <span className="d">{x.dates}</span>
+                <Link key={x.name.ko} to="/schedule" className="track-card">
+                  <span className="n">{x.nights[lang]}</span>
+                  <span className="t">{x.name[lang]}</span>
+                  <span className="d">{x.dates[lang]}</span>
                 </Link>
               ))}
             </div>
+          </section>
+        )}
+        {s?.id === "2027W" && (
+          <section className="home-sec">
+            <div className="col-head"><span className="label">Payment</span></div>
+            <div className="acc-grid">
+              {ACCOUNTS.map(x => (
+                <div key={x.no} className="acc-card">
+                  <span className="n">{x.who[lang]}</span>
+                  <span className="t num">{x.bank[lang]} {x.no}</span>
+                  <span className="d">{ACC_TEXT.holder[lang]}</span>
+                  <div className="acc-copy"><CopyButton text={x.no} /></div>
+                </div>
+              ))}
+            </div>
+            <p className="acc-note">{ACC_TEXT.note[lang]}</p>
           </section>
         )}
         <section className="home-sec">
           <div className="col-head"><span className="label">Every week</span><Link to="/notices#ministries" className="more">{t("otherMinistries")} →</Link></div>
           <div className="week-grid">
             {WEEKLY.map(x => (
-              <Link key={x.name} to="/notices#ministries" className="week-card">
-                <span className="t">{x.name}</span>
-                <span className="d">{x.when}</span>
-                <span className="w">{x.where}</span>
+              <Link key={x.name.ko} to="/notices#ministries" className="week-card">
+                <span className="t">{x.name[lang]}</span>
+                <span className="d">{x.when[lang]}</span>
+                <span className="w">{x.where[lang]}</span>
               </Link>
             ))}
           </div>
