@@ -368,7 +368,10 @@
           <div class="grid-wrap">
             <div class="input-group"><label data-i18n="name">이름</label><input type="text" name="ind_name" data-i18n-ph="req_x"></div>
             <div class="input-group"><label data-i18n="gender">성별</label><select name="ind_gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></div>
-            <div class="input-group"><label data-i18n="birth">생년월일</label><input type="text" name="ind_birth" placeholder="YYMMDD"></div>
+            
+            <!-- YYYY/MM/DD 변경 부분 -->
+            <div class="input-group"><label data-i18n="birth">생년월일</label><input type="text" name="ind_birth" placeholder="YYYY/MM/DD"></div>
+            
             <div class="input-group"><label data-i18n="phone">연락처</label><input type="tel" name="ind_phone" placeholder="010-0000-0000"></div>
             <div class="input-group full-width"><label data-i18n="email">E-mail</label><input type="email" name="ind_email"></div>
             <div class="input-group full-width"><label data-i18n="address">주소</label><input type="text" name="ind_address"></div>
@@ -423,7 +426,7 @@
                     <th style="min-width:70px;" data-i18n="gender">성별</th>
                     <th style="min-width:130px;" data-i18n="phone">연락처</th>
                     <th style="min-width:140px;" data-i18n="email">E-mail</th>
-                    <th style="min-width:100px;" data-i18n="birth">생년월일</th>
+                    <th style="min-width:120px;" data-i18n="birth">생년월일</th>
                     <th style="min-width:100px;" data-i18n="category">구분</th>
                     <th style="min-width:100px;" data-i18n="training">기존 훈련</th>
                     <th style="min-width:90px;" data-i18n="note">비고</th>
@@ -647,13 +650,14 @@
     function addTableRow() {
       rowCount++;
       const tr = document.createElement('tr');
+      // YYYY/MM/DD 변경 부분 적용
       tr.innerHTML = `
         <td style="color: var(--sub); font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 600;">${rowCount}</td>
         <td><input type="text" class="m-name"></td>
         <td><select class="m-gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></td>
         <td><input type="text" class="m-phone"></td>
         <td><input type="text" class="m-email"></td>
-        <td><input type="text" class="m-birth"></td>
+        <td><input type="text" class="m-birth" placeholder="YYYY/MM/DD"></td>
         <td><select class="m-cat"><option value=""></option><option value="어린이" data-i18n="c1">어린이</option><option value="중고등부" data-i18n="c2">중고등부</option><option value="대학생 청년" data-i18n="c3">대학생 청년</option><option value="교사 교역자" data-i18n="c4">교사 교역자</option><option value="선교사" data-i18n="c5">선교사</option></select></td>
         <td><select class="m-trn"><option value=""></option><option value="처음 참석" data-i18n="t1">처음 참석</option><option value="기존 참석" data-i18n="t2">기존 참석</option><option value="훈련생" data-i18n="t3">훈련생</option></select></td>
         <td><input type="text" class="m-note"></td>
@@ -724,9 +728,9 @@ function submitData() {
   const btn = document.getElementById('submitBtn');
   btn.innerText = "..."; btn.disabled = true;
 
-  // 새로 배포한 구글 앱스 스크립트(웹앱) URL을 아래 큰따옴표 안에 넣으세요.
   const GAS_URL = "https://script.google.com/macros/s/AKfycbxSn4_Z6Fed76Ff8X2lajrZJOtewnlHCRXkNTjbn1LQT_jKURFYrlb4sWnL0lAl0G6rBA/exec";
 
+  // 오류 원인 파악을 위한 에러 핸들링 보강
   fetch(GAS_URL, {
     method: "POST",
     body: JSON.stringify(payload),
@@ -737,7 +741,6 @@ function submitData() {
   .then(response => response.json())
   .then(data => {
     if(data.success) {
-      // 완료 화면 데이터 바인딩
       if(feeInfo[track]) {
         document.getElementById('summary-track-title').innerText = feeInfo[track].name;
         document.getElementById('summary-bank-account').innerText = feeInfo[track].acc;
@@ -748,11 +751,13 @@ function submitData() {
       document.getElementById('success-message').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      alert("Error: " + data.error); btn.disabled = false;
+      alert("데이터 저장 실패: " + data.error); btn.disabled = false;
     }
   })
   .catch(error => {
-    alert("서버와 통신 중 오류가 발생했습니다."); btn.disabled = false;
+    console.error(error);
+    alert("서버와 통신 중 오류가 발생했습니다.\n(구글 스크립트 권한 또는 버전 갱신 문제입니다.)\n\n상세 오류: " + error.message); 
+    btn.disabled = false;
   });
 }
   </script>
