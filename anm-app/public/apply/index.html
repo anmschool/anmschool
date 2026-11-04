@@ -1,742 +1,636 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2027 Winter 경배와찬양학교 신청 · Application · 申请</title>
-  <meta name="description" content="2027 WINTER 올네이션스 경배와찬양학교 및 7000학교 온라인 신청">
-  <meta name="theme-color" content="#FBFBF7">
-  <link rel="icon" href="/icons/anm-artist-256.png" type="image/png">
+  <title>2027 Winter 경배와찬양학교 신청 / Application / 申请书</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  
+  <link id="dynamic-favicon" rel="icon" href="https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG" type="image/x-icon">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Gowun+Batang:wght@400;700&family=Montserrat:wght@500;600;700;800&family=Pinyon+Script&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v3.2.1/dist/web/static/pretendard.min.css">
+  
   <style>
-    :root {
-      --paper: #FBFBF7; --ink: #1E1A1D; --sub: #75696D; --muted: #9E9598;
-      --hairline: #CDC3C2; --wine: #6E1F3A; --wine-soft: rgba(110, 31, 58, 0.06);
-      --err: #A3243B;
+    :root { 
+      --paper: #FBFBF7; 
+      --ink: #1E1A1D; 
+      --sub: #75696D; 
+      --muted: #9E9598;
+      --hairline: #CDC3C2; 
+      --wine: #6E1F3A; 
+      --wine-light: #8A3554;
     }
-    * { box-sizing: border-box; }
-    html { -webkit-text-size-adjust: 100%; }
+    
     body {
-      margin: 0; min-height: 100vh; padding: 56px 16px 40px;
-      background: #1a1416; font-family: 'Pretendard', sans-serif; color: var(--ink);
-      display: flex; flex-direction: column; align-items: center; position: relative; overflow-x: hidden;
-      word-break: keep-all;
+      margin: 0; padding: 0; 
+      background-color: #000;
+      font-family: 'Pretendard', sans-serif;
+      color: var(--ink);
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: env(safe-area-inset-bottom);
     }
+
     body::before {
-      content: ""; position: fixed; inset: -5%;
-      background: url('/images/apply/bg-worship.jpg') center / cover no-repeat;
-      filter: blur(24px) brightness(0.42); z-index: -1;
+      content: "";
+      position: fixed;
+      top: -5%; left: -5%; width: 110%; height: 110%;
+      background-image: url('https://lh3.googleusercontent.com/d/1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW'); 
+      background-size: cover; background-position: center; 
+      filter: blur(25px) brightness(0.4); 
+      z-index: -1;
     }
 
-    .sheet { background: var(--paper); max-width: 920px; width: 100%; position: relative; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.45); }
-    .sheet::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 360px;
-      background: url('/images/season-2027w.jpg') top center / cover no-repeat;
-      -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-      mask-image: linear-gradient(to bottom, #000 0%, transparent 100%);
-      opacity: 0.85; pointer-events: none;
+    .form-container {
+      background-color: var(--paper); 
+      width: 100%;
+      position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
     }
-    .inner { position: relative; z-index: 1; padding: 48px 24px 56px; }
-    @media (min-width: 768px) { .inner { padding: 72px 72px 80px; } }
 
-    .top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-    .brand { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 3px; color: var(--ink); text-decoration: none; }
-    .langs { display: flex; gap: 2px; }
-    .lang-btn { background: none; border: 0; border-bottom: 1px solid transparent; color: var(--sub); padding: 6px 10px; cursor: pointer; font: 600 12px 'Montserrat', sans-serif; letter-spacing: 1.5px; }
+    .form-container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 360px;
+      background-image: url('https://lh3.googleusercontent.com/d/1vF_xYfKgIHLnQSdyMD83NM1fA65iAAym'); 
+      background-size: cover; background-position: top center;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      z-index: 0; opacity: 0.9;
+    }
+
+    .form-inner { position: relative; z-index: 1; flex-grow: 1; }
+    .lang-switcher { text-align: right; margin-bottom: 25px; position: relative; z-index: 2; }
+    
+    .lang-btn { 
+      background: transparent; border: none; 
+      color: var(--sub); padding: 5px 8px; cursor: pointer; 
+      font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; 
+      letter-spacing: 1px; transition: 0.3s; margin-left: 2px; 
+    }
     .lang-btn:hover { color: var(--ink); }
-    .lang-btn.active { color: var(--wine); border-bottom-color: var(--wine); }
+    .lang-btn.active { color: var(--wine); border-bottom: 2px solid var(--wine); font-weight: 700; }
 
-    header.mast { text-align: center; margin-bottom: 44px; position: relative; }
-    .eyebrow { font: 600 13px 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 4px; color: var(--sub); margin-bottom: 10px; }
-    .season-script { font-family: 'Pinyon Script', cursive; font-size: 88px; color: var(--wine); position: absolute; top: -18px; left: 50%; transform: translateX(-50%); opacity: 0.12; pointer-events: none; white-space: nowrap; }
-    .season { font: 800 20px 'Montserrat', sans-serif; letter-spacing: 2px; color: var(--wine); margin-bottom: 4px; }
-    h1 { font-size: 30px; font-weight: 700; letter-spacing: -1px; margin: 0 0 6px; line-height: 1.3; }
-    @media (min-width: 768px) { h1 { font-size: 32px; } }
-    .title-sub { font: 700 14px 'Montserrat', 'Pretendard', sans-serif; letter-spacing: 6px; text-transform: uppercase; margin-top: 10px; }
-    .verse { margin: 26px auto 0; display: inline-flex; flex-direction: column; align-items: center; position: relative; padding: 4px 16px; }
-    .verse::before { content: '“'; font-family: 'Cormorant Garamond', serif; font-size: 72px; color: var(--wine); opacity: 0.12; position: absolute; top: -18px; left: -10px; line-height: 1; pointer-events: none; }
-    .verse-main { font: 700 22px 'Gowun Batang', serif; letter-spacing: -0.5px; }
-    .verse-ref { font: 600 12px 'Montserrat', 'Pretendard', sans-serif; letter-spacing: 2px; color: var(--sub); margin-top: 6px; }
+    .header-labels { text-align: center; margin-bottom: 30px; line-height: 1.2; position: relative; z-index: 2; }
+    .label-eng-top { font-family: 'Cormorant Garamond', serif; text-transform: uppercase; letter-spacing: 3px; font-size: 12px; margin-bottom: 8px; color: var(--sub); font-weight: 600; word-break: keep-all; }
+    .season-script { font-family: 'Pinyon Script', cursive; color: var(--wine); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); opacity: 0.12; pointer-events: none; }
+    .title-eng { font-family: 'Montserrat', sans-serif; font-weight: 800; color: var(--wine); margin-bottom: 4px; letter-spacing: 1.5px; }
+    .title-kor { font-family: 'Pretendard', sans-serif; font-weight: 700; color: var(--ink); margin-bottom: 8px; letter-spacing: -1px; word-break: keep-all; }
+    .title-sub { font-family: 'Montserrat', 'Pretendard', sans-serif; font-weight: 700; color: var(--ink); letter-spacing: 3px; text-transform: uppercase; margin-top: 10px; }
 
-    .tabs { display: flex; border-bottom: 0.5px solid var(--hairline); margin-bottom: 40px; }
-    .tab { flex: 1; background: none; border: 0; border-bottom: 1px solid transparent; padding: 16px 0; cursor: pointer; color: var(--sub); font: 600 16px 'Pretendard', sans-serif; letter-spacing: -0.2px; margin-bottom: -0.5px; }
-    .tab.active { color: var(--wine); border-bottom-color: var(--wine); }
+    .theme-verse-wrap { margin: 20px auto 0; position: relative; display: inline-flex; flex-direction: column; align-items: center; padding: 5px 15px; }
+    .theme-verse-wrap::before { content: '“'; font-family: 'Cormorant Garamond', serif; color: var(--wine); opacity: 0.12; position: absolute; line-height: 1; pointer-events: none; }
+    .theme-verse-main { font-family: 'Gowun Batang', serif; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; z-index: 1; }
+    .theme-verse-ref { font-family: 'Montserrat', 'Pretendard', sans-serif; font-weight: 600; color: var(--sub); letter-spacing: 1px; margin-top: 6px; z-index: 1; }
 
-    .section-label { font: 600 11px 'Montserrat', sans-serif; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin: 0 0 18px; }
-    .block { margin-bottom: 44px; }
+    .tabs { display: flex; border-bottom: 0.5px solid var(--hairline); margin-bottom: 25px; }
+    .tab { flex: 1; text-align: center; padding: 14px 0; cursor: pointer; color: var(--sub); font-weight: 600; transition: 0.3s; letter-spacing: -0.2px; }
+    .tab.active { color: var(--wine); border-bottom: 2px solid var(--wine); }
 
-    .grid { display: grid; grid-template-columns: 1fr; gap: 28px 40px; }
-    @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
-    .full { grid-column: 1 / -1; }
+    .form-section { display: none; animation: fadeIn 0.4s ease; }
+    .form-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .field label, .field .lbl { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--sub); letter-spacing: -0.2px; }
-    .req { color: var(--wine); margin-left: 3px; font-weight: 700; }
-    .opt { color: var(--muted); font-weight: 400; font-size: 12.5px; margin-left: 4px; }
-    input[type=text], input[type=email], input[type=tel], select, textarea {
-      width: 100%; padding: 11px 0; background: transparent; border: 0; border-bottom: 0.5px solid var(--hairline); border-radius: 0;
-      font: 400 16px 'Pretendard', sans-serif; color: var(--ink); outline: none; transition: border-color .2s;
-      -webkit-appearance: none; appearance: none;
+    .grid-wrap { display: grid; grid-template-columns: 1fr; gap: 20px 0; }
+    .full-width { grid-column: 1 / -1; }
+
+    .input-group { width: 100%; }
+    .input-group label { display: block; font-family: 'Pretendard', sans-serif; font-weight: 600; margin-bottom: 6px; color: var(--sub); letter-spacing: -0.2px; }
+    
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+      width: 100%; background: transparent; border: none; border-bottom: 0.5px solid var(--hairline);
+      font-family: 'Pretendard', sans-serif; font-weight: 400; box-sizing: border-box; outline: none; transition: 0.3s; color: var(--ink); border-radius: 0;
+      -webkit-appearance: none;
     }
-    select { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6' fill='none' stroke='%2375696D'/%3E%3C/svg%3E") right 2px center no-repeat; padding-right: 18px; }
-    textarea { resize: vertical; line-height: 1.6; }
-    input::placeholder, textarea::placeholder { color: #c9c0c1; }
-    input:focus, select:focus, textarea:focus { border-bottom-color: var(--wine); }
-    .field.bad input, .field.bad select, .field.bad textarea, td.bad input, td.bad select { border-bottom: 1px solid var(--err) !important; }
-    .field .hint { font-size: 12.5px; color: var(--err); margin-top: 6px; display: none; }
-    .field.bad .hint { display: block; }
-    #f-track { font-weight: 600; color: var(--wine); }
+    select { background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="24" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>'); background-repeat: no-repeat; background-position: right center; background-size: 16px; padding-right: 20px; }
+    input::placeholder, textarea::placeholder { color: #cfc7c8; font-weight: 400; }
+    input:focus, select:focus, textarea:focus { border-bottom: 1px solid var(--wine); }
 
-    .seg { display: flex; border: 0.5px solid var(--hairline); }
-    .seg button { flex: 1; background: none; border: 0; padding: 12px 8px; cursor: pointer; font: 600 14px 'Pretendard', sans-serif; color: var(--sub); }
-    .seg button + button { border-left: 0.5px solid var(--hairline); }
-    .seg button.on { color: var(--wine); background: var(--wine-soft); }
-    .field.bad .seg { border-color: var(--err); }
+    .fee-notice-card { margin-top: 10px; margin-bottom: 25px; border: 0.5px solid var(--hairline); background: rgba(255, 255, 255, 0.6); display: none; animation: fadeIn 0.3s ease; }
+    .fee-notice-card.visible { display: block; }
+    .fee-card-header { display: flex; flex-direction: column; gap: 6px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 10px; margin-bottom: 12px; }
+    .fee-track-name { font-weight: 700; color: var(--wine); word-break: keep-all; line-height: 1.4; }
+    .fee-account { font-family: 'Montserrat', 'Pretendard', sans-serif; color: var(--sub); font-weight: 500; }
+    
+    .fee-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; flex-wrap: wrap; gap: 4px; }
+    .fee-row .fee-label { color: var(--sub); font-weight: 500; }
+    .fee-row .fee-val { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--ink); letter-spacing: 0.5px; }
+    
+    .all-fee-toggle { color: var(--sub); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; display: inline-block; margin-top: 5px; margin-bottom: 25px; }
+    .all-fee-modal { display: none; border: 0.5px solid var(--hairline); background: #fff; margin-bottom: 25px; }
+    .all-fee-modal.active { display: block; animation: fadeIn 0.3s ease; }
+    .all-fee-item { margin-bottom: 15px; padding-bottom: 12px; border-bottom: 0.5px dashed var(--hairline); }
+    .all-fee-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .all-fee-item h4 { margin: 0 0 4px 0; color: var(--wine); font-weight: 700; line-height: 1.4; word-break: keep-all; }
+    .all-fee-item p { margin: 2px 0; color: var(--sub); line-height: 1.5; word-break: keep-all; }
 
-    .fee { margin-top: 22px; border: 0.5px solid var(--hairline); background: rgba(255,255,255,0.55); padding: 22px 24px; display: none; }
-    .fee.show { display: block; }
-    .fee-head { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: space-between; align-items: baseline; border-bottom: 0.5px solid var(--hairline); padding-bottom: 12px; margin-bottom: 12px; }
-    .fee-name { font-size: 15.5px; font-weight: 700; color: var(--wine); }
-    .fee-acc { font: 500 13px 'Montserrat', 'Pretendard', sans-serif; color: var(--sub); }
-    .fee-row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 14px; }
-    .fee-row span:first-child { color: var(--sub); }
-    .fee-row span:last-child { font: 700 14px 'Montserrat', sans-serif; letter-spacing: .3px; white-space: nowrap; }
-    .fee-row.dim span { color: var(--muted) !important; }
-    .fee-split { border-top: 0.5px dashed var(--hairline); margin-top: 6px; padding-top: 6px; }
-    .fee-note { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+    .table-container { margin-top: 35px; border-top: 0.5px solid var(--ink); padding-top: 25px; }
+    .table-title { font-family: 'Montserrat', sans-serif; color: var(--wine); font-weight: 700; margin-bottom: 6px; }
+    .table-desc { margin-bottom: 15px; color: var(--sub); letter-spacing: -0.3px; font-weight: 400; line-height: 1.4; word-break: keep-all; }
+    .table-responsive { overflow-x: auto; width: 100%; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+    table { width: 100%; min-width: 900px; border-collapse: collapse; border-bottom: 0.5px solid var(--ink); }
+    th, td { border: none; border-bottom: 0.5px solid var(--hairline); text-align: left; }
+    th { background: transparent; color: var(--ink); font-weight: 600; font-family: 'Pretendard', sans-serif; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
+    td input, td select { border: none !important; width: 100%; text-align: left; font-family: 'Pretendard', sans-serif; font-weight: 400; }
+    td input:focus, td select:focus { border-bottom: 0.5px solid var(--wine) !important; }
 
-    .linkish { background: none; border: 0; padding: 0; font: 400 13.5px 'Pretendard', sans-serif; color: var(--sub); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; margin-top: 14px; }
-    .linkish:hover { color: var(--wine); }
-    .all-fees { display: none; border-top: 0.5px solid var(--hairline); margin-top: 16px; }
-    .all-fees.show { display: block; }
-    .all-fees .item { padding: 14px 0; border-bottom: 0.5px dashed var(--hairline); }
-    .all-fees h4 { margin: 0 0 4px; font-size: 14.5px; color: var(--wine); }
-    .all-fees p { margin: 2px 0; font-size: 13px; color: var(--sub); line-height: 1.6; }
+    .btn-add-row { background: transparent; border: none; color: var(--sub); padding: 15px 0; cursor: pointer; font-family: 'Pretendard', sans-serif; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; margin-top: 5px; }
+    .btn-submit { width: 100%; font-family: 'Pretendard', sans-serif; font-weight: 600; cursor: pointer; transition: 0.3s; background-color: var(--ink); color: var(--paper); border: none; margin-top: 35px; letter-spacing: 1px; }
 
-    .pane { display: none; }
-    .pane.active { display: block; animation: fade .35s ease; }
-    @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    @media (prefers-reduced-motion: reduce) { .pane.active { animation: none; } }
+    #success-message { display: none; text-align: center; padding: 20px 10px; }
+    #success-message h2 { font-family: 'Montserrat', sans-serif; color: var(--wine); margin-bottom: 12px; font-weight: 700; }
+    #success-message p { line-height: 1.5; color: var(--ink); font-weight: 400; margin: 0 0 10px 0; word-break: keep-all; }
+    #success-message a { color: var(--wine); text-decoration: none; border-bottom: 1px solid var(--wine); font-weight: 600; padding-bottom: 2px; }
 
-    .members { margin-top: 48px; border-top: 0.5px solid var(--ink); padding-top: 28px; }
-    .members-title { font: 700 20px 'Montserrat', sans-serif; color: var(--wine); margin-bottom: 6px; }
-    .members-desc { font-size: 13px; color: var(--sub); margin-bottom: 18px; line-height: 1.6; }
-    .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 8px; }
-    table { width: 100%; min-width: 960px; border-collapse: collapse; border-bottom: 0.5px solid var(--ink); }
-    th, td { border-bottom: 0.5px solid var(--hairline); padding: 10px 8px; text-align: left; font-size: 14.5px; }
-    th { font-weight: 600; font-size: 13.5px; color: var(--ink); white-space: nowrap; }
-    td:first-child { font: 600 14px 'Montserrat', sans-serif; color: var(--muted); width: 40px; }
-    td input, td select { border-bottom-color: transparent; padding: 8px 0; font-size: 15px; }
-    td input:focus, td select:focus { border-bottom-color: var(--wine); }
+    .success-summary-card { margin: 25px auto; max-width: 100%; text-align: left; border: 0.5px solid var(--hairline); background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+    .summary-head { font-weight: 700; color: var(--wine); margin-bottom: 12px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 8px; }
+    .summary-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; color: var(--ink); border-bottom: 0.5px dashed rgba(205, 195, 194, 0.4); }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-row .label { color: var(--sub); }
+    .summary-row .val { font-weight: 600; word-break: keep-all; line-height: 1.4; }
 
-    .consent { border: 0.5px solid var(--hairline); padding: 20px 22px; margin-top: 44px; }
-    .consent-check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 14.5px; font-weight: 600; line-height: 1.5; }
-    .consent-check input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--wine); flex: none; }
-    .consent-body { display: none; font-size: 13px; color: var(--sub); line-height: 1.75; margin-top: 12px; padding-top: 12px; border-top: 0.5px dashed var(--hairline); }
-    .consent-body.show { display: block; }
-    .consent-body ul { margin: 0; padding-left: 18px; }
-    .consent.bad { border-color: var(--err); }
+    .refund-box { margin-top: 20px; padding-top: 15px; border-top: 0.5px dashed var(--hairline); text-align: left; }
+    .refund-box h3 { font-weight: 700; color: var(--ink); margin: 0 0 8px 0; }
+    .refund-box ul { color: var(--sub); padding-left: 16px; line-height: 1.6; margin: 0; font-weight: 400; }
+    .refund-box ul li { margin-bottom: 4px; word-break: keep-all; }
 
-    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    /* =========================================
+       📱 모바일 최적화 (기본 - 화면 꽉 차게, 글씨 축소)
+       ========================================= */
+    @media (max-width: 767px) {
+      body { padding: 0; }
+      .form-container { min-height: 100vh; border-radius: 0; box-shadow: none; }
+      .form-inner { padding: 30px 15px 40px; }
+      
+      .title-eng { font-size: 18px; }
+      .title-kor { font-size: 22px; }
+      .title-sub { font-size: 13px; }
+      .season-script { font-size: 70px; top: -5px; }
+      
+      .theme-verse-wrap::before { font-size: 45px; top: -8px; left: -5px; }
+      .theme-verse-main { font-size: 18px; }
+      .theme-verse-ref { font-size: 11px; }
 
-    .form-msg { display: none; margin-top: 28px; padding: 14px 16px; border-left: 2px solid var(--err); background: rgba(163,36,59,0.05); font-size: 14px; line-height: 1.6; color: var(--err); }
-    .form-msg.show { display: block; }
+      .tab { font-size: 15px; }
+      .input-group label { font-size: 13.5px; }
+      input[type="text"], input[type="email"], input[type="tel"], select, textarea { font-size: 14.5px; padding: 10px 0; }
+      
+      .fee-notice-card { padding: 15px; }
+      .fee-track-name { font-size: 14px; }
+      .fee-account { font-size: 12px; }
+      .fee-row { font-size: 13px; }
+      .all-fee-toggle { font-size: 12.5px; }
+      .all-fee-modal { padding: 15px; }
+      .all-fee-item h4 { font-size: 13.5px; }
+      .all-fee-item p { font-size: 12.5px; }
 
-    .submit { width: 100%; margin-top: 28px; padding: 20px; background: var(--ink); color: var(--paper); border: 0; cursor: pointer; font: 600 16px 'Pretendard', sans-serif; letter-spacing: 2px; transition: background .2s; }
-    .submit:hover { background: var(--wine); }
-    .submit:disabled { background: var(--muted); cursor: progress; }
-    .submit:focus-visible, .tab:focus-visible, .seg button:focus-visible, .lang-btn:focus-visible, .linkish:focus-visible { outline: 1px solid var(--wine); outline-offset: 3px; }
+      .table-title { font-size: 18px; }
+      .table-desc { font-size: 12.5px; }
+      th, td { padding: 10px 6px; font-size: 13.5px; }
+      th { font-size: 13.5px; }
+      td input, td select { font-size: 13.5px; padding: 6px 0; }
+      .btn-add-row { font-size: 13.5px; }
+      
+      .btn-submit { font-size: 15px; padding: 16px; }
 
-    #done { display: none; text-align: center; padding: 20px 0 10px; }
-    #done.show { display: block; animation: fade .4s ease; }
-    #done h2 { font: 700 30px 'Montserrat', sans-serif; color: var(--wine); margin: 0 0 14px; letter-spacing: .5px; }
-    #done .lead { font-size: 15.5px; line-height: 1.8; margin: 0; }
-    .receipt { display: inline-block; margin: 26px 0 0; font: 600 13px 'Montserrat', sans-serif; letter-spacing: 2px; color: var(--sub); }
-    .receipt b { display: block; font-size: 22px; color: var(--ink); letter-spacing: 1.5px; margin-top: 4px; }
-    .summary { margin: 30px auto 0; max-width: 620px; text-align: left; border: 0.5px solid var(--hairline); background: #fff; padding: 26px 26px 22px; }
-    .summary-head { font-size: 16px; font-weight: 700; color: var(--wine); border-bottom: 0.5px solid var(--hairline); padding-bottom: 10px; margin-bottom: 8px; }
-    .s-row { display: flex; justify-content: space-between; gap: 16px; padding: 8px 0; font-size: 14px; }
-    .s-row span:first-child { color: var(--sub); flex: none; }
-    .s-row span:last-child { font-weight: 600; text-align: right; }
-    .refund { margin-top: 18px; padding-top: 16px; border-top: 0.5px dashed var(--hairline); }
-    .refund h3 { font-size: 14px; margin: 0 0 8px; }
-    .refund ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--sub); line-height: 1.85; }
-    .next { margin-top: 34px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
-    .btn-line { display: inline-block; padding: 15px 28px; border: 0.5px solid var(--ink); color: var(--ink); text-decoration: none; font-weight: 600; font-size: 15px; letter-spacing: .5px; }
-    .btn-line:hover { border-color: var(--wine); color: var(--wine); }
-    .next p { margin: 0; font-size: 13px; color: var(--sub); line-height: 1.7; max-width: 520px; }
-    .next a.plain { color: var(--wine); }
+      #success-message h2 { font-size: 24px; }
+      #success-message p { font-size: 14.5px; }
+      .success-summary-card { padding: 20px 15px; }
+      .summary-head { font-size: 15px; }
+      .summary-row { font-size: 13.5px; }
+      .summary-row .label { font-size: 12.5px; }
+      .refund-box h3 { font-size: 13.5px; }
+      .refund-box ul { font-size: 12.5px; }
+    }
 
-    footer { margin-top: 28px; text-align: center; color: rgba(255,255,255,0.7); font: 600 10.5px 'Montserrat', sans-serif; letter-spacing: 2.5px; line-height: 2; }
-    footer a { color: inherit; text-decoration: none; border-bottom: 0.5px solid rgba(255,255,255,0.4); }
+    /* =========================================
+       💻 PC / 태블릿 최적화 (가로 2단 그리드 적용)
+       ========================================= */
+    @media (min-width: 768px) {
+      body { padding: 60px 15px; }
+      .form-container { max-width: 860px; margin: 0 auto; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.15); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+      .form-inner { padding: 70px 60px 50px; }
+      
+      .grid-wrap { grid-template-columns: 1fr 1fr; gap: 30px 40px; }
+      
+      .label-eng-top { font-size: 14px; letter-spacing: 4px; }
+      .title-eng { font-size: 22px; }
+      .title-kor { font-size: 32px; }
+      .title-sub { font-size: 15px; }
+      .season-script { font-size: 90px; }
+      
+      .theme-verse-wrap::before { font-size: 55px; top: -12px; left: -10px; }
+      .theme-verse-main { font-size: 21px; }
+      .theme-verse-ref { font-size: 12px; }
+
+      .tab { font-size: 16px; padding: 16px 0; }
+      .input-group label { font-size: 14.5px; margin-bottom: 8px; }
+      input[type="text"], input[type="email"], input[type="tel"], select, textarea { font-size: 15px; padding: 12px 0; }
+
+      .fee-notice-card { padding: 20px; }
+      .fee-track-name { font-size: 15px; }
+      .fee-account { font-size: 13px; }
+      .fee-row { font-size: 14px; }
+      .all-fee-toggle { font-size: 13.5px; }
+      .all-fee-modal { padding: 20px; }
+      .all-fee-item h4 { font-size: 14.5px; }
+      .all-fee-item p { font-size: 13px; }
+
+      .table-title { font-size: 20px; }
+      .table-desc { font-size: 13px; }
+      th, td { padding: 12px 8px; font-size: 14px; }
+      th { font-size: 14px; }
+      td input, td select { font-size: 14px; padding: 8px 0; }
+      .btn-add-row { font-size: 14px; }
+
+      .btn-submit { font-size: 16px; padding: 20px; }
+
+      .fee-card-header { flex-direction: row; align-items: baseline; }
+      .summary-row { flex-direction: row; justify-content: space-between; align-items: center; border-bottom: none; padding: 8px 0; }
+      
+      #success-message h2 { font-size: 28px; }
+      #success-message p { font-size: 15px; }
+      .success-summary-card { padding: 30px; }
+      .summary-head { font-size: 16px; }
+      .summary-row { font-size: 14px; }
+      .summary-row .label { font-size: 13px; }
+      .refund-box h3 { font-size: 14px; }
+      .refund-box ul { font-size: 13px; }
+    }
   </style>
 </head>
 <body>
-  <main class="sheet">
-    <div class="inner">
-      <div class="top">
-        <a class="brand" href="/">ANM</a>
-        <div class="langs" role="group" aria-label="Language">
-          <button type="button" class="lang-btn active" data-lang="ko">KOR</button>
-          <button type="button" class="lang-btn" data-lang="en">ENG</button>
-          <button type="button" class="lang-btn" data-lang="zh">CHN</button>
+
+  <div class="form-container" id="main-container">
+    <div class="form-inner">
+      
+      <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLang('ko')">KOR</button>
+        <button class="lang-btn" onclick="setLang('en')">ENG</button>
+        <button class="lang-btn" onclick="setLang('zh')">CHN</button>
+      </div>
+
+      <div class="header-labels">
+        <div class="label-eng-top">All Nations Worship & Praise School</div>
+        <div class="season-script">Winter</div>
+        <div class="title-eng">2027 WINTER</div>
+        <div class="title-kor" data-i18n="title_main">올네이션스 경배와찬양학교 및 7000학교</div>
+        <div class="title-sub" data-i18n="title_sub">Application</div>
+        
+        <div class="theme-verse-wrap">
+          <div class="theme-verse-main" data-i18n="theme_verse_main">"얽매이지 않는 삶"</div>
+          <div class="theme-verse-ref" data-i18n="theme_verse_ref">(고전 6:12)</div>
         </div>
       </div>
 
-      <header class="mast" id="mast">
-        <div class="eyebrow">All Nations Worship &amp; Praise School</div>
-        <div class="season-script" aria-hidden="true">Winter</div>
-        <div class="season">2027 WINTER</div>
-        <h1 data-i18n="title_main">올네이션스 경배와찬양학교 및 7000학교</h1>
-        <div class="title-sub" data-i18n="title_sub">온라인 신청</div>
-        <div class="verse">
-          <div class="verse-main" data-i18n="verse">‘얽매이지 않는 삶’</div>
-          <div class="verse-ref" data-i18n="verse_ref">고전 6:12</div>
-        </div>
-      </header>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('individual')" data-i18n="tab_ind">개인 신청</div>
+        <div class="tab" onclick="switchTab('group')" data-i18n="tab_grp">단체 신청</div>
+      </div>
 
-      <form id="form" novalidate autocomplete="on">
-        <div class="tabs" role="tablist">
-          <button type="button" class="tab active" role="tab" aria-selected="true" data-type="개인" data-i18n="tab_ind">개인 신청</button>
-          <button type="button" class="tab" role="tab" aria-selected="false" data-type="단체" data-i18n="tab_grp">단체 신청</button>
+      <form id="application-form">
+        <input type="hidden" id="form-type" name="type" value="개인">
+        
+        <div class="input-group full-width" style="margin-bottom: 10px;">
+          <label data-i18n="track_label">훈련 트랙 선택 (필수)</label>
+          <select name="track" id="global-track" onchange="updateFeeCard(this.value)" style="font-weight: 600; color: var(--wine);">
+            <option value="" data-i18n="track_select">훈련받고자 하는 학교를 선택해주세요</option>
+            <option value="청지기">1. 청지기들을 위한 경배와찬양학교 (8박 10일 | 1/11 ~ 1/16, 1/18 ~ 1/21)</option>
+            <option value="미래세대">2. 미래세대를 위한 경배와찬양학교 (3박 4일 | 1/11 ~ 1/14)</option>
+            <option value="어린이">3. 어린이를 위한 경배와찬양학교 (2박 3일 | 1/14 ~ 1/16)</option>
+            <option value="대학청년">4. 대학 청년 및 일반인을 위한 경배와찬양학교 (3박 4일 | 1/18 ~ 1/21)</option>
+            <option value="온라인">5. 온라인 등록 (비대면 훈련)</option>
+          </select>
         </div>
 
-        <!-- 1. 학교 선택 -->
-        <section class="block">
-          <p class="section-label" data-i18n="sec_school">01 · School</p>
-          <div class="grid">
-            <div class="field full" data-f="track">
-              <label for="f-track"><span data-i18n="track_label">훈련받고자 하는 학교</span><span class="req">*</span></label>
-              <select id="f-track" name="track">
-                <option value="" data-i18n="track_select">학교를 선택해 주세요</option>
-                <option value="청지기" data-i18n="tr_1">청지기들을 위한 경배와찬양학교 · 8박 10일 · 1/11~16, 1/18~21</option>
-                <option value="미래세대" data-i18n="tr_2">미래세대를 위한 경배와찬양학교 · 3박 4일 · 1/11~14</option>
-                <option value="어린이" data-i18n="tr_3">어린이를 위한 경배와찬양학교 · 2박 3일 · 1/14~16</option>
-                <option value="대학청년" data-i18n="tr_4">대학 청년 및 일반인을 위한 경배와찬양학교 · 3박 4일 · 1/18~21</option>
+        <div id="fee-notice-box" class="fee-notice-card">
+          <div class="fee-card-header">
+            <span class="fee-track-name" id="fee-card-title">-</span>
+            <span class="fee-account" id="fee-card-acc">-</span>
+          </div>
+          <div id="fee-card-content"></div>
+        </div>
+
+        <a class="all-fee-toggle" onclick="toggleAllFees()" data-i18n="toggle_fee">+ 전체 훈련비 및 계좌 정보 펼쳐보기</a>
+        
+        <div id="all-fee-box" class="all-fee-modal">
+          <div class="all-fee-item">
+            <h4>1. 청지기들을 위한 경배와찬양학교 (8박 10일)</h4>
+            <p>우리은행 1005-604-700231 경배와찬양</p>
+            <p>· 선등록 (~12/27 주일): 190,000원<br>· 일반등록 (12/28~): 220,000원</p>
+          </div>
+          <div class="all-fee-item">
+            <h4>2. 미래세대를 위한 경배와찬양학교 (3박 4일)</h4>
+            <p>우리은행 1005-604-700231 경배와찬양</p>
+            <p>· 선등록 (~12/27): 일반·대학청년 120,000 / 십대 100,000 / 어린이 80,000</p>
+            <p>· 일반등록 (12/28~): 일반·대학청년 140,000 / 십대 120,000 / 어린이 100,000</p>
+          </div>
+          <div class="all-fee-item">
+            <h4>3. 어린이를 위한 경배와찬양학교 (2박 3일)</h4>
+            <p>우리은행 1005-404-679551 경배와찬양</p>
+            <p>· 선등록 (~12/27): 일반·대학청년 100,000 / 십대 80,000 / 어린이 70,000</p>
+            <p>· 일반등록 (12/28~): 일반·대학청년 120,000 / 십대 100,000 / 어린이 90,000</p>
+          </div>
+          <div class="all-fee-item">
+            <h4>4. 대학 청년 및 일반인을 위한 경배와찬양학교 (3박 4일)</h4>
+            <p>우리은행 1005-604-700231 경배와찬양</p>
+            <p>· 선등록 (~12/27): 일반·대학청년 120,000 / 십대 100,000 / 어린이 80,000</p>
+            <p>· 일반등록 (12/28~): 일반·대학청년 140,000 / 십대 120,000 / 어린이 100,000</p>
+          </div>
+          <div class="all-fee-item">
+            <h4>5. 온라인 등록 (비대면 훈련)</h4>
+            <p>우리은행 1005-604-700231 경배와찬양</p>
+            <p>· 청지기: 75,000원 | 미래세대: 55,000원 | 어린이: 40,000원 | 대학청년/일반: 55,000원</p>
+          </div>
+        </div>
+
+        <div id="individual-section" class="form-section active">
+          <div class="grid-wrap">
+            <div class="input-group"><label data-i18n="name">이름</label><input type="text" name="ind_name" data-i18n-ph="req_x"></div>
+            <div class="input-group"><label data-i18n="gender">성별</label><select name="ind_gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></div>
+            
+            <div class="input-group"><label data-i18n="birth">생년월일</label><input type="text" name="ind_birth" placeholder="YYYY/MM/DD"></div>
+            
+            <div class="input-group"><label data-i18n="phone">연락처</label><input type="tel" name="ind_phone" placeholder="010-0000-0000"></div>
+            <div class="input-group full-width"><label data-i18n="email">E-mail</label><input type="email" name="ind_email"></div>
+            <div class="input-group full-width"><label data-i18n="address">주소</label><input type="text" name="ind_address"></div>
+            
+            <div class="input-group"><label data-i18n="church">참석 교회</label><input type="text" name="ind_church"></div>
+            <div class="input-group"><label data-i18n="role">직분</label><input type="text" name="ind_role"></div>
+            <div class="input-group"><label data-i18n="category">구분</label>
+              <select name="ind_category">
+                <option value=""></option><option value="어린이" data-i18n="c1">어린이</option><option value="중고등부" data-i18n="c2">중고등부</option>
+                <option value="대학생 청년" data-i18n="c3">대학생 청년</option><option value="교사 교역자" data-i18n="c4">교사 교역자</option><option value="선교사" data-i18n="c5">선교사</option>
               </select>
-              <div class="hint" data-i18n="h_track">학교를 선택해 주세요.</div>
             </div>
-            <div class="field full" data-f="mode">
-              <span class="lbl"><span data-i18n="mode_label">참여 방식</span><span class="req">*</span></span>
-              <div class="seg" role="radiogroup">
-                <button type="button" role="radio" aria-checked="true" class="on" data-mode="현장" data-i18n="mode_onsite">현장 참석</button>
-                <button type="button" role="radio" aria-checked="false" data-mode="온라인" data-i18n="mode_online">온라인 (비대면)</button>
-              </div>
+            <div class="input-group"><label data-i18n="training">기존 훈련 여부</label>
+              <select name="ind_training">
+                <option value=""></option><option value="처음 참석" data-i18n="t1">처음 참석</option><option value="기존 참석" data-i18n="t2">기존 참석</option><option value="훈련생" data-i18n="t3">훈련생</option>
+              </select>
             </div>
+            <div class="input-group full-width"><label data-i18n="school">학교</label><input type="text" name="ind_school" data-i18n-ph="opt"></div>
+            <div class="input-group"><label data-i18n="major">학과</label><input type="text" name="ind_major" data-i18n-ph="major"></div>
+            <div class="input-group"><label data-i18n="grade">학년</label><input type="text" name="ind_grade" data-i18n-ph="grade"></div>
+            <div class="input-group full-width"><label data-i18n="job">직장</label><input type="text" name="ind_job" data-i18n-ph="opt"></div>
+            
+            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="ind_prayer" rows="3"></textarea></div>
+          </div>
+        </div>
+
+        <div id="group-section" class="form-section">
+          <div class="grid-wrap">
+            <div class="input-group full-width"><label data-i18n="church_name">교회명</label><input type="text" name="grp_churchName" data-i18n-ph="req_x"></div>
+            <div class="input-group full-width"><label data-i18n="address">주소</label><input type="text" name="grp_address"></div>
+            
+            <div class="input-group"><label data-i18n="pastor">교역자명</label><input type="text" name="grp_pastorName"></div>
+            <div class="input-group"><label data-i18n="pastor_att">교역자 참석 여부</label><select name="grp_pastorAttend"><option value=""></option><option value="참석" data-i18n="att_y">참석</option><option value="불참" data-i18n="att_n">불참</option></select></div>
+            <div class="input-group full-width"><label data-i18n="pastor_phone">교역자 연락처</label><input type="tel" name="grp_pastorPhone"></div>
+            
+            <div class="input-group"><label data-i18n="rep_name">인솔자명</label><input type="text" name="grp_repName"></div>
+            <div class="input-group"><label data-i18n="rep_phone">인솔자 연락처</label><input type="tel" name="grp_repPhone"></div>
+            <div class="input-group full-width"><label data-i18n="rep_email">인솔자 E-mail</label><input type="email" name="grp_repEmail"></div>
+            
+            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="grp_prayer" rows="3"></textarea></div>
           </div>
 
-          <div class="fee" id="fee">
-            <div class="fee-head"><span class="fee-name" id="fee-name"></span><span class="fee-acc" id="fee-acc"></span></div>
-            <div id="fee-rows"></div>
-          </div>
-          <button type="button" class="linkish" id="toggle-fees" data-i18n="toggle_fee">전체 훈련비와 계좌 보기</button>
-          <div class="all-fees" id="all-fees"></div>
-        </section>
-
-        <!-- 2. 개인 -->
-        <section class="pane active block" id="pane-개인">
-          <p class="section-label" data-i18n="sec_person">02 · Personal</p>
-          <div class="grid">
-            <div class="field" data-f="name"><label for="i-name"><span data-i18n="name">이름</span><span class="req">*</span></label><input id="i-name" type="text" name="name" autocomplete="name"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="gender"><label for="i-gender"><span data-i18n="gender">성별</span><span class="req">*</span></label><select id="i-gender" name="gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="birth"><label for="i-birth"><span data-i18n="birth">생년월일</span><span class="req">*</span></label><input id="i-birth" type="text" name="birth" inputmode="numeric" placeholder="YYMMDD" maxlength="10"><div class="hint" data-i18n="h_birth">6자리로 적어 주세요 (예: 950312).</div></div>
-            <div class="field" data-f="phone"><label for="i-phone"><span data-i18n="phone">휴대폰 번호</span><span class="req">*</span></label><input id="i-phone" type="tel" name="phone" autocomplete="tel" placeholder="010-0000-0000"><div class="hint" data-i18n="h_phone">번호 전체를 적어 주세요. 등록 확인 때 이 번호로 들어갑니다.</div></div>
-            <div class="field full" data-f="email"><label for="i-email"><span data-i18n="email">E-mail</span><span class="req">*</span></label><input id="i-email" type="email" name="email" autocomplete="email"><div class="hint" data-i18n="h_email">이메일 형식을 확인해 주세요.</div></div>
-            <div class="field full" data-f="address"><label for="i-address"><span data-i18n="address">주소</span><span class="req">*</span></label><input id="i-address" type="text" name="address" autocomplete="street-address"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="church"><label for="i-church"><span data-i18n="church">출석 교회</span><span class="req">*</span></label><input id="i-church" type="text" name="church"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="role"><label for="i-role"><span data-i18n="role">직분</span><span class="opt" data-i18n="optional">선택</span></label><input id="i-role" type="text" name="role"></div>
-            <div class="field" data-f="category"><label for="i-category"><span data-i18n="category">구분</span><span class="req">*</span></label><select id="i-category" name="category"><option value=""></option><option value="어린이" data-i18n="c1">어린이</option><option value="중고등부" data-i18n="c2">중고등부</option><option value="대학생 청년" data-i18n="c3">대학생 청년</option><option value="교사 교역자" data-i18n="c4">교사 교역자</option><option value="선교사" data-i18n="c5">선교사</option></select><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="training"><label for="i-training"><span data-i18n="training">경배와찬양학교 참석</span><span class="req">*</span></label><select id="i-training" name="training"><option value=""></option><option value="처음 참석" data-i18n="t1">처음 참석</option><option value="기존 참석" data-i18n="t2">기존 참석</option><option value="훈련생" data-i18n="t3">훈련생</option></select><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field full" data-f="school"><label for="i-school"><span data-i18n="school">학교</span><span class="opt" data-i18n="optional">선택</span></label><input id="i-school" type="text" name="school"></div>
-            <div class="field" data-f="major"><label for="i-major"><span data-i18n="major">학과</span><span class="opt" data-i18n="optional">선택</span></label><input id="i-major" type="text" name="major"></div>
-            <div class="field" data-f="grade"><label for="i-grade"><span data-i18n="grade">학년</span><span class="opt" data-i18n="optional">선택</span></label><input id="i-grade" type="text" name="grade"></div>
-            <div class="field full" data-f="job"><label for="i-job"><span data-i18n="job">직장</span><span class="opt" data-i18n="optional">선택</span></label><input id="i-job" type="text" name="job"></div>
-            <div class="field full" data-f="prayer"><label for="i-prayer"><span data-i18n="prayer">기도제목</span><span class="req">*</span></label><textarea id="i-prayer" name="prayer" rows="4" data-i18n-ph="prayer_ph" placeholder="구체적으로 적어 주시면 훈련 기간 동안 함께 기도합니다."></textarea><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-          </div>
-        </section>
-
-        <!-- 2. 단체 -->
-        <section class="pane block" id="pane-단체">
-          <p class="section-label" data-i18n="sec_group">02 · Group</p>
-          <div class="grid">
-            <div class="field full" data-f="churchName"><label for="g-church"><span data-i18n="church_name">교회명</span><span class="req">*</span></label><input id="g-church" type="text" name="churchName"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field full" data-f="address"><label for="g-address"><span data-i18n="church_address">교회 주소</span><span class="req">*</span></label><input id="g-address" type="text" name="address"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="pastorName"><label for="g-pastor"><span data-i18n="pastor">담당 교역자</span><span class="req">*</span></label><input id="g-pastor" type="text" name="pastorName"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="pastorAttend"><label for="g-attend"><span data-i18n="pastor_att">교역자 참석 여부</span><span class="req">*</span></label><select id="g-attend" name="pastorAttend"><option value=""></option><option value="참석" data-i18n="att_y">참석</option><option value="불참" data-i18n="att_n">불참</option></select><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field full" data-f="pastorPhone"><label for="g-pphone"><span data-i18n="pastor_phone">교역자 연락처</span><span class="req">*</span></label><input id="g-pphone" type="tel" name="pastorPhone" placeholder="010-0000-0000"><div class="hint" data-i18n="h_phone2">번호 전체를 적어 주세요.</div></div>
-            <div class="field" data-f="repName"><label for="g-rep"><span data-i18n="rep_name">인솔자</span><span class="req">*</span></label><input id="g-rep" type="text" name="repName"><div class="hint" data-i18n="h_req">필수 항목입니다.</div></div>
-            <div class="field" data-f="repPhone"><label for="g-rphone"><span data-i18n="rep_phone">인솔자 연락처</span><span class="req">*</span></label><input id="g-rphone" type="tel" name="repPhone" placeholder="010-0000-0000"><div class="hint" data-i18n="h_phone2">번호 전체를 적어 주세요.</div></div>
-            <div class="field full" data-f="repEmail"><label for="g-remail"><span data-i18n="rep_email">인솔자 E-mail</span><span class="req">*</span></label><input id="g-remail" type="email" name="repEmail"><div class="hint" data-i18n="h_email">이메일 형식을 확인해 주세요.</div></div>
-            <div class="field full" data-f="prayer"><label for="g-prayer"><span data-i18n="prayer_grp">교회 기도제목</span><span class="opt" data-i18n="optional">선택</span></label><textarea id="g-prayer" name="prayer" rows="3"></textarea></div>
-          </div>
-
-          <div class="members" data-f="members">
-            <div class="members-title" data-i18n="tbl_title">Group Members</div>
-            <div class="members-desc" data-i18n="tbl_desc">이름을 적은 줄은 이메일·비고를 뺀 모든 칸을 채워 주세요. 휴대폰이 없는 어린이는 보호자 번호를 적어 주세요. 폰에서는 표를 옆으로 밀어서 입력합니다.</div>
-            <div class="scroll">
-              <table>
-                <thead><tr>
-                  <th>No</th><th data-i18n="name">이름</th><th data-i18n="gender">성별</th><th data-i18n="m_phone">연락처</th><th data-i18n="m_email">E-mail (선택)</th>
-                  <th data-i18n="birth">생년월일</th><th data-i18n="category">구분</th><th data-i18n="training_s">참석</th><th data-i18n="note">비고</th>
-                </tr></thead>
-                <tbody id="members"></tbody>
+          <div class="table-container">
+            <div class="table-title" data-i18n="tbl_title">Group Members</div>
+            <div class="table-desc" data-i18n="tbl_desc">* 이름을 입력한 줄은 모든 칸을 채워야 합니다. (해당 없으면 x)<br>(가로로 스크롤 하세요 ↔)</div>
+            <div class="table-responsive">
+              <table id="members-table">
+                <thead>
+                  <tr>
+                    <th style="width:30px;">No</th>
+                    <th style="min-width:75px;" data-i18n="name">이름</th>
+                    <th style="min-width:65px;" data-i18n="gender">성별</th>
+                    <th style="min-width:115px;" data-i18n="phone">연락처</th>
+                    <th style="min-width:130px;" data-i18n="email">E-mail</th>
+                    <th style="min-width:110px;" data-i18n="birth">생년월일</th>
+                    <th style="min-width:95px;" data-i18n="category">구분</th>
+                    <th style="min-width:95px;" data-i18n="training">기존 훈련</th>
+                    <th style="min-width:80px;" data-i18n="note">비고</th>
+                  </tr>
+                </thead>
+                <tbody id="members-body"></tbody>
               </table>
             </div>
-            <button type="button" class="linkish" id="add-row" data-i18n="add_btn">+ 인원 추가</button>
-          </div>
-        </section>
-
-        <!-- 3. 동의 -->
-        <div class="consent" id="consent-box">
-          <label class="consent-check"><input type="checkbox" id="consent"><span data-i18n="consent_label">개인정보 수집·이용에 동의합니다. (필수)</span></label>
-          <button type="button" class="linkish" id="consent-more" data-i18n="consent_more">내용 보기</button>
-          <div class="consent-body" id="consent-body">
-            <ul>
-              <li data-i18n="cs_1">수집 항목: 이름, 성별, 생년월일, 연락처, 이메일, 주소, 교회·직분, 학교·직장, 기도제목 (단체는 명단 포함)</li>
-              <li data-i18n="cs_2">이용 목적: 경배와찬양학교 등록·훈련비 확인·숙소 배정·안내 연락, 이후 경배와찬양학교 안내</li>
-              <li data-i18n="cs_3">보관: 올네이션스 경배와찬양이 관리하며, 외부에 제공하지 않습니다. 삭제를 원하시면 7000school@gmail.com으로 요청해 주세요.</li>
-              <li data-i18n="cs_4">만 14세 미만은 보호자가 내용을 확인하고 동의한 뒤 신청해 주세요. 단체 신청은 인솔자가 참가자(보호자)의 동의를 받아 주세요.</li>
-            </ul>
+            <button type="button" class="btn-add-row" onclick="addTableRow()" data-i18n="add_btn">+ 인원 추가하기</button>
           </div>
         </div>
 
-        <div class="hp" aria-hidden="true"><label>Website<input type="text" id="hp" tabindex="-1" autocomplete="off"></label></div>
-
-        <div class="form-msg" id="form-msg" role="alert"></div>
-        <button type="submit" class="submit" id="submit" data-i18n="submit">신청서 제출하기</button>
+        <button type="button" class="btn-submit" onclick="submitData()" id="submitBtn" data-i18n="submit">신청서 제출하기</button>
       </form>
 
-      <section id="done" aria-live="polite">
-        <h2>Application Complete</h2>
-        <p class="lead" data-i18n="succ_p1">신청이 접수되었습니다. 아래 계좌로 훈련비를 보내 주세요.</p>
-        <div class="receipt"><span data-i18n="receipt">접수번호</span><b id="d-receipt">-</b></div>
+      <div id="success-message">
+        <h2 data-i18n="succ_title">Application Complete</h2>
+        <p data-i18n="succ_p1">신청서 접수가 완료되었습니다.<br>아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.</p>
+        
+        <div class="success-summary-card">
+          <div class="summary-head" id="summary-track-title">훈련 신청 내역</div>
+          <div class="summary-row">
+            <span class="label">입금 계좌</span>
+            <span class="val" id="summary-bank-account">-</span>
+          </div>
+          <div class="summary-row">
+            <span class="label">입금 기한</span>
+            <span class="val">선등록 ~12/27(주일)<br>일반등록 12/28(월)~</span>
+          </div>
 
-        <div class="summary">
-          <div class="summary-head" id="d-track">-</div>
-          <div class="s-row"><span data-i18n="s_who">신청</span><span id="d-who">-</span></div>
-          <div class="s-row"><span data-i18n="s_acc">입금 계좌</span><span id="d-acc">-</span></div>
-          <div class="s-row"><span data-i18n="s_fee">훈련비</span><span id="d-fee">-</span></div>
-          <div class="s-row"><span data-i18n="s_due">기한</span><span data-i18n="s_due_v">선등록 12/27(주일)까지 · 일반등록 12/28(월)부터</span></div>
-          <div class="refund">
-            <h3 data-i18n="refund_title">환불 규정</h3>
+          <div class="refund-box">
+            <h3 data-i18n="refund_title">훈련비 환불 규정</h3>
             <ul>
-              <li data-i18n="refund_1">12월 27일까지: 100% 환불</li>
-              <li data-i18n="refund_2">12월 28일 ~ 1월 10일: 50% 환불</li>
-              <li data-i18n="refund_3">훈련 당일: 환불 불가</li>
-              <li data-i18n="refund_4">모든 환불은 경배와찬양학교가 끝난 뒤 계좌이체로 진행되며, 송금 수수료를 뺀 금액이 환불됩니다.</li>
+              <li data-i18n="refund_1">모든 훈련비 환불은 경배와찬양학교가 마무리된 후에 진행됩니다.</li>
+              <li data-i18n="refund_2">훈련 시작 2주일 전 환불 요청 시: 100% 환불</li>
+              <li data-i18n="refund_3">2주 전 ~ 훈련 전일 환불 요청 시: 80% 환불 (20% 공제)</li>
+              <li data-i18n="refund_4">훈련 당일 환불 요청 시: 50% 환불 (50% 공제)</li>
             </ul>
           </div>
         </div>
 
-        <div class="next">
-          <a class="btn-line" href="/login" data-i18n="go_check">등록·입금 확인하기</a>
-          <p data-i18n="next_note">접수 후 몇 분 안에 등록이 확인됩니다. 신청할 때 적은 이름과 휴대폰 번호로 들어오세요. 단체는 인솔자 번호로 들어올 수 있습니다.</p>
-          <p><a class="plain" href="/" data-i18n="go_home">2027 WINTER 안내 보기</a></p>
-        </div>
-      </section>
-    </div>
-  </main>
+        <p><span data-i18n="succ_p2">상세 안내 및 준비사항은 공식 웹사이트를 확인해 주십시오.</span><br><br>
+        <a href="https://anmschool.vercel.app/" target="_blank">anmschool.vercel.app</a></p>
+      </div>
 
-  <footer>
-    <div>ALL NATIONS WORSHIP &amp; PRAISE MINISTRIES</div>
-    <div><a href="mailto:7000school@gmail.com">7000school@gmail.com</a></div>
-  </footer>
+    </div>
+  </div>
 
   <script>
-  (function () {
-    'use strict';
+    window.addEventListener('load', function() {
+      const imgUrl = "https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG";
+      const img = new Image();
+      img.crossOrigin = "Anonymous"; 
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64; canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(32, 32, 32, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, 64, 64);
+        let link = document.getElementById('dynamic-favicon');
+        link.href = canvas.toDataURL('image/png');
+      };
+      img.src = imgUrl;
+    });
 
-    var API = 'https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec';
-    var PROJECT = '2027W';
-    var ACC_MAIN = '우리은행 1005-604-700231 경배와찬양';
-    var ACC_KIDS = '우리은행 1005-404-679551 경배와찬양';
-
-    // 훈련비 (원). onsite: [선등록, 일반] × {gen, teen, kid} / 청지기는 단일
-    var FEES = {
-      청지기: { acc: ACC_MAIN, flat: [190000, 220000], online: 75000 },
-      미래세대: { acc: ACC_MAIN, pre: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
-      어린이: { acc: ACC_KIDS, pre: [100000, 80000, 70000], reg: [120000, 100000, 90000], online: 40000 },
-      대학청년: { acc: ACC_MAIN, pre: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
+    const feeInfo = {
+      '청지기': { name: '청지기들을 위한 경배와찬양학교 (8박 10일)', acc: '우리은행 1005-604-700231 경배와찬양', html: `<div class="fee-row"><span class="fee-label">선등록 (~12/27 주일)</span><span class="fee-val">190,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28 월부터)</span><span class="fee-val">220,000 원</span></div>` },
+      '미래세대': { name: '미래세대를 위한 경배와찬양학교 (3박 4일)', acc: '우리은행 1005-604-700231 경배와찬양', html: `<div class="fee-row"><span class="fee-label">선등록 (~12/27) 일반·대학청년</span><span class="fee-val">120,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 십대</span><span class="fee-val">100,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 어린이</span><span class="fee-val">80,000 원</span></div><div style="margin-top:8px; border-top:0.5px dashed var(--hairline); padding-top:6px;"><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 일반·대학청년</span><span class="fee-val">140,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 십대</span><span class="fee-val">120,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 어린이</span><span class="fee-val">100,000 원</span></div></div>` },
+      '어린이': { name: '어린이를 위한 경배와찬양학교 (2박 3일)', acc: '우리은행 1005-404-679551 경배와찬양', html: `<div class="fee-row"><span class="fee-label">선등록 (~12/27) 일반·대학청년</span><span class="fee-val">100,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 십대</span><span class="fee-val">80,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 어린이</span><span class="fee-val">70,000 원</span></div><div style="margin-top:8px; border-top:0.5px dashed var(--hairline); padding-top:6px;"><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 일반·대학청년</span><span class="fee-val">120,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 십대</span><span class="fee-val">100,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 어린이</span><span class="fee-val">90,000 원</span></div></div>` },
+      '대학청년': { name: '대학 청년 및 일반인을 위한 경배와찬양학교 (3박 4일)', acc: '우리은행 1005-604-700231 경배와찬양', html: `<div class="fee-row"><span class="fee-label">선등록 (~12/27) 일반·대학청년</span><span class="fee-val">120,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 십대</span><span class="fee-val">100,000 원</span></div><div class="fee-row"><span class="fee-label">선등록 (~12/27) 어린이</span><span class="fee-val">80,000 원</span></div><div style="margin-top:8px; border-top:0.5px dashed var(--hairline); padding-top:6px;"><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 일반·대학청년</span><span class="fee-val">140,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 십대</span><span class="fee-val">120,000 원</span></div><div class="fee-row"><span class="fee-label">일반등록 (12/28~) 어린이</span><span class="fee-val">100,000 원</span></div></div>` },
+      '온라인': { name: '온라인 등록 (비대면 훈련)', acc: '우리은행 1005-604-700231 경배와찬양', html: `<div class="fee-row"><span class="fee-label">청지기 학교 (8박 10일)</span><span class="fee-val">75,000 원</span></div><div class="fee-row"><span class="fee-label">미래세대 학교 (3박 4일)</span><span class="fee-val">55,000 원</span></div><div class="fee-row"><span class="fee-label">어린이 학교 (2박 3일)</span><span class="fee-val">40,000 원</span></div><div class="fee-row"><span class="fee-label">대학청년 및 일반인 (3박 4일)</span><span class="fee-val">55,000 원</span></div>` }
     };
-    var ONLINE_ACC = ACC_MAIN;
 
-    var T = {
+    function updateFeeCard(key) {
+      const box = document.getElementById('fee-notice-box');
+      if(!key || !feeInfo[key]) { box.classList.remove('visible'); return; }
+      document.getElementById('fee-card-title').innerText = feeInfo[key].name;
+      document.getElementById('fee-card-acc').innerText = feeInfo[key].acc;
+      document.getElementById('fee-card-content').innerHTML = feeInfo[key].html;
+      box.classList.add('visible');
+    }
+
+    function toggleAllFees() { document.getElementById('all-fee-box').classList.toggle('active'); }
+
+    const i18n = {
       ko: {
-        title_main: '올네이션스 경배와찬양학교 및 7000학교', title_sub: '온라인 신청', verse: '‘얽매이지 않는 삶’', verse_ref: '고전 6:12',
-        tab_ind: '개인 신청', tab_grp: '단체 신청', sec_school: '01 · School', sec_person: '02 · Personal', sec_group: '02 · Group',
-        track_label: '훈련받고자 하는 학교', track_select: '학교를 선택해 주세요',
-        tr_1: '청지기들을 위한 경배와찬양학교 · 8박 10일 · 1/11~16, 1/18~21', tr_2: '미래세대를 위한 경배와찬양학교 · 3박 4일 · 1/11~14',
-        tr_3: '어린이를 위한 경배와찬양학교 · 2박 3일 · 1/14~16', tr_4: '대학 청년 및 일반인을 위한 경배와찬양학교 · 3박 4일 · 1/18~21',
-        mode_label: '참여 방식', mode_onsite: '현장 참석', mode_online: '온라인 (비대면)',
-        toggle_fee: '전체 훈련비와 계좌 보기', toggle_fee_hide: '전체 훈련비 접기',
-        fee_pre: '선등록 (~12/27)', fee_reg: '일반등록 (12/28~)', fee_gen: '일반인·대학청년', fee_teen: '십대', fee_kid: '어린이',
-        fee_flat_note: '세대 구분 없이 같은 금액입니다.', fee_online: '온라인 등록', fee_online_note: '온라인은 선등록·일반등록 구분 없이 같은 금액입니다.',
-        name: '이름', gender: '성별', birth: '생년월일', phone: '휴대폰 번호', email: 'E-mail', address: '주소', church: '출석 교회', role: '직분',
-        category: '구분', training: '경배와찬양학교 참석', school: '학교', major: '학과', grade: '학년', job: '직장', prayer: '기도제목',
-        prayer_ph: '구체적으로 적어 주시면 훈련 기간 동안 함께 기도합니다.', optional: '선택',
-        church_name: '교회명', church_address: '교회 주소', pastor: '담당 교역자', pastor_att: '교역자 참석 여부', pastor_phone: '교역자 연락처',
-        rep_name: '인솔자', rep_phone: '인솔자 연락처', rep_email: '인솔자 E-mail', prayer_grp: '교회 기도제목',
-        tbl_title: 'Group Members', tbl_desc: '이름을 적은 줄은 이메일·비고를 뺀 모든 칸을 채워 주세요. 휴대폰이 없는 어린이는 보호자 번호를 적어 주세요. 폰에서는 표를 옆으로 밀어서 입력합니다.',
-        m_phone: '연락처', m_email: 'E-mail (선택)', training_s: '참석', note: '비고', add_btn: '+ 인원 추가',
-        m: '남', f: '여', c1: '어린이', c2: '중고등부', c3: '대학생 청년', c4: '교사 교역자', c5: '선교사', t1: '처음 참석', t2: '기존 참석', t3: '훈련생', att_y: '참석', att_n: '불참',
-        consent_label: '개인정보 수집·이용에 동의합니다. (필수)', consent_more: '내용 보기', consent_less: '접기',
-        cs_1: '수집 항목: 이름, 성별, 생년월일, 연락처, 이메일, 주소, 교회·직분, 학교·직장, 기도제목 (단체는 명단 포함)',
-        cs_2: '이용 목적: 경배와찬양학교 등록·훈련비 확인·숙소 배정·안내 연락, 이후 경배와찬양학교 안내',
-        cs_3: '보관: 올네이션스 경배와찬양이 관리하며, 외부에 제공하지 않습니다. 삭제를 원하시면 7000school@gmail.com으로 요청해 주세요.',
-        cs_4: '만 14세 미만은 보호자가 내용을 확인하고 동의한 뒤 신청해 주세요. 단체 신청은 인솔자가 참가자(보호자)의 동의를 받아 주세요.',
-        submit: '신청서 제출하기', sending: '보내는 중…',
-        h_req: '필수 항목입니다.', h_track: '학교를 선택해 주세요.', h_birth: '6자리로 적어 주세요 (예: 950312).', h_phone: '번호 전체를 적어 주세요. 등록 확인 때 이 번호로 들어갑니다.',
-        h_phone2: '번호 전체를 적어 주세요.', h_email: '이메일 형식을 확인해 주세요.',
-        e_fields: '표시된 칸을 확인해 주세요.', e_members: '명단에 한 명 이상 적어 주세요. 이름을 적은 줄은 이메일·비고를 뺀 모든 칸이 필요합니다.',
-        e_consent: '개인정보 수집·이용에 동의해 주세요.', e_closed: '지금은 신청을 받지 않습니다. 7000school@gmail.com으로 문의해 주세요.',
-        e_many: '같은 번호로 신청이 너무 많습니다. 10분 뒤에 다시 해 주세요.', e_busy: '신청이 몰리고 있습니다. 잠시 후 한 번 더 눌러 주세요.',
-        e_net: '인터넷 연결을 확인하고 다시 눌러 주세요. 입력한 내용은 그대로 있습니다.', e_server: '접수 중 문제가 생겼습니다. 잠시 후 다시 눌러 주세요. 계속되면 7000school@gmail.com으로 알려 주세요.',
-        succ_p1: '신청이 접수되었습니다. 아래 계좌로 훈련비를 보내 주세요.', receipt: '접수번호', s_who: '신청', s_acc: '입금 계좌', s_fee: '훈련비', s_due: '기한',
-        s_due_v: '선등록 12/27(주일)까지 · 일반등록 12/28(월)부터', s_fee_group: '명단 인원별로 계산되어 안내됩니다', s_people: '명',
-        refund_title: '환불 규정', refund_1: '12월 27일까지: 100% 환불', refund_2: '12월 28일 ~ 1월 10일: 50% 환불', refund_3: '훈련 당일: 환불 불가',
-        refund_4: '모든 환불은 경배와찬양학교가 끝난 뒤 계좌이체로 진행되며, 송금 수수료를 뺀 금액이 환불됩니다.',
-        go_check: '등록·입금 확인하기', next_note: '접수 후 몇 분 안에 등록이 확인됩니다. 신청할 때 적은 이름과 휴대폰 번호로 들어오세요. 단체는 인솔자 번호로 들어올 수 있습니다.',
-        go_home: '2027 WINTER 안내 보기', won: '원', per_person: '1인 ',
+        title_main: "올네이션스 경배와찬양학교 및 7000학교", title_sub: "온라인 신청", tab_ind: "개인 신청", tab_grp: "단체 신청", theme_verse_main: '"얽매이지 않는 삶"', theme_verse_ref: "(고전 6:12)", track_label: "훈련 트랙 선택 (필수)", track_select: "훈련받고자 하는 학교를 선택해주세요", toggle_fee: "+ 전체 훈련비 및 계좌 정보 펼쳐보기", name: "이름", gender: "성별", birth: "생년월일", phone: "연락처", email: "E-mail", address: "주소", church: "참석 교회", role: "직분", category: "구분", training: "기존 훈련 여부", school: "학교", major: "학과", grade: "학년", job: "직장", prayer: "기도제목 (구체적으로 작성해주십시오)", church_name: "교회명", pastor: "교역자명", pastor_att: "교역자 참석 여부", pastor_phone: "교역자 연락처", rep_name: "인솔자명", rep_phone: "인솔자 연락처", rep_email: "인솔자 E-mail", tbl_title: "Group Members", tbl_desc: "* 이름을 입력한 줄은 모든 칸을 채워야 합니다. (해당 없으면 x)<br>(가로로 스크롤 하세요 ↔)", note: "비고", add_btn: "+ 인원 추가하기", submit: "신청서 제출하기", m: "남", f: "여", c1: "어린이", c2: "중고등부", c3: "대학생 청년", c4: "교사 교역자", c5: "선교사", t1: "처음 참석", t2: "기존 참석", t3: "훈련생", att_y: "참석", att_n: "불참", req_x: "필수 (없으면 x)", opt: "(해당시)",  succ_title: "Application Complete", succ_p1: "신청서 접수가 완료되었습니다.<br>아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.", succ_p2: "상세 안내 및 준비사항은 공식 웹사이트를 확인해 주십시오.", refund_title: "훈련비 환불 규정", refund_1: "모든 훈련비 환불은 경배와찬양학교가 마무리된 후에 진행됩니다.", refund_2: "훈련 시작 2주일 전 환불 요청 시: 100% 환불", refund_3: "2주 전 ~ 훈련 전일 환불 요청 시: 80% 환불 (20% 공제)", refund_4: "훈련 당일 환불 요청 시: 50% 환불 (50% 공제)", alert_track: "훈련 트랙을 선택해주세요.", alert_ind: "[개인 신청] 빈 항목이 있습니다. 해당 없으면 x를 기입해주세요.", alert_grp: "[단체 신청] 헤더 빈 항목이 있습니다.", alert_mem: "인원 명단 빈 항목을 채워주세요."
       },
       en: {
-        title_main: 'All Nations Worship & Praise School and 7000 School', title_sub: 'Online Application', verse: '“An Unbound Life”', verse_ref: '1 Corinthians 6:12',
-        tab_ind: 'Individual', tab_grp: 'Group', sec_school: '01 · School', sec_person: '02 · Personal', sec_group: '02 · Group',
-        track_label: 'School', track_select: 'Select a school',
-        tr_1: 'School for Stewards · 10 days · Jan 11–16, 18–21', tr_2: 'School for the Next Generation · 4 days · Jan 11–14',
-        tr_3: 'School for Children · 3 days · Jan 14–16', tr_4: 'School for Young Adults & Adults · 4 days · Jan 18–21',
-        mode_label: 'Attendance', mode_onsite: 'On site', mode_online: 'Online',
-        toggle_fee: 'View all fees & bank accounts', toggle_fee_hide: 'Hide all fees',
-        fee_pre: 'Early (by Dec 27)', fee_reg: 'Regular (from Dec 28)', fee_gen: 'Adults & young adults', fee_teen: 'Teens', fee_kid: 'Children',
-        fee_flat_note: 'Same fee for all ages.', fee_online: 'Online registration', fee_online_note: 'Online fees are the same before and after Dec 27.',
-        name: 'Name', gender: 'Gender', birth: 'Date of birth', phone: 'Mobile', email: 'E-mail', address: 'Address', church: 'Church', role: 'Church role',
-        category: 'Category', training: 'Previous attendance', school: 'School', major: 'Major', grade: 'Year', job: 'Workplace', prayer: 'Prayer requests',
-        prayer_ph: 'We will pray for you during the school.', optional: 'optional',
-        church_name: 'Church', church_address: 'Church address', pastor: 'Pastor', pastor_att: 'Pastor attending', pastor_phone: 'Pastor phone',
-        rep_name: 'Group leader', rep_phone: 'Leader phone', rep_email: 'Leader e-mail', prayer_grp: 'Church prayer requests',
-        tbl_title: 'Group Members', tbl_desc: 'For each named row, fill every column except e-mail and note. For children without a phone, use a guardian’s number. Scroll the table sideways on a phone.',
-        m_phone: 'Phone', m_email: 'E-mail (optional)', training_s: 'Attendance', note: 'Note', add_btn: '+ Add a member',
-        m: 'Male', f: 'Female', c1: 'Child', c2: 'Teen', c3: 'Young adult', c4: 'Teacher / Pastor', c5: 'Missionary', t1: 'First time', t2: 'Returning', t3: 'Trainee', att_y: 'Yes', att_n: 'No',
-        consent_label: 'I agree to the collection and use of personal information. (Required)', consent_more: 'Details', consent_less: 'Hide',
-        cs_1: 'Collected: name, gender, date of birth, phone, e-mail, address, church and role, school or workplace, prayer requests (and the member list for groups).',
-        cs_2: 'Purpose: registration, fee confirmation, room assignment and contact for this school, and notices about future schools.',
-        cs_3: 'Kept by All Nations Worship & Praise Ministries and never shared with third parties. To have it deleted, write to 7000school@gmail.com.',
-        cs_4: 'Applicants under 14 need a guardian’s consent. Group leaders must have each member’s (or guardian’s) consent.',
-        submit: 'Submit application', sending: 'Sending…',
-        h_req: 'Required.', h_track: 'Select a school.', h_birth: 'Use 6 digits (e.g. 950312).', h_phone: 'Enter the full number. You will use it to check your registration.',
-        h_phone2: 'Enter the full number.', h_email: 'Check the e-mail address.',
-        e_fields: 'Please check the highlighted fields.', e_members: 'Add at least one member. Each named row needs every column except e-mail and note.',
-        e_consent: 'Please agree to the personal information terms.', e_closed: 'Applications are closed. Please contact 7000school@gmail.com.',
-        e_many: 'Too many applications from this number. Please try again in 10 minutes.', e_busy: 'Many people are applying right now. Please press submit again shortly.',
-        e_net: 'Check your connection and press submit again. Your entries are kept.', e_server: 'Something went wrong. Please try again shortly, or write to 7000school@gmail.com.',
-        succ_p1: 'Your application has been received. Please transfer the fee to the account below.', receipt: 'Receipt no.', s_who: 'Applicant', s_acc: 'Bank account', s_fee: 'Fee', s_due: 'Deadline',
-        s_due_v: 'Early by Dec 27 · Regular from Dec 28', s_fee_group: 'Calculated per member; we will let you know', s_people: ' people',
-        refund_title: 'Refund policy', refund_1: 'Until Dec 27: 100% refund', refund_2: 'Dec 28 – Jan 10: 50% refund', refund_3: 'On the day: no refund',
-        refund_4: 'Refunds are sent by bank transfer after the school ends, minus transfer fees.',
-        go_check: 'Check registration & payment', next_note: 'Your registration appears within a few minutes. Sign in with the name and mobile number you entered. Group members can also use the leader’s number.',
-        go_home: 'About 2027 WINTER', won: ' KRW', per_person: 'Per person ',
+        title_main: "All Nations Worship & Praise and 7000 School", title_sub: "Online Application", tab_ind: "Individual", tab_grp: "Group", theme_verse_main: '"An Unbound Life"', theme_verse_ref: "(1 Corinthians 6:12)", track_label: "Training Track (Required)", track_select: "Please select a training school", toggle_fee: "+ View all training fees & bank accounts", name: "Name", gender: "Gender", birth: "Date of Birth", phone: "Phone", email: "E-mail", address: "Address", church: "Church", role: "Role", category: "Category", training: "Previous Training", school: "School", major: "Major", grade: "Grade", job: "Job", prayer: "Prayer Requests", church_name: "Church Name", pastor: "Pastor Name", pastor_att: "Pastor Attending", pastor_phone: "Pastor Phone", rep_name: "Leader Name", rep_phone: "Leader Phone", rep_email: "Leader E-mail", tbl_title: "Group Members", tbl_desc: "* Fill all fields for entered names. (Put x if N/A)<br>(Scroll horizontally ↔)", note: "Note", add_btn: "+ Add Member", submit: "Submit Application", m: "Male", f: "Female", c1: "Kids", c2: "Teens", c3: "Youth", c4: "Teacher/Pastor", c5: "Missionary", t1: "First Time", t2: "Returning", t3: "Trainee", att_y: "Yes", att_n: "No", req_x: "Required (or x)", opt: "(Optional)",  succ_title: "Application Complete", succ_p1: "Your application has been received.<br>Please transfer the fee to the designated account below.", succ_p2: "Check the official website for schedules and details.", refund_title: "Refund Policy", refund_1: "All refunds will be processed after the school is completed.", refund_2: "Request 2 weeks prior: 100% refund", refund_3: "Between 2 weeks prior and the day before: 80% refund (20% deduction)", refund_4: "Request on the day of the event: 50% refund (50% deduction)", alert_track: "Please select a training track.", alert_ind: "Please fill all fields (put x if N/A).", alert_grp: "Please fill all group header fields.", alert_mem: "Please fill all fields for members."
       },
       zh: {
-        title_main: '万国敬拜赞美学校及7000学校', title_sub: '在线报名', verse: '“不被辖制的生活”', verse_ref: '哥林多前书 6:12',
-        tab_ind: '个人报名', tab_grp: '团体报名', sec_school: '01 · School', sec_person: '02 · Personal', sec_group: '02 · Group',
-        track_label: '报名学校', track_select: '请选择学校',
-        tr_1: '管家敬拜赞美学校 · 10天 · 1/11–16, 1/18–21', tr_2: '下一代敬拜赞美学校 · 4天 · 1/11–14',
-        tr_3: '儿童敬拜赞美学校 · 3天 · 1/14–16', tr_4: '青年及成人敬拜赞美学校 · 4天 · 1/18–21',
-        mode_label: '参加方式', mode_onsite: '现场参加', mode_online: '线上参加',
-        toggle_fee: '查看全部费用及账户', toggle_fee_hide: '收起全部费用',
-        fee_pre: '提前报名 (~12/27)', fee_reg: '一般报名 (12/28~)', fee_gen: '成人·青年', fee_teen: '青少年', fee_kid: '儿童',
-        fee_flat_note: '不分年龄，费用相同。', fee_online: '线上报名', fee_online_note: '线上费用不分提前与一般报名。',
-        name: '姓名', gender: '性别', birth: '出生日期', phone: '手机号码', email: '电子邮箱', address: '地址', church: '所属教会', role: '职分',
-        category: '分类', training: '参加经历', school: '学校', major: '专业', grade: '年级', job: '工作单位', prayer: '代祷事项',
-        prayer_ph: '训练期间我们会为您代祷。', optional: '选填',
-        church_name: '教会名称', church_address: '教会地址', pastor: '负责牧者', pastor_att: '牧者是否参加', pastor_phone: '牧者电话',
-        rep_name: '领队', rep_phone: '领队电话', rep_email: '领队邮箱', prayer_grp: '教会代祷事项',
-        tbl_title: 'Group Members', tbl_desc: '填写姓名的行，除邮箱和备注外都需填写。没有手机的儿童请填写监护人号码。手机上请左右滑动表格。',
-        m_phone: '电话', m_email: '邮箱 (选填)', training_s: '参加', note: '备注', add_btn: '+ 添加人员',
-        m: '男', f: '女', c1: '儿童', c2: '青少年', c3: '青年', c4: '教师·牧者', c5: '宣教士', t1: '首次参加', t2: '曾参加', t3: '受训生', att_y: '参加', att_n: '不参加',
-        consent_label: '同意收集和使用个人信息。(必选)', consent_more: '查看内容', consent_less: '收起',
-        cs_1: '收集项目：姓名、性别、出生日期、电话、邮箱、地址、教会及职分、学校或单位、代祷事项（团体含名单）。',
-        cs_2: '使用目的：本次学校的报名、费用确认、住宿安排及联络，以及今后学校的通知。',
-        cs_3: '由万国敬拜赞美事工保管，不向第三方提供。如需删除，请发邮件至 7000school@gmail.com。',
-        cs_4: '未满14岁者须经监护人同意后报名。团体报名须由领队取得每位参加者（或监护人）的同意。',
-        submit: '提交报名', sending: '提交中…',
-        h_req: '必填项。', h_track: '请选择学校。', h_birth: '请填写6位数字（例：950312）。', h_phone: '请填写完整号码。查询报名时使用此号码。',
-        h_phone2: '请填写完整号码。', h_email: '请检查邮箱格式。',
-        e_fields: '请检查标示的栏位。', e_members: '请至少填写一位人员。填写姓名的行，除邮箱和备注外都需填写。',
-        e_consent: '请同意收集和使用个人信息。', e_closed: '目前不接受报名。请联系 7000school@gmail.com。',
-        e_many: '该号码提交次数过多，请10分钟后再试。', e_busy: '报名人数较多，请稍后再按一次。',
-        e_net: '请检查网络后再提交。已填写的内容会保留。', e_server: '提交时出现问题，请稍后再试。如持续出现，请联系 7000school@gmail.com。',
-        succ_p1: '报名已受理。请向以下账户汇款。', receipt: '受理编号', s_who: '报名人', s_acc: '汇款账户', s_fee: '费用', s_due: '期限',
-        s_due_v: '提前报名至12/27 · 一般报名自12/28', s_fee_group: '按人员计算后另行通知', s_people: '人',
-        refund_title: '退款规定', refund_1: '12月27日前：全额退款', refund_2: '12月28日至1月10日：退款50%', refund_3: '训练当天：不予退款',
-        refund_4: '所有退款在学校结束后以转账方式办理，并扣除汇款手续费。',
-        go_check: '查询报名及缴费', next_note: '受理后几分钟内即可查询。请用报名时填写的姓名和手机号码登录。团体成员也可使用领队号码。',
-        go_home: '2027 WINTER 介绍', won: '韩元', per_person: '每人 ',
-      },
+        title_main: "万国敬拜赞美及7000学校", title_sub: "在线申请", tab_ind: "个人申请", tab_grp: "团体申请", theme_verse_main: '"不被辖制的生活"', theme_verse_ref: "(哥林多前书 6:12)", track_label: "训练课程选择 (必填)", track_select: "请选择要参加的学校", toggle_fee: "+ 查看所有费用及银行账号", name: "姓名", gender: "性别", birth: "出生日期", phone: "联系电话", email: "电子邮箱", address: "地址", church: "教会名称", role: "职位", category: "分类", training: "是否参加过", school: "学校", major: "专业", grade: "年级", job: "工作单位", prayer: "代祷事项", church_name: "教会名称", pastor: "牧师姓名", pastor_att: "牧师是否参加", pastor_phone: "牧师电话", rep_name: "领队姓名", rep_phone: "领队电话", rep_email: "领队邮箱", tbl_title: "Group Members", tbl_desc: "* 输入姓名的行必须填满所有空格 (没有请填x)<br>(请左右滑动表格 ↔)", note: "备注", add_btn: "+ 添加人员", submit: "提交申请书", m: "男", f: "女", c1: "儿童", c2: "青少年", c3: "青年", c4: "教师/牧者", c5: "宣教士", t1: "首次参加", t2: "曾参加", t3: "受训生", att_y: "参加", att_n: "不参加", req_x: "必填(或x)", opt: "(选填)", succ_title: "Application Complete", succ_p1: "申请已完成，<br>请向下方账户汇款。", succ_p2: "详细日程及准备事项请确认官方网站。", refund_title: "退款政策", refund_1: "所有训练费退款将在学校结束后进行。", refund_2: "提前2周申请退款：100%退款", refund_3: "提前2周至活动前一天：80%退款（扣除20%）", refund_4: "活动当天申请退款：50%退款（扣除50%）", alert_track: "请选择训练课程。", alert_ind: "请填写所有空格。", alert_grp: "请填写团体基本信息。", alert_mem: "请填写人员名单所有空格。"
+      }
     };
 
-    var lang = 'ko';
-    var type = '개인';
-    var mode = '현장';
-    var $ = function (s, r) { return (r || document).querySelector(s); };
-    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
-    var t = function (k) { return (T[lang] && T[lang][k]) || T.ko[k] || k; };
-    var money = function (n) { return n.toLocaleString('ko-KR') + t('won'); };
+    let currentLang = 'ko';
 
-    /* ── 언어 ── */
-    function setLang(l) {
-      lang = T[l] ? l : 'ko';
-      document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
-      $$('.lang-btn').forEach(function (b) { b.classList.toggle('active', b.dataset.lang === lang); });
-      $$('[data-i18n]').forEach(function (el) { var v = T[lang][el.dataset.i18n]; if (v != null) el.textContent = v; });
-      $$('[data-i18n-ph]').forEach(function (el) { el.placeholder = t(el.dataset.i18nPh); });
-      $('#toggle-fees').textContent = $('#all-fees').classList.contains('show') ? t('toggle_fee_hide') : t('toggle_fee');
-      $('#consent-more').textContent = $('#consent-body').classList.contains('show') ? t('consent_less') : t('consent_more');
-      renderFee(); renderAllFees();
-      try { localStorage.setItem('anm_lang', lang); } catch (e) {}
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.querySelectorAll('[data-i18n]').forEach(el => { el.innerHTML = i18n[lang][el.getAttribute('data-i18n')]; });
+      document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = i18n[lang][el.getAttribute('data-i18n-ph')]; });
     }
-    $$('.lang-btn').forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
 
-    /* ── 탭 ── */
-    $$('.tab').forEach(function (b) {
-      b.addEventListener('click', function () {
-        type = b.dataset.type;
-        $$('.tab').forEach(function (x) { var on = x === b; x.classList.toggle('active', on); x.setAttribute('aria-selected', on); });
-        $$('.pane').forEach(function (p) { p.classList.toggle('active', p.id === 'pane-' + type); });
-        clearErrors();
-      });
-    });
+    const tbody = document.getElementById('members-body');
+    let rowCount = 0;
 
-    /* ── 참여 방식 ── */
-    $$('.seg button').forEach(function (b) {
-      b.addEventListener('click', function () {
-        mode = b.dataset.mode;
-        $$('.seg button').forEach(function (x) { var on = x === b; x.classList.toggle('on', on); x.setAttribute('aria-checked', on); });
-        renderFee();
-      });
-    });
-
-    /* ── 훈련비 ── */
-    var trackName = function (k) { return ({ 청지기: t('tr_1'), 미래세대: t('tr_2'), 어린이: t('tr_3'), 대학청년: t('tr_4') })[k].split(' · ')[0]; };
-    var row = function (a, b) { return '<div class="fee-row"><span>' + a + '</span><span>' + b + '</span></div>'; };
-    function feeRows(k) {
-      var f = FEES[k];
-      if (mode === '온라인') return row(t('fee_online'), money(f.online)) + '<div class="fee-note">' + t('fee_online_note') + '</div>';
-      if (f.flat) return row(t('fee_pre'), money(f.flat[0])) + row(t('fee_reg'), money(f.flat[1])) + '<div class="fee-note">' + t('fee_flat_note') + '</div>';
-      var labs = [t('fee_gen'), t('fee_teen'), t('fee_kid')];
-      var out = '';
-      labs.forEach(function (l, i) { out += row(t('fee_pre') + ' · ' + l, money(f.pre[i])); });
-      out += '<div class="fee-split">';
-      labs.forEach(function (l, i) { out += row(t('fee_reg') + ' · ' + l, money(f.reg[i])); });
-      return out + '</div>';
+    function addTableRow() {
+      rowCount++;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="color: var(--sub); font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 600;">${rowCount}</td>
+        <td><input type="text" class="m-name"></td>
+        <td><select class="m-gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></td>
+        <td><input type="text" class="m-phone"></td>
+        <td><input type="text" class="m-email"></td>
+        <td><input type="text" class="m-birth" placeholder="YYYY/MM/DD"></td>
+        <td><select class="m-cat"><option value=""></option><option value="어린이" data-i18n="c1">어린이</option><option value="중고등부" data-i18n="c2">중고등부</option><option value="대학생 청년" data-i18n="c3">대학생 청년</option><option value="교사 교역자" data-i18n="c4">교사 교역자</option><option value="선교사" data-i18n="c5">선교사</option></select></td>
+        <td><select class="m-trn"><option value=""></option><option value="처음 참석" data-i18n="t1">처음 참석</option><option value="기존 참석" data-i18n="t2">기존 참석</option><option value="훈련생" data-i18n="t3">훈련생</option></select></td>
+        <td><input type="text" class="m-note"></td>
+      `;
+      tbody.appendChild(tr);
+      if(currentLang !== 'ko') setLang(currentLang);
     }
-    function accOf(k) { return mode === '온라인' ? ONLINE_ACC : FEES[k].acc; }
-    function renderFee() {
-      var k = $('#f-track').value, box = $('#fee');
-      if (!FEES[k]) { box.classList.remove('show'); return; }
-      $('#fee-name').textContent = trackName(k) + (mode === '온라인' ? ' · ' + t('mode_online') : '');
-      $('#fee-acc').textContent = accOf(k);
-      $('#fee-rows').innerHTML = feeRows(k);
-      box.classList.add('show');
-    }
-    function renderAllFees() {
-      var html = '';
-      ['청지기', '미래세대', '어린이', '대학청년'].forEach(function (k) {
-        var f = FEES[k], lines = [];
-        if (f.flat) lines.push(t('fee_pre') + ' ' + money(f.flat[0]) + ' · ' + t('fee_reg') + ' ' + money(f.flat[1]));
-        else {
-          lines.push(t('fee_pre') + ' — ' + t('fee_gen') + ' ' + money(f.pre[0]) + ' / ' + t('fee_teen') + ' ' + money(f.pre[1]) + ' / ' + t('fee_kid') + ' ' + money(f.pre[2]));
-          lines.push(t('fee_reg') + ' — ' + t('fee_gen') + ' ' + money(f.reg[0]) + ' / ' + t('fee_teen') + ' ' + money(f.reg[1]) + ' / ' + t('fee_kid') + ' ' + money(f.reg[2]));
-        }
-        lines.push(t('fee_online') + ' ' + money(f.online));
-        html += '<div class="item"><h4>' + trackName(k) + '</h4><p>' + f.acc + '</p>' + lines.map(function (x) { return '<p>' + x + '</p>'; }).join('') + '</div>';
-      });
-      html += '<div class="item"><h4>' + t('fee_online') + '</h4><p>' + ONLINE_ACC + '</p></div>';
-      $('#all-fees').innerHTML = html;
-    }
-    $('#f-track').addEventListener('change', function () { renderFee(); fieldOk('track'); });
-    $('#toggle-fees').addEventListener('click', function () {
-      var on = $('#all-fees').classList.toggle('show');
-      this.textContent = on ? t('toggle_fee_hide') : t('toggle_fee');
-    });
-    $('#consent-more').addEventListener('click', function () {
-      var on = $('#consent-body').classList.toggle('show');
-      this.textContent = on ? t('consent_less') : t('consent_more');
-    });
 
-    /* ── 단체 명단 ── */
-    var opt = function (vals, keys) { return '<option value=""></option>' + vals.map(function (v, i) { return '<option value="' + v + '" data-i18n="' + keys[i] + '">' + t(keys[i]) + '</option>'; }).join(''); };
-    function addRow() {
-      var n = $('#members').children.length + 1, tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + n + '</td>' +
-        '<td data-k="name"><input type="text" aria-label="name"></td>' +
-        '<td data-k="gender"><select aria-label="gender">' + opt(['남', '여'], ['m', 'f']) + '</select></td>' +
-        '<td data-k="phone"><input type="tel" aria-label="phone" placeholder="010-"></td>' +
-        '<td data-k="email"><input type="email" aria-label="email"></td>' +
-        '<td data-k="birth"><input type="text" inputmode="numeric" maxlength="10" aria-label="birth" placeholder="YYMMDD"></td>' +
-        '<td data-k="category"><select aria-label="category">' + opt(['어린이', '중고등부', '대학생 청년', '교사 교역자', '선교사'], ['c1', 'c2', 'c3', 'c4', 'c5']) + '</select></td>' +
-        '<td data-k="training"><select aria-label="training">' + opt(['처음 참석', '기존 참석', '훈련생'], ['t1', 't2', 't3']) + '</select></td>' +
-        '<td data-k="note"><input type="text" aria-label="note"></td>';
-      $('#members').appendChild(tr);
-    }
-    for (var i = 0; i < 10; i++) addRow();
-    $('#add-row').addEventListener('click', function () { addRow(); var r = $('#members').lastElementChild; r.querySelector('input').focus(); });
+    for(let i = 0; i < 10; i++) addTableRow();
 
-    /* ── 검사 ── */
-    var digits = function (s) { return String(s || '').replace(/\D/g, ''); };
-    var emailOk = function (s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); };
-    var birthOk = function (s) { var d = digits(s); return d.length === 6 || d.length === 8; };
-    var phoneOk = function (s) { return digits(s).length >= 9; };
-    function paneField(k) { return $('#pane-' + type + ' [data-f="' + k + '"]') || $('[data-f="' + k + '"]'); }
-    function fieldBad(k, hintKey) { var f = paneField(k); if (!f) return; f.classList.add('bad'); var h = f.querySelector('.hint'); if (h && hintKey) h.textContent = t(hintKey); }
-    function fieldOk(k) { var f = paneField(k); if (f) f.classList.remove('bad'); }
-    function clearErrors() {
-      $$('.bad').forEach(function (e) { e.classList.remove('bad'); });
-      $('#form-msg').classList.remove('show');
-    }
-    function showMsg(k) { var m = $('#form-msg'); m.textContent = t(k); m.classList.add('show'); }
-
-    // 칸을 고치면 빨간 표시 바로 지움
-    $('#form').addEventListener('input', function (e) {
-      var f = e.target.closest('.field'); if (f) f.classList.remove('bad');
-      var td = e.target.closest('td'); if (td) td.classList.remove('bad');
-      tidyMsg();
-    });
-    $('#form').addEventListener('change', function (e) {
-      var f = e.target.closest('.field'); if (f) f.classList.remove('bad');
-      var td = e.target.closest('td'); if (td) td.classList.remove('bad');
-      tidyMsg();
-    });
-    $('#consent').addEventListener('change', function () { $('#consent-box').classList.remove('bad'); tidyMsg(); });
-    function tidyMsg() { if (!$('#form .bad')) $('#form-msg').classList.remove('show'); }
-
-    var val = function (name) { var el = $('#pane-' + type + ' [name="' + name + '"]'); return el ? el.value.trim() : ''; };
-
-    function collect() {
-      clearErrors();
-      var bad = [], form = { type: type, track: $('#f-track').value, mode: mode, consent: $('#consent').checked };
-      if (!FEES[form.track]) bad.push(['track', 'h_track']);
-      if (type === '개인') {
-        ['name', 'gender', 'birth', 'phone', 'email', 'address', 'church', 'role', 'category', 'training', 'school', 'major', 'grade', 'job', 'prayer'].forEach(function (k) { form[k] = val(k); });
-        ['name', 'gender', 'address', 'church', 'category', 'training', 'prayer'].forEach(function (k) { if (!form[k]) bad.push([k, 'h_req']); });
-        if (!birthOk(form.birth)) bad.push(['birth', 'h_birth']);
-        if (!phoneOk(form.phone)) bad.push(['phone', 'h_phone']);
-        if (!emailOk(form.email)) bad.push(['email', 'h_email']);
+    function switchTab(type) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+      if(type === 'individual') {
+        document.querySelectorAll('.tab')[0].classList.add('active');
+        document.getElementById('individual-section').classList.add('active');
+        document.getElementById('form-type').value = '개인';
       } else {
-        ['churchName', 'address', 'pastorName', 'pastorAttend', 'pastorPhone', 'repName', 'repPhone', 'repEmail', 'prayer'].forEach(function (k) { form[k] = val(k); });
-        ['churchName', 'address', 'pastorName', 'pastorAttend', 'repName'].forEach(function (k) { if (!form[k]) bad.push([k, 'h_req']); });
-        if (!phoneOk(form.pastorPhone)) bad.push(['pastorPhone', 'h_phone2']);
-        if (!phoneOk(form.repPhone)) bad.push(['repPhone', 'h_phone2']);
-        if (!emailOk(form.repEmail)) bad.push(['repEmail', 'h_email']);
-        form.members = [];
-        var memberBad = false;
-        $$('#members tr').forEach(function (tr) {
-          var get = function (k) { var el = tr.querySelector('[data-k="' + k + '"] input, [data-k="' + k + '"] select'); return el ? el.value.trim() : ''; };
-          var m = { name: get('name'), gender: get('gender'), phone: get('phone'), email: get('email'), birth: get('birth'), category: get('category'), training: get('training'), note: get('note') };
-          var any = Object.keys(m).some(function (k) { return m[k]; });
-          if (!any) return;
-          var miss = [];
-          if (!m.name) miss.push('name');
-          ['gender', 'category', 'training'].forEach(function (k) { if (!m[k]) miss.push(k); });
-          if (!phoneOk(m.phone)) miss.push('phone');
-          if (!birthOk(m.birth)) miss.push('birth');
-          if (m.email && !emailOk(m.email)) miss.push('email');
-          miss.forEach(function (k) { tr.querySelector('[data-k="' + k + '"]').classList.add('bad'); });
-          if (miss.length) memberBad = true;
-          form.members.push(m);
-        });
-        if (!form.members.length || memberBad) bad.push(['members', null]);
-      }
-      if (!form.consent) bad.push(['consent', null]);
-      return { form: form, bad: bad };
-    }
-
-    function report(bad) {
-      var first = null;
-      bad.forEach(function (b) {
-        if (b[0] === 'consent') { $('#consent-box').classList.add('bad'); first = first || $('#consent-box'); return; }
-        if (b[0] === 'members') { first = first || $('#pane-단체 .members'); return; }
-        fieldBad(b[0], b[1]); first = first || paneField(b[0]);
-      });
-      var onlyConsent = bad.length === 1 && bad[0][0] === 'consent';
-      var onlyMembers = bad.every(function (b) { return b[0] === 'members'; });
-      showMsg(onlyConsent ? 'e_consent' : onlyMembers ? 'e_members' : 'e_fields');
-      if (first) {
-        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        var inp = first.querySelector && first.querySelector('input, select, textarea, button');
-        if (inp) setTimeout(function () { inp.focus({ preventScroll: true }); }, 350);
+        document.querySelectorAll('.tab')[1].classList.add('active');
+        document.getElementById('group-section').classList.add('active');
+        document.getElementById('form-type').value = '단체';
       }
     }
 
-    // 서버가 돌려준 필드 이름 → 화면 표시
-    function reportServer(fields) {
-      var bad = [];
-      (fields || []).forEach(function (k) {
-        if (/^m\d+\./.test(k) || k === 'members') { bad.push(['members', null]); return; }
-        if (k === 'consent') { bad.push(['consent', null]); return; }
-        if (k === 'mode') return;
-        bad.push([k, k === 'phone' ? 'h_phone' : k === 'track' ? 'h_track' : 'h_req']);
+    function submitData() {
+      const formType = document.getElementById('form-type').value;
+      const track = document.getElementById('global-track').value;
+      if(!track) { alert(i18n[currentLang].alert_track); return; }
+
+      let payload = { type: formType, track: track };
+
+      if(formType === '개인') {
+        const fields = ['ind_name', 'ind_gender', 'ind_birth', 'ind_phone', 'ind_email', 'ind_address', 'ind_church', 'ind_role', 'ind_category', 'ind_training', 'ind_school', 'ind_major', 'ind_grade', 'ind_job', 'ind_prayer'];
+        for(let field of fields) {
+          const el = document.querySelector(`[name="${field}"]`);
+          if(!el.value.trim()) { alert(i18n[currentLang].alert_ind); el.focus(); return; }
+          payload[field.replace('ind_', '')] = el.value.trim();
+        }
+      } else {
+        const fields = ['grp_churchName', 'grp_address', 'grp_pastorName', 'grp_pastorAttend', 'grp_pastorPhone', 'grp_repName', 'grp_repPhone', 'grp_repEmail', 'grp_prayer'];
+        for(let field of fields) {
+          const el = document.querySelector(`[name="${field}"]`);
+          if(!el.value.trim()) { alert(i18n[currentLang].alert_grp); el.focus(); return; }
+          payload[field.replace('grp_', '')] = el.value.trim();
+        }
+        payload.members = [];
+        const rows = document.querySelectorAll('#members-body tr');
+        let hasMember = false;
+        
+        for(let i = 0; i < rows.length; i++) {
+          const name = rows[i].querySelector('.m-name').value.trim();
+          if(!name) continue; 
+          hasMember = true;
+          const gender = rows[i].querySelector('.m-gender').value;
+          const phone = rows[i].querySelector('.m-phone').value.trim();
+          const email = rows[i].querySelector('.m-email').value.trim();
+          const birth = rows[i].querySelector('.m-birth').value.trim();
+          const cat = rows[i].querySelector('.m-cat').value;
+          const trn = rows[i].querySelector('.m-trn').value;
+          const note = rows[i].querySelector('.m-note').value.trim() || ' ';
+          
+          if(!gender || !phone || !email || !birth || !cat || !trn) { alert(i18n[currentLang].alert_mem); return; }
+          payload.members.push({ name: name, gender: gender, phone: phone, email: email, birth: birth, category: cat, training: trn, note: note });
+        }
+        if(!hasMember) return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.innerText = "..."; btn.disabled = true;
+
+      const GAS_URL = "https://script.google.com/macros/s/AKfycbxSn4_Z6Fed76Ff8X2lajrZJOtewnlHCRXkNTjbn1LQT_jKURFYrlb4sWnL0lAl0G6rBA/exec";
+
+      fetch(GAS_URL, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: { "Content-Type": "text/plain;charset=utf-8" }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.success) {
+          if(feeInfo[track]) {
+            document.getElementById('summary-track-title').innerText = feeInfo[track].name;
+            document.getElementById('summary-bank-account').innerText = feeInfo[track].acc;
+          }
+          document.getElementById('application-form').style.display = 'none';
+          document.querySelector('.tabs').style.display = 'none';
+          document.querySelector('.header-labels').style.display = 'none';
+          document.getElementById('success-message').style.display = 'block';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          alert("데이터 저장 실패: " + data.error); btn.disabled = false;
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert("서버와 통신 중 오류가 발생했습니다.\n상세 오류: " + error.message); 
+        btn.disabled = false;
       });
-      if (bad.length) report(bad); else showMsg('e_fields');
     }
-
-    /* ── 제출 ── */
-    var sending = false;
-    $('#form').addEventListener('submit', function (e) {
-      e.preventDefault();
-      if (sending) return;
-      var c = collect();
-      if (c.bad.length) { report(c.bad); return; }
-      sending = true;
-      var btn = $('#submit');
-      btn.disabled = true; btn.textContent = t('sending');
-      var payload = { action: 'register', project: PROJECT, lang: lang, hp: $('#hp').value, form: c.form };
-      var ctrl = 'AbortController' in window ? new AbortController() : null;
-      var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, 30000) : null;
-      fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload), redirect: 'follow', signal: ctrl ? ctrl.signal : undefined })
-        .then(function (r) { return r.json(); })
-        .then(function (res) {
-          if (res && res.ok) { done(c.form, res.receipt); return; }
-          var err = res && res.error;
-          if (err === 'invalid') reportServer(res.fields);
-          else showMsg(err === 'closed' || err === 'no_project' ? 'e_closed' : err === 'too_many' ? 'e_many' : err === 'busy' ? 'e_busy' : 'e_server');
-        })
-        .catch(function (err) { showMsg(err && err.name === 'AbortError' ? 'e_busy' : navigator.onLine === false ? 'e_net' : 'e_server'); })
-        .then(function () { if (timer) clearTimeout(timer); sending = false; btn.disabled = false; btn.textContent = t('submit'); });
-    });
-
-    /* ── 완료 화면 ── */
-    function feeFor(form) {
-      var f = FEES[form.track];
-      if (form.mode === '온라인') return (form.type === '단체' ? t('per_person') : '') + money(f.online);
-      if (form.type === '단체') return null;
-      var late = new Date() > new Date('2026-12-27T23:59:59+09:00');
-      if (f.flat) return money(f.flat[late ? 1 : 0]);
-      var idx = form.category === '어린이' ? 2 : form.category === '중고등부' ? 1 : 0;
-      return money((late ? f.reg : f.pre)[idx]);
-    }
-    function done(form, receipt) {
-      $('#form').style.display = 'none';
-      $('#mast').style.display = 'none';
-      $('#d-receipt').textContent = receipt || '-';
-      $('#d-track').textContent = trackName(form.track) + (form.mode === '온라인' ? ' · ' + t('mode_online') : '');
-      $('#d-who').textContent = form.type === '개인' ? form.name : form.churchName + ' · ' + form.members.length + t('s_people');
-      $('#d-acc').textContent = form.mode === '온라인' ? ONLINE_ACC : FEES[form.track].acc;
-      $('#d-fee').textContent = feeFor(form) || t('s_fee_group');
-      $('#done').classList.add('show');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      try { sessionStorage.setItem('anm_receipt', receipt || ''); } catch (e) {}
-    }
-
-    /* ── 시작 ── */
-    var startLang = 'ko';
-    try { startLang = new URLSearchParams(location.search).get('lang') || localStorage.getItem('anm_lang') || ''; } catch (e) {}
-    if (!startLang) startLang = /^zh/i.test(navigator.language) ? 'zh' : /^ko/i.test(navigator.language) ? 'ko' : 'en';
-    var pre = new URLSearchParams(location.search).get('track');
-    if (pre && FEES[pre]) $('#f-track').value = pre;
-    setLang(startLang);
-  })();
   </script>
 </body>
 </html>
