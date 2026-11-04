@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "routes": [
+    { "src": "/link", "dest": "/link.html" },
+    { "src": "/apply", "dest": "/apply.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
