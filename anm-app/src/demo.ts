@@ -26,7 +26,7 @@ export const DEMO_CONTENT: Content = {
   guides: [
     { project: "2027W", section: "훈련 안내", title: "복장", body: "- 형제는 운동복이 아닌 긴바지, 자매는 긴 치마를 준비해 주시기 바랍니다.\n- 예배에 동참할 때 운동화를 착용해 주시기 바랍니다.", order: 1 },
     { project: "2027W", section: "훈련 안내", title: "숙소에서", body: "- 서로 안식할 수 있도록 배려해 주십시오.\n- 숙소를 나가실 때는 항상 소등해 주십시오.", order: 2 },
-    { project: "2027W", section: "훈련비", title: "환불 규정", body: "- 12월 27일까지 100% 환불\n- 12월 28일 ~ 1월 10일 50% 환불\n- 당일 환불 불가", order: 3 },
+    { project: "2027W", section: "훈련비", title: "환불 규정", body: "- 훈련 시작 2주 전까지 100% 환불\n- 훈련 시작 2주 전부터 전날까지 50% 환불\n- 훈련 당일 환불 불가", order: 3 },
   ],
   places: [
     { project: "2027W", name: "60주년 기념 채플관", kind: "예배", body: "모든 예배와 강의가 열리는 곳", image: "/images/facility/chapel_back-to-stage.jpg", video: "/videos/course1_main_gate_to_chapel.mp4", order: 1 },
