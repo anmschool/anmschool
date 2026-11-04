@@ -1,8 +1,1 @@
-{
-  "cleanUrls": true,
-  "rewrites": [
-    { "source": "/linkhub", "destination": "/linkhub/index.html" },
-    { "source": "/apply", "destination": "/apply/index.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
+{ "rewrites": [{ "source": "/((?!assets|images|videos|icons|apply|linkhub|.*\\..*).*)", "destination": "/index.html" }] }
