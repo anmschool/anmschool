@@ -26,6 +26,7 @@ export default defineConfig({
       workbox: {
         globPatterns: ["**/*.{js,css,html,svg,woff2}", "icons/*.png", "images/season-*.jpg"],
         navigateFallback: "/index.html",
+        navigateFallbackDenylist: [/^\/apply/, /^\/linkhub/],
         runtimeCaching: [
           { urlPattern: /\/images\//, handler: "CacheFirst", options: { cacheName: "images", expiration: { maxEntries: 60 } } },
           { urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com\//, handler: "StaleWhileRevalidate", options: { cacheName: "fonts" } },
