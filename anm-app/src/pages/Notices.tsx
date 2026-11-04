@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useLang } from "../i18n";
-import { fmtRange, Footer, Head, Icon, RichText, Section, useContent, useMe, useSeason } from "../ui";
-import { forTrack } from "./shared";
+import { fmtRange, Footer, Head, Icon, Section, useContent, useSeason } from "../ui";
 
 const ABOUT: { en: string; kr: string; verse?: string; ref?: string; body: string[]; info?: string; to?: string }[] = [
   {
@@ -36,10 +35,8 @@ const ABOUT: { en: string; kr: string; verse?: string; ref?: string; body: strin
 export default function Notices() {
   const { content } = useContent();
   const s = useSeason();
-  const { me } = useMe(s?.id);
   const { t } = useLang();
   const loc = useLocation();
-  const notices = (content?.notices ?? []).filter(n => (n.project === s?.id || n.project === "전체") && forTrack(n.track, me?.track));
   const others = (content?.projects ?? []).filter(p => p.id !== s?.id && p.id !== "매주예배");
 
   useEffect(() => {
@@ -50,18 +47,7 @@ export default function Notices() {
     <div className="app">
       <Head label="Notices & Ministries" title={t("noticesMinistries")} />
       <main className="body">
-        <div className="split">
         <div>
-          {notices.length === 0 && <div className="empty">{t("noNotice")}</div>}
-          {notices.map((n, i) => (
-            <article key={i} className="notice">
-              <span className="when">{n.date.replace(/-/g, ".")}{n.track !== "전체" && <span className="pin kr">{n.track}</span>}</span>
-              <h3>{n.title}</h3>
-              <RichText text={n.body} />
-            </article>
-          ))}
-        </div>
-
         {(
           <div id="ministries">
             <Section label="Ministries" title={t("otherMinistries")}>

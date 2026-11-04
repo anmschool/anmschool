@@ -52,7 +52,7 @@ export default function Home() {
   const schedCount = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track)).length;
 
   const menu: [string, string, string, string, string?][] = [
-    ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin"), notices.length ? String(notices.length) : undefined],
+    ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin")],
     ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
     ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
     ["/guide", "Guide", t("guide"), t("capGuide")],
@@ -82,7 +82,7 @@ export default function Home() {
       </header>
 
       <section className="masthead">
-        <div className="cover-paper">
+        <div className="cover-paper mast-text">
           {!s && loading && <Skeleton lines={4} />}
           {s && (
             <>
@@ -98,20 +98,21 @@ export default function Home() {
               )}
             </>
           )}
+          {s && (
+            <>
+              <dl className="facts">
+                {s.start && <div><dt>Date</dt><dd>{krDate(s.start)}{s.end && s.end !== s.start ? ` ~ ${krDate(s.end)}` : ""}</dd></div>}
+                {s.venue && <div><dt>Location</dt><dd>{s.venue}</dd></div>}
+              </dl>
+              <div className="cta">
+                <Link className="btn" to={loggedIn ? "/me" : "/login"}>{t("myInfo")}</Link>
+                {s.applyUrl && s.status !== "종료" && <a className="btn line" href={s.applyUrl}>{t("apply")}</a>}
+              </div>
+              {me && <Pass me={me} />}
+            </>
+          )}
         </div>
-        {s && (
-          <aside className="mast-aside">
-            <dl className="facts">
-              {s.start && <div><dt>Date</dt><dd>{krDate(s.start)}{s.end && s.end !== s.start ? ` ~ ${krDate(s.end)}` : ""}</dd></div>}
-              {s.venue && <div><dt>Location</dt><dd>{s.venue}</dd></div>}
-            </dl>
-            <div className="cta">
-              <Link className="btn" to={loggedIn ? "/me" : "/login"}>{t("myInfo")}</Link>
-              {s.applyUrl && s.status !== "종료" && <a className="link-cta" href={s.applyUrl}>{t("apply")} <span aria-hidden>→</span></a>}
-            </div>
-            {me && <Pass me={me} />}
-          </aside>
-        )}
+        <figure className="mast-photo wide-only"><img src="/images/apply/bg-worship.jpg" alt="" /></figure>
       </section>
       </div>
 
