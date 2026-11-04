@@ -20,11 +20,15 @@ const KEY_CONTENT = "anm.content.v1";
 const KEY_TOKENS = "anm.tokens.v1";
 const KEY_ME = "anm.me.v1";
 
+/** 로그인 정보(토큰·내 정보)는 sessionStorage: 탭·앱을 닫으면 자동 로그아웃 */
+const store = (k: string) => (k === KEY_CONTENT ? localStorage : sessionStorage);
+try { localStorage.removeItem(KEY_TOKENS); localStorage.removeItem(KEY_ME); } catch { /* */ }
+
 function read<T>(k: string): T | null {
-  try { const s = localStorage.getItem(k); return s ? (JSON.parse(s) as T) : null; } catch { return null; }
+  try { const s = store(k).getItem(k); return s ? (JSON.parse(s) as T) : null; } catch { return null; }
 }
 function write(k: string, v: unknown) {
-  try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* 저장 불가 환경: 무시 */ }
+  try { store(k).setItem(k, JSON.stringify(v)); } catch { /* 저장 불가 환경: 무시 */ }
 }
 
 export function cachedContent(): Content | null { return DEMO ? DEMO_CONTENT : read<Content>(KEY_CONTENT); }
