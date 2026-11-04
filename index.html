@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <title>All Nations Worship & Praise Ministries</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  
+  <!-- 탭 아이콘 (파비콘) -->
+  <link id="dynamic-favicon" rel="icon" href="https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG" type="image/x-icon">
+
+  <!-- 브랜드 폰트 로드 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@400;500;600;700;800&family=Pinyon+Script&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v3.2.1/dist/web/static/pretendard.min.css">
+  
+  <style>
+    :root { 
+      --paper: #FBFBF7; 
+      --ink: #1E1A1D; 
+      --sub: #75696D; 
+      --muted: #9E9598;
+      --hairline: #CDC3C2; 
+      --wine: #6E1F3A; 
+      --wine-light: rgba(110, 31, 58, 0.04);
+    }
+    
+    body {
+      margin: 0; padding: 0; 
+      background-color: #000;
+      font-family: 'Pretendard', sans-serif; 
+      color: var(--ink);
+      display: flex; justify-content: center; align-items: flex-start;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* 배경: 현장 사진 블러 축소로 사역 모습 노출 */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -2%; left: -2%; width: 104%; height: 104%;
+      background-image: url('https://lh3.googleusercontent.com/d/1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW'); 
+      background-size: cover; background-position: center; 
+      filter: blur(8px) brightness(0.45); 
+      z-index: -1;
+    }
+
+    /* 링크트리 메인 컨테이너 (PC/Mobile 반응형 공통) */
+    .link-container {
+      width: 100%; 
+      background-color: var(--paper);
+      position: relative; z-index: 1;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* 상단 워터컬러 배너 */
+    .link-container::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 320px;
+      background-image: url('https://lh3.googleusercontent.com/d/1vF_xYfKgIHLnQSdyMD83NM1fA65iAAym'); 
+      background-size: cover; background-position: top center;
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+      z-index: 0; opacity: 0.9;
+    }
+
+    .form-inner {
+      position: relative; z-index: 1;
+      padding: 60px 25px 40px;
+      flex-grow: 1;
+    }
+
+    /* 프로필 영역 */
+    .profile-section { text-align: center; margin-bottom: 45px; }
+    .profile-logo {
+      width: 95px; height: 95px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 0.5px solid var(--hairline);
+      box-shadow: 0 15px 25px rgba(0,0,0,0.15);
+      margin-bottom: 25px;
+      background: #000;
+    }
+    
+    /* 타이틀 한 줄 고정 */
+    .profile-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600; color: var(--ink);
+      text-transform: uppercase; margin: 0 0 8px 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .profile-desc {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 600; color: var(--sub);
+      letter-spacing: 4px; text-transform: uppercase; margin: 0;
+    }
+
+    /* 링크 버튼 공통 스타일 */
+    .link-group { margin-bottom: 45px; }
+    .group-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px; font-weight: 700; color: var(--sub);
+      letter-spacing: 3px; text-transform: uppercase;
+      margin-bottom: 15px; padding-left: 5px; text-align: center;
+    }
+
+    .link-btn {
+      display: flex; justify-content: center; align-items: center;
+      width: 100%; padding: 18px 20px; margin-bottom: 12px;
+      background: rgba(255,255,255,0.6);
+      border: 0.5px solid var(--hairline);
+      color: var(--ink); font-size: 15px; font-weight: 600;
+      text-decoration: none; box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+    .link-btn:hover {
+      background: #fff;
+      border-color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    /* 2027 WINTER 특별 강조 섹션 */
+    .highlight-section {
+      background: var(--wine-light);
+      border: 0.5px solid rgba(110, 31, 58, 0.25);
+      padding: 35px 20px;
+      margin-bottom: 25px;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box; /* 패딩 오버플로우 방지 */
+    }
+    .highlight-title-eng {
+      font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800;
+      color: var(--wine); letter-spacing: 2.5px; margin: 0 0 10px 0;
+    }
+    .highlight-title-kor {
+      font-family: 'Pretendard', sans-serif; font-size: 22px; font-weight: 700;
+      color: var(--ink); letter-spacing: -1px; margin: 0 0 25px 0;
+    }
+    
+    .highlight-btn {
+      display: block; width: 100%; padding: 20px; margin-bottom: 12px;
+      background: var(--ink); color: var(--paper);
+      font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 1px;
+      border: none; transition: 0.3s;
+      box-sizing: border-box; /* 버튼 삐져나감(오버플로우) 방지 */
+    }
+    .highlight-btn:hover { background: var(--wine); box-shadow: 0 10px 20px rgba(110, 31, 58, 0.2); }
+    
+    .highlight-btn-outline {
+      display: block; width: 100%; padding: 20px;
+      background: transparent; color: var(--ink);
+      font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 1px;
+      border: 0.5px solid var(--ink); transition: 0.3s;
+      box-sizing: border-box; /* 버튼 삐져나감(오버플로우) 방지 */
+    }
+    .highlight-btn-outline:hover { background: #fff; color: var(--wine); border-color: var(--wine); }
+
+    /* 사역 안내 (About) 섹션 - 세련된 배너 스타일 */
+    .about-banner {
+      display: block; text-align: center;
+      padding: 22px 20px; margin-bottom: 45px;
+      background: #fff;
+      border: 0.5px solid var(--hairline);
+      border-left: 3px solid var(--ink);
+      color: var(--ink); text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+      box-sizing: border-box;
+    }
+    .about-banner:hover {
+      border-left: 3px solid var(--wine);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      transform: translateY(-2px);
+    }
+    .about-eng { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--sub); letter-spacing: 3px; display: block; margin-bottom: 6px; }
+    .about-kor { font-family: 'Pretendard', sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); display: block; }
+
+    /* 스트리밍 버튼 듀얼 그리드 */
+    .grid-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-links .link-btn { margin-bottom: 0; padding: 16px 10px; font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+
+    /* 맨 밑 Footer: Ministries 까지 포함 및 크기 조정 */
+    .footer {
+      text-align: center; margin-top: 40px; padding-top: 30px;
+      border-top: 0.5px solid var(--hairline);
+      font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--hairline);
+      letter-spacing: 1.5px;
+      line-height: 1.5;
+    }
+
+    /* 📱 PC / Mobile 반응형 분기 */
+    
+    /* [모바일] 화면에 꽉 차게 */
+    @media (max-width: 500px) {
+      .link-container {
+        max-width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .profile-title { font-size: 16.5px; letter-spacing: 0.5px; } 
+    }
+
+    /* [PC/태블릿] 화면 중앙에 떠 있는 앱 뷰(App View) 스타일 */
+    @media (min-width: 501px) {
+      .link-container {
+        max-width: 480px; 
+        margin-top: 50px;
+        margin-bottom: 50px;
+        border-radius: 20px; 
+        border: 0.5px solid rgba(255,255,255,0.2);
+        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      }
+      .profile-title { font-size: 17.5px; letter-spacing: 1px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="link-container">
+    <div class="form-inner">
+      
+      <!-- 프로필 영역 -->
+      <div class="profile-section">
+        <img src="https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG" alt="ANM Logo" class="profile-logo">
+        <h1 class="profile-title">All Nations Worship & Praise Ministries</h1>
+        <p class="profile-desc">Official Link Hub</p>
+      </div>
+
+      <!-- 1. 2027 WINTER 메인 사역 -->
+      <div class="highlight-section">
+        <h2 class="highlight-title-eng">2027 WINTER</h2>
+        <h3 class="highlight-title-kor">경배와찬양학교 및 7000학교</h3>
+        
+        <!-- 신청서 폼 주소 입력칸 -->
+        <a href="apply.html" class="highlight-btn">온라인 신청서 작성하기</a>
+        
+        <!-- Vercel 상세페이지/확인 주소 연결 -->
+        <a href="https://anmschool.vercel.app/" target="_blank" class="highlight-btn-outline">신청 및 입금 확인</a>
+      </div>
+
+      <!-- 2. 올네이션스 사역 안내 (신규 추가된 세련된 배너) -->
+      <a href="#" class="about-banner" target="_blank">
+        <span class="about-eng">ABOUT ANM</span>
+        <span class="about-kor">올네이션스 경배와찬양 사역 안내</span>
+      </a>
+
+      <!-- 3. 공식 채널 -->
+      <div class="link-group">
+        <div class="group-title">Official Channels</div>
+        <a href="http://allenationen.org" target="_blank" class="link-btn">공식 홈페이지 (Website)</a>
+        <a href="https://www.instagram.com/allnations.anm/" target="_blank" class="link-btn">인스타그램 (Instagram)</a>
+        <a href="https://www.youtube.com/channel/UC0VvfP8f7DVWfju4pLEYZog" target="_blank" class="link-btn">유튜브 (YouTube)</a>
+        <a href="https://www.facebook.com/올네이션스%20경배와찬양%20ANM" target="_blank" class="link-btn">페이스북 (Facebook)</a>
+        <a href="http://pf.kakao.com/_xlyCXX" target="_blank" class="link-btn">카카오톡 플러스친구</a>
+        <a href="mailto:7000school@gmail.com" class="link-btn">공식 문의 메일 (Contact)</a>
+        <a href="mailto:anmschool@allnationsinspirational.com" class="link-btn">스쿨 관련 문의 (School)</a>
+      </div>
+
+      <!-- 4. 음원 스트리밍 사이트 -->
+      <div class="link-group">
+        <div class="group-title">Music Streaming</div>
+        <div class="grid-links">
+          <a href="https://music.apple.com/kr/artist/%EC%98%AC%EB%84%A4%EC%9D%B4%EC%85%98%EC%8A%A4-%EA%B2%BD%EB%B0%B0%EC%99%80%EC%B0%AC%EC%96%91/1888342674" target="_blank" class="link-btn">Apple Music</a>
+          <a href="https://open.spotify.com/artist/6PeaDhvXLtjOTvWCHqYpEW" target="_blank" class="link-btn">Spotify</a>
+          <a href="https://music.youtube.com/channel/UCm2KAsO9QzNRlG079DmqHQQ" target="_blank" class="link-btn">YouTube Music</a>
+          <a href="https://www.melon.com/artist/timeline.htm?artistId=106863" target="_blank" class="link-btn">Melon</a>
+          <a href="https://www.genie.co.kr/detail/artistInfo?xxnm=14958711" target="_blank" class="link-btn">Genie</a>
+          <a href="https://music.bugs.co.kr/artist/45402?wl_ref=list_ar_02_search" target="_blank" class="link-btn">Bugs</a>
+          <a href="https://www.music-flo.com/detail/artist/45402/album?sortType=RECENT&roleType=RELEASE" target="_blank" class="link-btn">FLO</a>
+          <a href="https://vibe.naver.com/artist/121578" target="_blank" class="link-btn">VIBE</a>
+        </div>
+      </div>
+
+      <!-- 풋터 텍스트 업데이트 및 조절 -->
+      <div class="footer">
+        © 2027 ALL NATIONS WORSHIP & PRAISE MINISTRIES
+      </div>
+      
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function() {
+      const imgUrl = "https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG";
+      const img = new Image();
+      img.crossOrigin = "Anonymous"; 
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64; canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(32, 32, 32, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(img, 0, 0, 64, 64);
+        let link = document.getElementById('dynamic-favicon');
+        if(link) link.href = canvas.toDataURL('image/png');
+      };
+      img.src = imgUrl;
+    });
+  </script>
+</body>
+</html>
