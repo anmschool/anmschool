@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <title>All Nations Worship & Praise Ministries</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   
   <!-- 탭 아이콘 (파비콘) -->
   <link id="dynamic-favicon" rel="icon" href="https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG" type="image/x-icon">
@@ -34,20 +34,22 @@
       display: flex; justify-content: center; align-items: flex-start;
       min-height: 100vh;
       position: relative;
+      /* 아이폰 하단 홈바 대응 */
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     /* 배경: 현장 사진 블러 축소로 사역 모습 노출 */
     body::before {
       content: "";
       position: fixed;
-      top: -2%; left: -2%; width: 104%; height: 104%;
+      top: -5%; left: -5%; width: 110%; height: 110%;
       background-image: url('https://lh3.googleusercontent.com/d/1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW'); 
       background-size: cover; background-position: center; 
       filter: blur(8px) brightness(0.45); 
       z-index: -1;
     }
 
-    /* 링크트리 메인 컨테이너 (PC/Mobile 반응형 공통) */
+    /* 링크트리 메인 컨테이너 */
     .link-container {
       width: 100%; 
       background-color: var(--paper);
@@ -70,105 +72,74 @@
 
     .form-inner {
       position: relative; z-index: 1;
-      padding: 60px 25px 40px;
+      padding: 50px 20px 40px;
       flex-grow: 1;
     }
 
     /* 프로필 영역 */
-    .profile-section { text-align: center; margin-bottom: 45px; }
+    .profile-section { text-align: center; margin-bottom: 40px; }
     .profile-logo {
-      width: 95px; height: 95px;
+      width: 90px; height: 90px;
       border-radius: 50%;
       object-fit: cover;
       border: 0.5px solid var(--hairline);
-      box-shadow: 0 15px 25px rgba(0,0,0,0.15);
-      margin-bottom: 25px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+      margin-bottom: 20px;
       background: #000;
     }
     
-    /* 타이틀 한 줄 고정 */
     .profile-title {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 600; color: var(--ink);
-      text-transform: uppercase; margin: 0 0 8px 0;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      text-transform: uppercase; margin: 0 0 6px 0;
+      white-space: normal; word-break: keep-all; line-height: 1.2;
     }
     .profile-desc {
       font-family: 'Montserrat', sans-serif;
       font-size: 11px; font-weight: 600; color: var(--sub);
-      letter-spacing: 4px; text-transform: uppercase; margin: 0;
-    }
-
-    /* 링크 버튼 공통 스타일 */
-    .link-group { margin-bottom: 45px; }
-    .group-title {
-      font-family: 'Montserrat', sans-serif;
-      font-size: 12px; font-weight: 700; color: var(--sub);
-      letter-spacing: 3px; text-transform: uppercase;
-      margin-bottom: 15px; padding-left: 5px; text-align: center;
-    }
-
-    .link-btn {
-      display: flex; justify-content: center; align-items: center;
-      width: 100%; padding: 18px 20px; margin-bottom: 12px;
-      background: rgba(255,255,255,0.6);
-      border: 0.5px solid var(--hairline);
-      color: var(--ink); font-size: 15px; font-weight: 600;
-      text-decoration: none; box-sizing: border-box;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .link-btn:hover {
-      background: #fff;
-      border-color: var(--ink);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      letter-spacing: 3px; text-transform: uppercase; margin: 0;
     }
 
     /* 2027 WINTER 특별 강조 섹션 */
     .highlight-section {
       background: var(--wine-light);
       border: 0.5px solid rgba(110, 31, 58, 0.25);
-      padding: 35px 20px;
+      padding: 30px 15px;
       margin-bottom: 25px;
       text-align: center;
       position: relative;
       box-sizing: border-box;
     }
     .highlight-title-eng {
-      font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 800;
-      color: var(--wine); letter-spacing: 2.5px; margin: 0 0 10px 0;
+      font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 800;
+      color: var(--wine); letter-spacing: 2px; margin: 0 0 8px 0;
     }
     .highlight-title-kor {
-      font-family: 'Pretendard', sans-serif; font-size: 22px; font-weight: 700;
-      color: var(--ink); letter-spacing: -1px; margin: 0 0 25px 0;
+      font-family: 'Pretendard', sans-serif; font-size: 20px; font-weight: 700;
+      color: var(--ink); letter-spacing: -1px; margin: 0 0 20px 0;
     }
     
-    .highlight-btn {
-      display: block; width: 100%; padding: 20px; margin-bottom: 12px;
-      background: var(--ink); color: var(--paper);
-      font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 1px;
-      border: none; transition: 0.3s;
-      box-sizing: border-box;
-      cursor: pointer;
+    .highlight-btn, .highlight-btn-outline {
+      display: flex; justify-content: center; align-items: center;
+      width: 100%; padding: 18px 15px; margin-bottom: 10px;
+      font-size: 15px; font-weight: 700; text-decoration: none; letter-spacing: 0.5px;
+      transition: 0.3s; box-sizing: border-box; cursor: pointer; text-align: center;
+      word-break: keep-all;
     }
-    .highlight-btn:hover { background: var(--wine); box-shadow: 0 10px 20px rgba(110, 31, 58, 0.2); }
+    .highlight-btn {
+      background: var(--ink); color: var(--paper); border: none;
+    }
+    .highlight-btn:hover { background: var(--wine); box-shadow: 0 8px 15px rgba(110, 31, 58, 0.2); }
     
     .highlight-btn-outline {
-      display: block; width: 100%; padding: 20px;
-      background: transparent; color: var(--ink);
-      font-size: 16px; font-weight: 700; text-decoration: none; letter-spacing: 1px;
-      border: 0.5px solid var(--ink); transition: 0.3s;
-      box-sizing: border-box;
-      cursor: pointer;
+      background: transparent; color: var(--ink); border: 0.5px solid var(--ink); margin-bottom: 0;
     }
     .highlight-btn-outline:hover { background: #fff; color: var(--wine); border-color: var(--wine); }
 
-    /* 사역 안내 (About) 섹션 - 세련된 배너 스타일 */
+    /* 사역 안내 (About) 섹션 */
     .about-banner {
       display: block; text-align: center;
-      padding: 22px 20px; margin-bottom: 45px;
+      padding: 20px 15px; margin-bottom: 40px;
       background: #fff;
       border: 0.5px solid var(--hairline);
       border-left: 3px solid var(--ink);
@@ -179,39 +150,80 @@
     }
     .about-banner:hover {
       border-left: 3px solid var(--wine);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
       transform: translateY(-2px);
     }
-    .about-eng { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--sub); letter-spacing: 3px; display: block; margin-bottom: 6px; }
-    .about-kor { font-family: 'Pretendard', sans-serif; font-size: 16px; font-weight: 700; color: var(--ink); display: block; }
+    .about-eng { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--sub); letter-spacing: 2px; display: block; margin-bottom: 6px; }
+    .about-kor { font-family: 'Pretendard', sans-serif; font-size: 15px; font-weight: 700; color: var(--ink); display: block; }
+
+    /* 링크 버튼 공통 스타일 */
+    .link-group { margin-bottom: 40px; width: 100%; }
+    .group-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700; color: var(--sub);
+      letter-spacing: 2px; text-transform: uppercase;
+      margin-bottom: 12px; text-align: center;
+    }
+
+    .link-btn {
+      display: flex; justify-content: center; align-items: center;
+      width: 100%; padding: 16px 15px; margin-bottom: 10px;
+      background: rgba(255,255,255,0.7);
+      border: 0.5px solid var(--hairline);
+      color: var(--ink); font-size: 14.5px; font-weight: 600;
+      text-decoration: none; box-sizing: border-box;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      word-break: keep-all;
+    }
+    .link-btn:hover {
+      background: #fff;
+      border-color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.06);
+    }
 
     /* 스트리밍 버튼 듀얼 그리드 */
-    .grid-links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .grid-links .link-btn { margin-bottom: 0; padding: 16px 10px; font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: 600; }
+    .grid-links { 
+      display: grid; 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 10px; 
+      width: 100%; 
+    }
+    .grid-links .link-btn { 
+      margin-bottom: 0; 
+      padding: 14px 5px; 
+      font-size: 13px; 
+      font-family: 'Montserrat', sans-serif; 
+      font-weight: 600; 
+      letter-spacing: -0.2px;
+    }
 
-    /* 맨 밑 Footer */
+    /* 풋터 */
     .footer {
-      text-align: center; margin-top: 40px; padding-top: 30px;
+      text-align: center; margin-top: 30px; padding-top: 25px;
       border-top: 0.5px solid var(--hairline);
       font-family: 'Montserrat', sans-serif; font-size: 9px; color: var(--hairline);
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       line-height: 1.5;
     }
 
     /* 토스트 알림창 스타일 */
     .toast-popup {
       position: fixed;
-      bottom: 35px;
+      bottom: env(safe-area-inset-bottom, 20px);
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       background-color: var(--ink);
       color: var(--paper);
-      padding: 13px 22px;
+      padding: 12px 20px;
       border-radius: 30px;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       letter-spacing: -0.2px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
       opacity: 0;
       pointer-events: none;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -223,7 +235,7 @@
     }
     .toast-popup.show {
       opacity: 1;
-      transform: translateX(-50%) translateY(0);
+      transform: translateX(-50%) translateY(-20px);
     }
     .toast-icon {
       display: inline-flex;
@@ -237,27 +249,35 @@
       color: #fff;
     }
 
-    /* 📱 PC / Mobile 반응형 분기 */
-    @media (max-width: 500px) {
+    /* =========================================
+       📱 모바일 최적화 (기본값) 
+       ========================================= */
+    @media (max-width: 480px) {
       .link-container {
         max-width: 100%;
         min-height: 100vh;
         border-radius: 0;
         box-shadow: none;
       }
-      .profile-title { font-size: 16.5px; letter-spacing: 0.5px; } 
+      .profile-title { font-size: 16px; letter-spacing: 0px; }
+      .form-inner { padding: 40px 15px 30px; }
     }
 
-    @media (min-width: 501px) {
+    /* =========================================
+       💻 PC / 태블릿 최적화 (앱 뷰 형태)
+       ========================================= */
+    @media (min-width: 481px) {
       .link-container {
-        max-width: 480px; 
-        margin-top: 50px;
-        margin-bottom: 50px;
-        border-radius: 20px; 
-        border: 0.5px solid rgba(255,255,255,0.2);
-        box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        max-width: 440px; 
+        margin-top: 40px;
+        margin-bottom: 40px;
+        border-radius: 24px; 
+        border: 0.5px solid rgba(255,255,255,0.15);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.6);
       }
-      .profile-title { font-size: 17.5px; letter-spacing: 1px; }
+      .form-inner { padding: 50px 35px 40px; }
+      .profile-title { font-size: 17px; letter-spacing: 0.5px; }
+      .grid-links { gap: 12px; }
     }
   </style>
 </head>
@@ -285,7 +305,7 @@
         <a href="https://anmschool.vercel.app/" target="_blank" class="highlight-btn-outline">신청 및 입금 확인</a>
       </div>
 
-      <!-- 2. 올네이션스 사역 안내 (신규 추가된 세련된 배너) -->
+      <!-- 2. 올네이션스 사역 안내 -->
       <a href="#" class="about-banner" target="_blank">
         <span class="about-eng">ABOUT ANM</span>
         <span class="about-kor">올네이션스 경배와찬양 사역 안내</span>
