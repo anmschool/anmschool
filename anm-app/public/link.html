@@ -300,9 +300,8 @@
         <a href="https://www.facebook.com/올네이션스%20경배와찬양%20ANM" target="_blank" class="link-btn">페이스북 (Facebook)</a>
         <a href="http://pf.kakao.com/_xlyCXX" target="_blank" class="link-btn">카카오톡 플러스친구</a>
         
-        <!-- 이메일 복사 버튼 2개 -->
+        <!-- 공식 문의 메일 단일 버튼 -->
         <a href="javascript:void(0)" onclick="copyEmail('7000school@gmail.com')" class="link-btn">공식 문의 메일 (Contact)</a>
-        <a href="javascript:void(0)" onclick="copyEmail('anmschool@allnationsinspirational.com')" class="link-btn">스쿨 관련 문의 (School)</a>
       </div>
 
       <!-- 4. 음원 스트리밍 사이트 -->
@@ -335,7 +334,6 @@
   </div>
 
   <script>
-    // 이메일 클립보드 복사 함수
     let toastTimeout = null;
     function copyEmail(email) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -349,7 +347,6 @@
       }
     }
 
-    // 모바일/구형 브라우저 호환용 Fallback
     function fallbackCopy(text) {
       const tempArea = document.createElement("textarea");
       tempArea.value = text;
@@ -367,7 +364,6 @@
       document.body.removeChild(tempArea);
     }
 
-    // 토스트 팝업 띄우기 함수
     function showToast() {
       const toast = document.getElementById("toast");
       toast.classList.add("show");
@@ -378,7 +374,6 @@
       }, 2000);
     }
 
-    // 동적 파비콘 원형 자르기 로직
     window.addEventListener('load', function() {
       const imgUrl = "https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG";
       const img = new Image();
