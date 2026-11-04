@@ -14,6 +14,7 @@
  *   POST {action:'me', token}                   → {me}          로그인 유지 (토큰 60일)
  *   POST {action:'admin', pin, project}         → {stats}       관리자 탭의 PIN
  *   POST {action:'apply', key, ops:[…]}          → 관리 시트 내용 일괄 반영 (시즌 세팅 도구용, ADMIN_KEY 필요)
+ *   POST {action:'register', project, form}     → 웹 신청서 접수 → 운영 시트 '웹 신청' 탭에 한 줄 (03이 5분마다 등록으로 옮김)
  *
  * 원칙
  *   - 운영 시트는 공개하지 않는다. API가 본인 행만 골라 필요한 칸만 내보낸다 (주소·생년월일·기도제목·연락처는 절대 안 보냄)
@@ -148,6 +149,7 @@ function doPost(e) {
     if (body.action === 'admin') return json_(apiAdmin_(body));
     if (body.action === 'content') return json_({ ok: true, data: getContent_() });
     if (body.action === 'apply') return json_(apiApply_(body));
+    if (body.action === 'register') return json_(apiRegister_(body));
     return json_({ ok: false, error: 'unknown_action' });
   } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
 }
@@ -250,7 +252,7 @@ function apiAdmin_(b) {
 function projectRow_(id) {
   const r = rows_(appSheet_().getSheetByName('프로젝트')).find(x => String(x.ID) === String(id));
   if (!r) return null;
-  return { id: String(r.ID), title: r.제목, opsId: String(r['운영 시트 ID'] || '').trim(), login: String(r.로그인).toUpperCase() === 'ON' && !!r['운영 시트 ID'] };
+  return { id: String(r.ID), title: r.제목, status: String(r.상태 || ''), opsId: String(r['운영 시트 ID'] || '').trim(), login: String(r.로그인).toUpperCase() === 'ON' && !!r['운영 시트 ID'] };
 }
 
 /** 운영 시트에서 필요한 탭만 읽기 (머리글 이름 기준) */
@@ -365,6 +367,135 @@ function appLog_(project, result, code) {
     const sh = appSheet_().getSheetByName('접속 로그');
     sh.appendRow([new Date(), project, result, code]);
   } catch (e) {}
+}
+
+/* ═════════════════════════ 웹 신청 (register) ═════════════════════════ */
+
+const REG_TRACK_NAMES = {
+  청지기: '청지기들을 위한 경배와찬양학교',
+  미래세대: '미래세대를 위한 경배와찬양학교',
+  어린이: '어린이를 위한 경배와찬양학교',
+  대학청년: '대학 청년 및 일반인을 위한 경배와찬양학교',
+};
+const REG_LIMITS = { short: 200, long: 3000, members: 300 };
+
+function apiRegister_(b) {
+  if (b.hp) return { ok: true, receipt: '-' };                      // 봇이 채우는 숨은 칸
+  const f = b.form || {};
+  const v = validateRegistration_(f);
+  if (!v.ok) return v;
+  const proj = projectRow_(b.project);
+  if (!proj || !proj.opsId) return { ok: false, error: 'no_project' };
+  if (proj.status === '종료' || proj.status === '숨김') return { ok: false, error: 'closed' };
+
+  const cache = CacheService.getScriptCache();
+  const who = normDigits_(f.type === '단체' ? f.repPhone : f.phone);
+  const rk = 'reg_' + who;
+  const cnt = Number(cache.get(rk) || 0);
+  if (cnt >= 5) return { ok: false, error: 'too_many' };
+  // 같은 내용 연속 제출(두 번 클릭) → 같은 접수번호
+  const dk = 'regdup_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(f))).slice(0, 22);
+  const prev = cache.get(dk);
+  if (prev) return { ok: true, receipt: prev, duplicate: true };
+
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return { ok: false, error: 'busy' };
+  try {
+    const ss = SpreadsheetApp.openById(proj.opsId);
+    const sh = ensureWebTab_(ss);
+    const row = buildWebRow_(f, new Date(), b.lang);
+    const at = sh.getLastRow() + 1;
+    const receipt = proj.id + '-W' + String(at - 1).padStart(4, '0');
+    row[0] = receipt;
+    sh.getRange(at, 1, 1, row.length).setValues([row]);
+    SpreadsheetApp.flush();
+    cache.put(rk, String(cnt + 1), 600);
+    cache.put(dk, receipt, 300);
+    return { ok: true, receipt };
+  } finally { lock.releaseLock(); }
+}
+
+/** 순수 함수: 입력 검사 → {ok} 또는 {ok:false, error:'invalid', fields:[…]} */
+function validateRegistration_(f) {
+  const bad = [];
+  const s = (k, max) => { const x = String(f[k] == null ? '' : f[k]).trim(); if (x.length > (max || REG_LIMITS.short)) bad.push(k); return x; };
+  const need = (k, max) => { if (!s(k, max)) bad.push(k); };
+  const phoneOk = (x) => normDigits_(x).length >= 9;
+  if (f.type !== '개인' && f.type !== '단체') return { ok: false, error: 'invalid', fields: ['type'] };
+  if (!REG_TRACK_NAMES[f.track]) bad.push('track');
+  if (f.mode !== '현장' && f.mode !== '온라인') bad.push('mode');
+  if (f.consent !== true) bad.push('consent');
+  if (f.type === '개인') {
+    ['name', 'gender', 'birth', 'phone', 'email', 'address', 'church', 'category', 'training'].forEach(k => need(k));
+    need('prayer', REG_LIMITS.long);
+    ['role', 'school', 'major', 'grade', 'job'].forEach(k => s(k));
+    if (f.phone && !phoneOk(f.phone)) bad.push('phone');
+  } else {
+    ['churchName', 'address', 'pastorName', 'pastorAttend', 'pastorPhone', 'repName', 'repPhone', 'repEmail'].forEach(k => need(k));
+    s('prayer', REG_LIMITS.long);
+    if (f.repPhone && !phoneOk(f.repPhone)) bad.push('repPhone');
+    const ms = Array.isArray(f.members) ? f.members : [];
+    if (!ms.length || ms.length > REG_LIMITS.members) bad.push('members');
+    ms.forEach((m, i) => {
+      ['name', 'gender', 'phone', 'birth', 'category', 'training'].forEach(k => { const x = String((m || {})[k] || '').trim(); if (!x || x.length > REG_LIMITS.short) bad.push('m' + i + '.' + k); });
+      ['email', 'note'].forEach(k => { if (String((m || {})[k] || '').length > REG_LIMITS.short) bad.push('m' + i + '.' + k); });
+    });
+  }
+  return bad.length ? { ok: false, error: 'invalid', fields: Array.from(new Set(bad)) } : { ok: true };
+}
+
+/** 순수 함수: 신청서 → '웹 신청' 탭 한 줄 (03 WEB_HEADERS 순서) */
+function buildWebRow_(f, now, lang) {
+  const safe = (x) => { const t = String(x == null ? '' : x).trim(); return /^[=+@]/.test(t) ? "'" + t : t; };
+  const H = WEB_HEADERS, row = new Array(H.length).fill('');
+  const put = (header, val, nth) => {
+    let c = 0;
+    for (let i = 0; i < H.length; i++) if (H[i] === header) { if (c === (nth || 0)) { row[i] = val; return; } c++; }
+    throw new Error('머리글 없음: ' + header);
+  };
+  const trackText = (f.mode === '온라인' ? '온라인 ' : '') + REG_TRACK_NAMES[f.track];
+  put('타임스탬프', now);
+  put('신청 방법', f.type);
+  put('훈련받고자 하는 학교', trackText);
+  put('참여 방식', f.mode);
+  put('언어', String(lang || 'ko').slice(0, 5));
+  put('개인정보 동의', 'O ' + Utilities.formatDate(now, 'Asia/Seoul', 'yyyy-MM-dd HH:mm'));
+  if (f.type === '개인') {
+    put('이름', safe(f.name)); put('성별', safe(f.gender)); put('생년월일', safe(f.birth)); put('연락처', safe(f.phone));
+    put('E-mail', safe(f.email)); put('주소', safe(f.address)); put('참석 교회', safe(f.church)); put('직분', safe(f.role));
+    put('구분', safe(f.category)); put('기존 훈련', safe(f.training)); put('학교', safe(f.school)); put('학과', safe(f.major));
+    put('학년', safe(f.grade)); put('직장', safe(f.job)); put('기도제목', safe(f.prayer));
+  } else {
+    put('교회명', safe(f.churchName)); put('주소', safe(f.address), 1); put('교역자명', safe(f.pastorName));
+    put('교역자 참석', safe(f.pastorAttend)); put('교역자 연락처', safe(f.pastorPhone)); put('인솔자명', safe(f.repName));
+    put('인솔자 연락처', safe(f.repPhone)); put('E-mail', safe(f.repEmail), 1); put('기도제목', safe(f.prayer), 1);
+    const ms = f.members.map(m => ({ name: String(m.name || '').trim(), gender: m.gender || '', phone: String(m.phone || '').trim(),
+      email: String(m.email || '').trim(), birth: String(m.birth || '').trim(), category: m.category || '', training: m.training || '', note: String(m.note || '').trim() }));
+    put('단체 명단', JSON.stringify(ms));
+  }
+  return row;
+}
+
+function ensureWebTab_(ss) {
+  let sh = ss.getSheetByName(WEB_TAB);
+  if (sh) return sh;
+  sh = ss.insertSheet(WEB_TAB);
+  sh.getRange(1, 1, 1, WEB_HEADERS.length).setValues([WEB_HEADERS]).setFontWeight('bold').setBackground('#F3E9ED');
+  sh.getRange(1, 1, sh.getMaxRows(), WEB_HEADERS.length).setNumberFormat('@');
+  sh.getRange(2, 2, sh.getMaxRows() - 1, 1).setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  sh.setFrozenRows(1);
+  sh.getRange('A1').setNote('웹 신청서(anmschool.vercel.app/apply)가 자동으로 쌓는 탭입니다. 직접 고치지 마세요. 5분마다 Master_DB(등록)으로 옮겨집니다 (접수 로그의 W행 번호).');
+  return sh;
+}
+
+/** 배포 전 점검: 가짜 신청 2건(개인·단체)을 검사만 하고 줄 모양을 로그에 출력 (시트에 쓰지 않음) */
+function testRegister() {
+  const ind = { type: '개인', track: '미래세대', mode: '현장', consent: true, name: '테스트', gender: '여', birth: '100512', phone: '010-1234-5678',
+    email: 't@t.t', address: '서울', church: '테스트교회', category: '중고등부', training: '처음 참석', prayer: '기도' };
+  console.log(JSON.stringify(validateRegistration_(ind)));
+  const row = buildWebRow_(ind, new Date(), 'ko');
+  WEB_HEADERS.forEach((h, i) => { if (row[i] !== '') console.log(h + ' = ' + row[i]); });
+  console.log(JSON.stringify(validateRegistration_({ type: '단체', track: '어린이', mode: '현장', consent: true, members: [{ name: 'a' }] })));
 }
 
 function testApi() {

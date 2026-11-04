@@ -23,6 +23,11 @@ const T = {
   lod: '숙소', un: '숙소 미배정', night: '숙소 현황', rooms: '방 목록', log: '접수 로그',
   cfg: '설정', trk: '트랙', fee: '금액', chk: '체크리스트', guide: '사용법',
 };
+// 웹 신청서(anmschool.vercel.app/apply) → 04 register가 운영 시트의 이 탭에 한 줄씩 쌓음. 03이 구글폼 응답과 같은 방식으로 읽음
+const WEB_TAB = '웹 신청';
+const WEB_HEADERS = ['접수번호', '타임스탬프', '신청 방법', '훈련받고자 하는 학교', '참여 방식', '이름', '성별', '생년월일', '연락처', 'E-mail', '주소',
+  '참석 교회', '직분', '구분', '기존 훈련', '학교', '학과', '학년', '직장', '기도제목', '언어', '개인정보 동의',
+  '교회명', '주소', '교역자명', '교역자 참석', '교역자 연락처', '인솔자명', '인솔자 연락처', 'E-mail', '기도제목', '단체 명단'];
 // 1차 버전 탭 이름 → 새 이름 (데이터가 없으면 지우고 새로 만듦)
 const OLD_TABS = { 등록: T.reg, 재정: T.fin, 단체: T.grp, 검색: T.search, 현황: T.dash, 안내: T.guide };
 
@@ -403,26 +408,37 @@ function syncResponses() {
     const ctx = loadCtx_(ss);
     console.log('▶ 동기화 시작 (등록 ' + ctx.regRows.length + '명, 처리된 응답 ' + Object.keys(ctx.done).length + '줄)');
 
-    // 1) 폼 응답
-    const resp = SpreadsheetApp.openById(ctx.respId).getSheets()[0];
-    const vals = resp.getDataRange().getValues();
-    const H = mapResponseHeader_(vals[0]);
+    // 1) 응답: 웹 신청 탭(W) + 구글폼 응답 시트(R, 설정에 ID가 있을 때만)
+    const sources = [];
+    const web = ss.getSheetByName(WEB_TAB);
+    if (web) sources.push(['W', web]);
+    if (ctx.respId) {
+      try { sources.push(['R', SpreadsheetApp.openById(ctx.respId).getSheets()[0]]); }
+      catch (e) { console.log('구글폼 응답 시트를 못 엶 (건너뜀): ' + e.message); }
+    }
     const newRegs = [], newGroups = [], logs = [];
-    for (let i = 1; i < vals.length; i++) {
-      const src = 'R' + (i + 1);
-      if (ctx.done[src]) continue;
-      if (Date.now() - t0 > 4.5 * 60 * 1000) { console.log('⏱ 시간 제한 → 나머지는 다음 동기화'); break; }
-      const row = vals[i];
-      if (!row[H.ts]) continue;
-      try {
-        const r = processResponseRow_(row, H, src, ctx);
-        r.regs.forEach(x => newRegs.push(x));
-        if (r.group) newGroups.push(r.group);
-        logs.push([new Date(), src, r.result, r.note]);
-        console.log('   ' + src + ' ' + r.result + ' ' + r.note);
-      } catch (e) {
-        logs.push([new Date(), src, '실패', e.message]);
-        console.log('   ' + src + ' 실패 ' + e.message);
+    let timeUp = false;
+    for (const [pfx, sh] of sources) {
+      if (timeUp) break;
+      const vals = sh.getDataRange().getValues();
+      if (vals.length < 2) continue;
+      const H = mapResponseHeader_(vals[0]);
+      for (let i = 1; i < vals.length; i++) {
+        const src = pfx + (i + 1);
+        if (ctx.done[src]) continue;
+        if (Date.now() - t0 > 4.5 * 60 * 1000) { console.log('⏱ 시간 제한 → 나머지는 다음 동기화'); timeUp = true; break; }
+        const row = vals[i];
+        if (!row[H.ts]) continue;
+        try {
+          const r = processResponseRow_(row, H, src, ctx);
+          r.regs.forEach(x => newRegs.push(x));
+          if (r.group) newGroups.push(r.group);
+          logs.push([new Date(), src, r.result, r.note]);
+          console.log('   ' + src + ' ' + r.result + ' ' + r.note);
+        } catch (e) {
+          logs.push([new Date(), src, '실패', e.message]);
+          console.log('   ' + src + ' 실패 ' + e.message);
+        }
       }
     }
     const reg = ss.getSheetByName(T.reg);
@@ -482,7 +498,7 @@ function processResponseRow_(row, H, src, ctx) {
   const ts = row[H.ts] instanceof Date ? row[H.ts] : new Date(row[H.ts]);
   if (!isGroup) {
     const p = {
-      트랙: track ? track[0] : trackRaw, 등록경로: '개인폼', 이름: str_(row[H.name]), 성별: normGender_(row[H.gender]),
+      트랙: track ? track[0] : trackRaw, 등록경로: src.charAt(0) === 'W' ? '웹 개인' : '개인폼', 이름: str_(row[H.name]), 성별: normGender_(row[H.gender]),
       생년월일: normBirth_(row[H.birth]), 구분: str_(row[H.type]), 직분: str_(row[H.role]),
       연락처: normPhone_(row[H.phone]).phone, 이메일: str_(row[H.email]), 주소: str_(row[H.addr]), 교회: str_(row[H.church]),
       '기존 훈련': str_(row[H.prior]), 학교: str_(row[H.school]), 학과: str_(row[H.major]), 학년: str_(row[H.grade]),
@@ -497,23 +513,35 @@ function processResponseRow_(row, H, src, ctx) {
   // 단체
   const gid = ctx.term + '-G' + String(++ctx.gseq).padStart(3, '0');
   const church = str_(row[H.g_church]);
-  const files = String(row[H.g_file] || '').split(/[,\s]+/).map(u => (u.match(/[-\w]{25,}/) || [])[0]).filter(Boolean);
+  const files = H.g_file < 0 ? [] : String(row[H.g_file] || '').split(/[,\s]+/).map(u => (u.match(/[-\w]{25,}/) || [])[0]).filter(Boolean);
+  let inline = null;   // 웹 신청서: 명단을 JSON으로 받음
+  if (H.g_members !== undefined && H.g_members >= 0 && String(row[H.g_members] || '').trim()) {
+    try { inline = JSON.parse(String(row[H.g_members])); } catch (e) { inline = null; }
+  }
   const group = [gid, ts, church, track ? track[0] : trackRaw, str_(row[H.g_pastor]), str_(row[H.g_pastorAttend]),
     normPhone_(row[H.g_pastorPhone]).phone, str_(row[H.g_leader]), normPhone_(row[H.g_leaderPhone]).phone,
-    str_(row[H.g_email]), files.map(id => 'https://drive.google.com/open?id=' + id).join('\n'), '', src];
+    str_(row[H.g_email]), inline ? '웹 신청 명단 ' + inline.length + '명' : files.map(id => 'https://drive.google.com/open?id=' + id).join('\n'), '', src];
   const regs = []; const notes = []; let dup = 0;
-  files.forEach(id => {
-    try {
-      readGroupFile_(id).forEach(m => {
-        const p = Object.assign(m, { 트랙: track ? track[0] : trackRaw, 등록경로: '단체폼', 교회: church, 제출일시: ts, 원본: src });
-        const k = personKey_(p.이름, p.연락처, p.생년월일);
-        if (k && ctx.dupe[k]) { dup++; notes.push(p.이름 + '(중복 ' + ctx.dupe[k] + ')'); return; }
-        const r = buildRegRow_(p, gid, track, ctx);
-        if (k) ctx.dupe[k] = r[COL.코드];
-        regs.push(r);
-      });
-    } catch (e) { notes.push('파일 읽기 실패: ' + e.message); }
-  });
+  const addMember = (m) => {
+    const p = Object.assign(m, { 트랙: track ? track[0] : trackRaw, 등록경로: inline ? '웹 단체' : '단체폼', 교회: church, 제출일시: ts, 원본: src });
+    const k = personKey_(p.이름, p.연락처, p.생년월일);
+    if (k && ctx.dupe[k]) { dup++; notes.push(p.이름 + '(중복 ' + ctx.dupe[k] + ')'); return; }
+    const r = buildRegRow_(p, gid, track, ctx);
+    if (k) ctx.dupe[k] = r[COL.코드];
+    regs.push(r);
+  };
+  if (inline) {
+    inline.forEach(m => {
+      const name = str_(m.name);
+      if (!name) return;
+      addMember({ 이름: name, 성별: normGender_(m.gender), 연락처: normPhone_(m.phone).phone, 이메일: str_(m.email),
+        생년월일: normBirth_(m.birth), 구분: str_(m.category), '기존 훈련': str_(m.training), 비고: str_(m.note) });
+    });
+  } else {
+    files.forEach(id => {
+      try { readGroupFile_(id).forEach(addMember); } catch (e) { notes.push('파일 읽기 실패: ' + e.message); }
+    });
+  }
   group[11] = (regs.length ? '✔ ' + regs.length + '명 등록' : '⚠️ 명단 0명 → 수기 입력 필요') + (dup ? ' · 중복 ' + dup : '') + (notes.length ? ' · ' + notes.join(', ') : '');
   return { regs, group, result: regs.length ? '추가(단체)' : '실패', note: gid + ' ' + church + ' ' + regs.length + '명' + (notes.length ? ' · ' + notes.join(', ') : '') };
 }
@@ -704,7 +732,7 @@ function mapResponseHeader_(hdr) {
     major: P('학과'), grade: P('학년'), job: P('직장'), type: P('구분'), prior: P('기존 훈련'), prayer: P('기도제목'),
     g_church: gStart, g_pastor: G('교역자명'), g_pastorAttend: G('교역자 참석'), g_pastorPhone: G('교역자 연락처'),
     g_leader: G('인솔자명'), g_leaderPhone: G('인솔자 연락처'), g_email: G('E-mail'), g_addr: G('주소'), g_prayer: G('기도제목'),
-    g_file: G('단체 신청'),
+    g_file: G('단체 신청'), g_members: G('단체 명단'),
   };
 }
 
