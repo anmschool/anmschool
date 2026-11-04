@@ -35,16 +35,16 @@ function Slides() {
 type L = Record<Lang, string>;
 const TRACKS: { name: L; dates: L; nights: L }[] = [
   { name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
-    dates: { ko: "1/11(월) ~ 1/16(토), 1/18(월) ~ 1/21(목)", en: "Jan 11 (Mon) – 16 (Sat), Jan 18 (Mon) – 21 (Thu)", zh: "1月11日(周一) ~ 16日(周六)，1月18日(周一) ~ 21日(周四)" },
-    nights: { ko: "8박 10일", en: "8 nights · 10 days", zh: "8晚10天" } },
-  { name: { ko: "미래세대를 위한 경배와찬양학교", en: "Worship & Praise School for the Next Generation", zh: "为下一代的敬拜赞美学校" },
+    dates: { ko: "1/6(수) ~ 1/16(토)", en: "Jan 6 (Wed) – 16 (Sat)", zh: "1月6日(周三) ~ 16日(周六)" },
+    nights: { ko: "10박 11일", en: "10 nights · 11 days", zh: "10晚11天" } },
+  { name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
     dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
   { name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
     dates: { ko: "1/14(목) ~ 1/16(토)", en: "Jan 14 (Thu) – 16 (Sat)", zh: "1月14日(周四) ~ 16日(周六)" },
     nights: { ko: "2박 3일", en: "2 nights · 3 days", zh: "2晚3天" } },
   { name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
-    dates: { ko: "1/18(월) ~ 1/21(목)", en: "Jan 18 (Mon) – 21 (Thu)", zh: "1月18日(周一) ~ 21日(周四)" },
+    dates: { ko: "1/6(수) ~ 1/9(토)", en: "Jan 6 (Wed) – 9 (Sat)", zh: "1月6日(周三) ~ 9日(周六)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
 ];
 const WEEKLY: { name: L; when: L; where: L }[] = [
@@ -56,7 +56,7 @@ const WEEKLY: { name: L; when: L; where: L }[] = [
     where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
 ];
 const ACCOUNTS: { who: L; bank: L; no: string }[] = [
-  { who: { ko: "청지기 · 미래세대 · 대학 청년 및 일반인 · 온라인", en: "Stewards · Next Generation · University Students, Young Adults & General · Online", zh: "管家 · 下一代 · 大学青年及一般成人 · 线上" },
+  { who: { ko: "청지기 · 십대 · 대학 청년 및 일반인 · 온라인", en: "Stewards · Teens · University Students, Young Adults & General · Online", zh: "管家 · 青少年 · 大学青年及一般成人 · 线上" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-604-700231" },
   { who: { ko: "어린이", en: "Children", zh: "儿童" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-404-679551" },
