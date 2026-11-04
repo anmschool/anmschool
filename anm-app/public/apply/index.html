@@ -303,7 +303,13 @@
             <option value="미래세대">2. 미래세대를 위한 경배와찬양학교 (3박 4일 | 1/11 ~ 1/14)</option>
             <option value="어린이">3. 어린이를 위한 경배와찬양학교 (2박 3일 | 1/14 ~ 1/16)</option>
             <option value="대학청년">4. 대학 청년 및 일반인을 위한 경배와찬양학교 (3박 4일 | 1/18 ~ 1/21)</option>
-            <option value="온라인">5. 온라인 등록 (비대면 훈련)</option>
+          </select>
+        </div>
+        <div class="input-group full-width" style="margin-bottom: 10px;">
+          <label>참여 방식 (필수) · Mode · 参与方式</label>
+          <select id="global-mode" onchange="updateFeeCard(document.getElementById('global-track').value)">
+            <option value="현장">현장 참석 · On-site · 现场</option>
+            <option value="온라인">온라인 (비대면) · Online · 线上</option>
           </select>
         </div>
 
@@ -422,6 +428,7 @@
           </div>
         </div>
 
+        <label style="display:flex; gap:8px; align-items:flex-start; font-size:13px; line-height:1.6; color:var(--sub); margin:18px 0;"><input type="checkbox" id="consent" style="width:auto; margin-top:4px; flex:none;"><span>개인정보(이름·연락처·생년월일 등)를 경배와찬양학교 등록·안내 목적으로 수집·이용하는 데 동의합니다. (필수) · I agree to the collection and use of my personal data for registration. · 同意为报名目的收集和使用个人信息。</span></label>
         <button type="button" class="btn-submit" onclick="submitData()" id="submitBtn" data-i18n="submit">신청서 제출하기</button>
       </form>
 
@@ -486,6 +493,7 @@
     };
 
     function updateFeeCard(key) {
+      if(key && document.getElementById('global-mode').value === '온라인') key = '온라인';
       const box = document.getElementById('fee-notice-box');
       if(!key || !feeInfo[key]) { box.classList.remove('visible'); return; }
       document.getElementById('fee-card-title').innerText = feeInfo[key].name;
@@ -564,17 +572,18 @@
       let payload = { type: formType, track: track };
 
       if(formType === '개인') {
+        const OPT = ['ind_role', 'ind_school', 'ind_major', 'ind_grade', 'ind_job', 'grp_prayer'];
         const fields = ['ind_name', 'ind_gender', 'ind_birth', 'ind_phone', 'ind_email', 'ind_address', 'ind_church', 'ind_role', 'ind_category', 'ind_training', 'ind_school', 'ind_major', 'ind_grade', 'ind_job', 'ind_prayer'];
         for(let field of fields) {
           const el = document.querySelector(`[name="${field}"]`);
-          if(!el.value.trim()) { alert(i18n[currentLang].alert_ind); el.focus(); return; }
+          if(!el.value.trim() && !OPT.includes(field)) { alert(i18n[currentLang].alert_ind); el.focus(); return; }
           payload[field.replace('ind_', '')] = el.value.trim();
         }
       } else {
         const fields = ['grp_churchName', 'grp_address', 'grp_pastorName', 'grp_pastorAttend', 'grp_pastorPhone', 'grp_repName', 'grp_repPhone', 'grp_repEmail', 'grp_prayer'];
         for(let field of fields) {
           const el = document.querySelector(`[name="${field}"]`);
-          if(!el.value.trim()) { alert(i18n[currentLang].alert_grp); el.focus(); return; }
+          if(!el.value.trim() && !OPT.includes(field)) { alert(i18n[currentLang].alert_grp); el.focus(); return; }
           payload[field.replace('grp_', '')] = el.value.trim();
         }
         payload.members = [];
@@ -599,22 +608,27 @@
         if(!hasMember) return;
       }
 
+      if(!document.getElementById('consent').checked) { alert('개인정보 수집·이용에 동의해 주세요. / Please agree to the privacy terms. / 请同意个人信息条款。'); return; }
+      const mode = document.getElementById('global-mode').value;
+      payload.mode = mode; payload.consent = true;
       const btn = document.getElementById('submitBtn');
       btn.innerText = "..."; btn.disabled = true;
 
-      const GAS_URL = "https://script.google.com/macros/s/AKfycbxSn4_Z6Fed76Ff8X2lajrZJOtewnlHCRXkNTjbn1LQT_jKURFYrlb4sWnL0lAl0G6rBA/exec";
+      const GAS_URL = "https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec";
 
       fetch(GAS_URL, {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ action: 'register', project: '2027W', lang: currentLang, hp: '', form: payload }),
+        redirect: 'follow',
         headers: { "Content-Type": "text/plain;charset=utf-8" }
       })
       .then(response => response.json())
       .then(data => {
-        if(data.success) {
-          if(feeInfo[track]) {
-            document.getElementById('summary-track-title').innerText = feeInfo[track].name;
-            document.getElementById('summary-bank-account').innerText = feeInfo[track].acc;
+        if(data.ok) {
+          const fk = mode === '온라인' ? '온라인' : track;
+          if(feeInfo[fk]) {
+            document.getElementById('summary-track-title').innerText = feeInfo[track].name + (mode === '온라인' ? ' (온라인)' : '') + (data.receipt ? '  ·  접수번호 ' + data.receipt : '');
+            document.getElementById('summary-bank-account').innerText = (track === '어린이' ? feeInfo['어린이'].acc : feeInfo[fk].acc);
           }
           document.getElementById('application-form').style.display = 'none';
           document.querySelector('.tabs').style.display = 'none';
@@ -622,13 +636,14 @@
           document.getElementById('success-message').style.display = 'block';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
-          alert("데이터 저장 실패: " + data.error); btn.disabled = false;
+          const M = { invalid: '입력값을 확인해 주세요: ' + (data.fields || []).join(', '), too_many: '잠시 후 다시 시도해 주세요. (짧은 시간에 여러 번 제출됨)', closed: '현재 신청 기간이 아닙니다.', no_project: '현재 신청 기간이 아닙니다.', busy: '접수가 몰리고 있습니다. 잠시 후 다시 제출해 주세요.' };
+          alert(M[data.error] || ('저장 실패: ' + data.error)); btn.disabled = false; btn.innerText = i18n[currentLang].submit;
         }
       })
       .catch(error => {
         console.error(error);
         alert("서버와 통신 중 오류가 발생했습니다.\n상세 오류: " + error.message); 
-        btn.disabled = false;
+        btn.disabled = false; btn.innerText = i18n[currentLang].submit;
       });
     }
   </script>
