@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="UTF-8">
   <title>2027 Winter 경배와찬양학교 신청 / Application / 申请书</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   
   <link id="dynamic-favicon" rel="icon" href="https://lh3.googleusercontent.com/d/1LS8kohsuirFakmJN5kvrrIlV04-y8HpG" type="image/x-icon">
 
@@ -30,8 +30,9 @@
       font-family: 'Pretendard', sans-serif;
       color: var(--ink);
       display: flex; justify-content: center; align-items: flex-start;
-      min-height: 100vh; padding: 60px 15px; box-sizing: border-box;
-      position: relative; overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: env(safe-area-inset-bottom);
     }
 
     body::before {
@@ -46,10 +47,9 @@
 
     .form-container {
       background-color: var(--paper); 
-      border: none; 
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); 
-      max-width: 920px; width: 100%; padding: 0; box-sizing: border-box;
+      width: 100%;
       position: relative; overflow: hidden;
+      display: flex; flex-direction: column;
     }
 
     .form-container::before {
@@ -65,11 +65,11 @@
 
     .form-inner {
       position: relative; z-index: 1;
-      padding: 60px 30px;
+      padding: 50px 20px 40px;
+      flex-grow: 1;
     }
-    @media (min-width: 768px) { .form-inner { padding: 85px 75px; } }
 
-    .lang-switcher { text-align: right; margin-bottom: 45px; position: relative; z-index: 2; }
+    .lang-switcher { text-align: right; margin-bottom: 35px; position: relative; z-index: 2; }
     
     .lang-btn { 
       background: transparent; border: none; 
@@ -83,46 +83,48 @@
     .lang-btn:hover { color: var(--ink); }
     .lang-btn.active { color: var(--wine); border-bottom: 2px solid var(--wine); font-weight: 700; }
 
-    .header-labels { text-align: center; margin-bottom: 45px; line-height: 1.2; position: relative; z-index: 2; }
+    .header-labels { text-align: center; margin-bottom: 40px; line-height: 1.2; position: relative; z-index: 2; }
     
     .label-eng-top { 
       font-family: 'Cormorant Garamond', serif; 
       text-transform: uppercase; 
-      letter-spacing: 4px; 
-      font-size: 14px; 
+      letter-spacing: 3px; 
+      font-size: 13px; 
       margin-bottom: 12px; 
       color: var(--sub); 
       font-weight: 600; 
+      word-break: keep-all;
     }
     
-    .season-script { font-family: 'Pinyon Script', cursive; font-size: 90px; color: var(--wine); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); opacity: 0.12; pointer-events: none; }
+    .season-script { font-family: 'Pinyon Script', cursive; font-size: 80px; color: var(--wine); position: absolute; top: -10px; left: 50%; transform: translateX(-50%); opacity: 0.12; pointer-events: none; }
     
     .title-eng { 
       font-family: 'Montserrat', sans-serif; 
-      font-size: 22px; 
+      font-size: 20px; 
       font-weight: 800; 
       color: var(--wine); 
       margin-bottom: 4px; 
-      letter-spacing: 2px; 
+      letter-spacing: 1.5px; 
     }
     
     .title-kor { 
       font-family: 'Pretendard', sans-serif; 
-      font-size: 32px; 
+      font-size: 26px; 
       font-weight: 700; 
       color: var(--ink); 
       margin-bottom: 8px; 
-      letter-spacing: -1.2px; 
+      letter-spacing: -1px; 
+      word-break: keep-all;
     }
     
     .title-sub { 
       font-family: 'Montserrat', 'Pretendard', sans-serif; 
-      font-size: 16px; 
+      font-size: 15px; 
       font-weight: 700; 
       color: var(--ink); 
-      letter-spacing: 6px; 
+      letter-spacing: 4px; 
       text-transform: uppercase; 
-      margin-top: 12px; 
+      margin-top: 10px; 
     }
 
     .theme-verse-wrap {
@@ -137,7 +139,7 @@
     .theme-verse-wrap::before {
       content: '“';
       font-family: 'Cormorant Garamond', serif;
-      font-size: 65px;
+      font-size: 55px;
       color: var(--wine);
       opacity: 0.12;
       position: absolute;
@@ -149,7 +151,7 @@
 
     .theme-verse-main {
       font-family: 'Gowun Batang', serif;
-      font-size: 23px; 
+      font-size: 21px; 
       font-weight: 700; 
       color: var(--ink);
       letter-spacing: -0.5px;
@@ -158,55 +160,58 @@
     
     .theme-verse-ref {
       font-family: 'Montserrat', 'Pretendard', sans-serif;
-      font-size: 13px; 
+      font-size: 12px; 
       font-weight: 600;
       color: var(--sub);
-      letter-spacing: 2px;
+      letter-spacing: 1px;
       margin-top: 6px;
       z-index: 1;
     }
 
-    .tabs { display: flex; border-bottom: 0.5px solid var(--hairline); margin-bottom: 45px; }
-    .tab { flex: 1; text-align: center; padding: 18px 0; cursor: pointer; color: var(--sub); font-weight: 600; transition: 0.3s; font-size: 17px; letter-spacing: -0.2px; }
+    .tabs { display: flex; border-bottom: 0.5px solid var(--hairline); margin-bottom: 35px; }
+    .tab { flex: 1; text-align: center; padding: 16px 0; cursor: pointer; color: var(--sub); font-weight: 600; transition: 0.3s; font-size: 16px; letter-spacing: -0.2px; }
     .tab.active { color: var(--wine); border-bottom: 2px solid var(--wine); }
 
     .form-section { display: none; animation: fadeIn 0.4s ease; }
     .form-section.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-    .grid-wrap { display: grid; grid-template-columns: 1fr; gap: 32px 40px; }
+    .grid-wrap { display: grid; grid-template-columns: 1fr; gap: 24px 0; }
     .full-width { grid-column: 1 / -1; }
-    @media (min-width: 768px) { .grid-wrap { grid-template-columns: 1fr 1fr; } }
 
-    .input-group label { display: block; font-family: 'Pretendard', sans-serif; font-size: 15px; font-weight: 600; margin-bottom: 10px; color: var(--sub); letter-spacing: -0.2px; }
+    .input-group { width: 100%; }
+    .input-group label { display: block; font-family: 'Pretendard', sans-serif; font-size: 14.5px; font-weight: 600; margin-bottom: 8px; color: var(--sub); letter-spacing: -0.2px; }
+    
     input[type="text"], input[type="email"], input[type="tel"], select, textarea {
       width: 100%; padding: 12px 0; background: transparent; border: none; border-bottom: 0.5px solid var(--hairline);
-      font-family: 'Pretendard', sans-serif; font-size: 16px; font-weight: 400; box-sizing: border-box; outline: none; transition: 0.3s; color: var(--ink); border-radius: 0;
+      font-family: 'Pretendard', sans-serif; font-size: 15px; font-weight: 400; box-sizing: border-box; outline: none; transition: 0.3s; color: var(--ink); border-radius: 0;
+      -webkit-appearance: none;
     }
-    input::placeholder, textarea::placeholder { color: #cfc7c8; font-weight: 400; font-size: 15px; }
+    select { background-image: url('data:image/svg+xml;utf8,<svg fill="none" height="24" stroke="gray" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><polyline points="6 9 12 15 18 9"/></svg>'); background-repeat: no-repeat; background-position: right center; background-size: 16px; padding-right: 20px; }
+    input::placeholder, textarea::placeholder { color: #cfc7c8; font-weight: 400; font-size: 14.5px; }
     input:focus, select:focus, textarea:focus { border-bottom: 1px solid var(--wine); }
 
     .fee-notice-card {
       margin-top: 15px;
-      margin-bottom: 35px;
+      margin-bottom: 30px;
       border: 0.5px solid var(--hairline);
       background: rgba(255, 255, 255, 0.6);
-      padding: 24px 28px;
+      padding: 20px;
       display: none;
       animation: fadeIn 0.3s ease;
     }
     .fee-notice-card.visible { display: block; }
     .fee-card-header {
-      display: flex; justify-content: space-between; align-items: baseline;
+      display: flex; flex-direction: column; gap: 6px;
       border-bottom: 0.5px solid var(--hairline);
       padding-bottom: 12px; margin-bottom: 16px;
     }
-    .fee-track-name { font-size: 16px; font-weight: 700; color: var(--wine); }
+    .fee-track-name { font-size: 15px; font-weight: 700; color: var(--wine); word-break: keep-all; line-height: 1.4; }
     .fee-account { font-family: 'Montserrat', 'Pretendard', sans-serif; font-size: 13px; color: var(--sub); font-weight: 500; }
     
     .fee-row {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 0; font-size: 14.5px;
+      padding: 8px 0; font-size: 14px; flex-wrap: wrap; gap: 4px;
     }
     .fee-row .fee-label { color: var(--sub); font-weight: 500; }
     .fee-row .fee-val { 
@@ -215,68 +220,110 @@
       color: var(--ink); 
       letter-spacing: 0.5px;
     }
-    .fee-sub-desc { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+    .fee-sub-desc { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.5; }
 
     .all-fee-toggle {
       font-size: 13.5px; color: var(--sub); text-decoration: underline; text-underline-offset: 4px;
-      cursor: pointer; display: inline-block; margin-top: 10px; margin-bottom: 30px;
+      cursor: pointer; display: inline-block; margin-top: 5px; margin-bottom: 30px;
     }
     .all-fee-toggle:hover { color: var(--wine); }
 
     .all-fee-modal {
-      display: none; border: 0.5px solid var(--hairline); background: #fff; padding: 24px; margin-bottom: 35px;
+      display: none; border: 0.5px solid var(--hairline); background: #fff; padding: 20px; margin-bottom: 30px;
     }
     .all-fee-modal.active { display: block; animation: fadeIn 0.3s ease; }
     .all-fee-item { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 0.5px dashed var(--hairline); }
     .all-fee-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-    .all-fee-item h4 { margin: 0 0 6px 0; font-size: 15px; color: var(--wine); font-weight: 700; }
-    .all-fee-item p { margin: 4px 0; font-size: 13.5px; color: var(--sub); }
+    .all-fee-item h4 { margin: 0 0 6px 0; font-size: 14.5px; color: var(--wine); font-weight: 700; line-height: 1.4; word-break: keep-all; }
+    .all-fee-item p { margin: 4px 0; font-size: 13px; color: var(--sub); line-height: 1.5; word-break: keep-all; }
 
-    .table-container { margin-top: 55px; border-top: 0.5px solid var(--ink); padding-top: 35px; }
-    .table-title { font-family: 'Montserrat', sans-serif; font-size: 22px; color: var(--wine); font-weight: 700; margin-bottom: 8px; }
-    .table-desc { font-size: 13.5px; margin-bottom: 22px; color: var(--sub); letter-spacing: -0.3px; font-weight: 400; }
-    .table-responsive { overflow-x: auto; width: 100%; padding-bottom: 15px; }
+    .table-container { margin-top: 45px; border-top: 0.5px solid var(--ink); padding-top: 30px; }
+    .table-title { font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--wine); font-weight: 700; margin-bottom: 6px; }
+    .table-desc { font-size: 13px; margin-bottom: 20px; color: var(--sub); letter-spacing: -0.3px; font-weight: 400; line-height: 1.5; word-break: keep-all; }
     
-    table { width: 100%; min-width: 1000px; border-collapse: collapse; border-bottom: 0.5px solid var(--ink); }
-    th, td { border: none; border-bottom: 0.5px solid var(--hairline); padding: 15px 10px; text-align: left; font-size: 15px; }
-    th { background: transparent; color: var(--ink); font-weight: 600; font-family: 'Pretendard', sans-serif; border-bottom: 1px solid var(--hairline); font-size: 14.5px; }
-    td input, td select { border: none !important; padding: 8px 0; font-size: 15px; width: 100%; text-align: left; font-family: 'Pretendard', sans-serif; font-weight: 400; }
+    .table-responsive { overflow-x: auto; width: 100%; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+    
+    table { width: 100%; min-width: 900px; border-collapse: collapse; border-bottom: 0.5px solid var(--ink); }
+    th, td { border: none; border-bottom: 0.5px solid var(--hairline); padding: 12px 8px; text-align: left; font-size: 14px; }
+    th { background: transparent; color: var(--ink); font-weight: 600; font-family: 'Pretendard', sans-serif; border-bottom: 1px solid var(--hairline); font-size: 14px; white-space: nowrap; }
+    td input, td select { border: none !important; padding: 8px 0; font-size: 14px; width: 100%; text-align: left; font-family: 'Pretendard', sans-serif; font-weight: 400; }
     td input:focus, td select:focus { border-bottom: 0.5px solid var(--wine) !important; }
 
-    .btn-add-row { background: transparent; border: none; color: var(--sub); width: auto; padding: 18px 0; cursor: pointer; font-family: 'Pretendard', sans-serif; font-size: 14.5px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; }
+    .btn-add-row { background: transparent; border: none; color: var(--sub); width: auto; padding: 15px 0; cursor: pointer; font-family: 'Pretendard', sans-serif; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; margin-top: 5px; }
     .btn-add-row:hover { color: var(--ink); }
 
-    .btn-submit { width: 100%; padding: 22px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 17px; cursor: pointer; transition: 0.3s; background-color: var(--ink); color: var(--paper); border: none; margin-top: 55px; letter-spacing: 2px; }
+    .btn-submit { width: 100%; padding: 20px; font-family: 'Pretendard', sans-serif; font-weight: 600; font-size: 16px; cursor: pointer; transition: 0.3s; background-color: var(--ink); color: var(--paper); border: none; margin-top: 45px; letter-spacing: 1px; }
     .btn-submit:hover { background-color: var(--wine); }
 
-    #success-message { display: none; text-align: center; padding: 60px 10px; }
-    #success-message h2 { font-family: 'Montserrat', sans-serif; color: var(--wine); font-size: 34px; margin-bottom: 16px; font-weight: 700; }
-    #success-message p { font-size: 16px; line-height: 1.8; color: var(--ink); font-weight: 400; margin: 0 0 10px 0; }
+    #success-message { display: none; text-align: center; padding: 40px 10px; }
+    #success-message h2 { font-family: 'Montserrat', sans-serif; color: var(--wine); font-size: 28px; margin-bottom: 12px; font-weight: 700; }
+    #success-message p { font-size: 15px; line-height: 1.6; color: var(--ink); font-weight: 400; margin: 0 0 10px 0; word-break: keep-all; }
     #success-message a { color: var(--wine); text-decoration: none; border-bottom: 1px solid var(--wine); font-weight: 600; padding-bottom: 2px; }
 
     .success-summary-card {
-      margin: 35px auto 40px;
-      max-width: 620px;
+      margin: 30px auto;
+      max-width: 100%;
       text-align: left;
       border: 0.5px solid var(--hairline);
       background: #fff;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      padding: 24px 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.03);
     }
-    .summary-head { font-size: 17px; font-weight: 700; color: var(--wine); margin-bottom: 15px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 10px; }
-    .summary-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14.5px; color: var(--ink); }
-    .summary-row .label { color: var(--sub); }
-    .summary-row .val { font-weight: 600; }
+    .summary-head { font-size: 16px; font-weight: 700; color: var(--wine); margin-bottom: 15px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 10px; }
+    .summary-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; font-size: 14px; color: var(--ink); border-bottom: 0.5px dashed rgba(205, 195, 194, 0.4); }
+    .summary-row:last-of-type { border-bottom: none; }
+    .summary-row .label { color: var(--sub); font-size: 13px; }
+    .summary-row .val { font-weight: 600; word-break: keep-all; line-height: 1.4; }
 
     .refund-box { 
-      margin-top: 30px; 
+      margin-top: 25px; 
       padding-top: 20px; 
       border-top: 0.5px dashed var(--hairline); 
       text-align: left; 
     }
-    .refund-box h3 { font-size: 14.5px; font-weight: 700; color: var(--ink); margin: 0 0 12px 0; }
-    .refund-box ul { font-size: 13.5px; color: var(--sub); padding-left: 18px; line-height: 1.9; margin: 0; font-weight: 400; }
-    .refund-box ul li { margin-bottom: 4px; }
+    .refund-box h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin: 0 0 10px 0; }
+    .refund-box ul { font-size: 13px; color: var(--sub); padding-left: 16px; line-height: 1.7; margin: 0; font-weight: 400; }
+    .refund-box ul li { margin-bottom: 6px; word-break: keep-all; }
+
+    /* =========================================
+       📱 모바일 최적화 (기본값) 
+       ========================================= */
+    @media (max-width: 767px) {
+      .form-container {
+        max-width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .form-inner { padding: 40px 20px 30px; }
+    }
+
+    /* =========================================
+       💻 PC / 태블릿 최적화 (가로 2단 그리드 적용)
+       ========================================= */
+    @media (min-width: 768px) {
+      body { padding: 60px 15px; }
+      .form-container {
+        max-width: 860px;
+        margin: 0 auto;
+        border-radius: 20px;
+        border: 0.5px solid rgba(255,255,255,0.15);
+      }
+      .form-inner { padding: 70px 60px 50px; }
+      
+      .grid-wrap { grid-template-columns: 1fr 1fr; gap: 30px 40px; }
+      
+      .label-eng-top { font-size: 14px; letter-spacing: 4px; }
+      .title-eng { font-size: 22px; }
+      .title-kor { font-size: 32px; }
+      .season-script { font-size: 90px; }
+      
+      .fee-card-header { flex-direction: row; align-items: baseline; }
+      .summary-row { flex-direction: row; justify-content: space-between; align-items: center; border-bottom: none; padding: 8px 0; }
+      
+      #success-message h2 { font-size: 34px; }
+      .success-summary-card { padding: 30px; }
+    }
   </style>
 </head>
 <body>
@@ -313,7 +360,7 @@
         
         <div class="input-group full-width" style="margin-bottom: 10px;">
           <label data-i18n="track_label">훈련 트랙 선택 (필수)</label>
-          <select name="track" id="global-track" onchange="updateFeeCard(this.value)" style="font-weight: 600; color: var(--wine); font-size: 16px;">
+          <select name="track" id="global-track" onchange="updateFeeCard(this.value)" style="font-weight: 600; color: var(--wine); font-size: 15px;">
             <option value="" data-i18n="track_select">훈련받고자 하는 학교를 선택해주세요</option>
             <option value="청지기">1. 청지기들을 위한 경배와찬양학교 (8박 10일 | 1/11 ~ 1/16, 1/18 ~ 1/21)</option>
             <option value="미래세대">2. 미래세대를 위한 경배와찬양학교 (3박 4일 | 1/11 ~ 1/14)</option>
@@ -337,7 +384,7 @@
           <div class="all-fee-item">
             <h4>1. 청지기들을 위한 경배와찬양학교 (8박 10일)</h4>
             <p>우리은행 1005-604-700231 경배와찬양</p>
-            <p>· 선등록 (~12/27 주일): 190,000원 | 일반등록 (12/28~): 220,000원</p>
+            <p>· 선등록 (~12/27 주일): 190,000원<br>· 일반등록 (12/28~): 220,000원</p>
           </div>
           <div class="all-fee-item">
             <h4>2. 미래세대를 위한 경배와찬양학교 (3박 4일)</h4>
@@ -369,7 +416,6 @@
             <div class="input-group"><label data-i18n="name">이름</label><input type="text" name="ind_name" data-i18n-ph="req_x"></div>
             <div class="input-group"><label data-i18n="gender">성별</label><select name="ind_gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></div>
             
-            <!-- YYYY/MM/DD 변경 부분 -->
             <div class="input-group"><label data-i18n="birth">생년월일</label><input type="text" name="ind_birth" placeholder="YYYY/MM/DD"></div>
             
             <div class="input-group"><label data-i18n="phone">연락처</label><input type="tel" name="ind_phone" placeholder="010-0000-0000"></div>
@@ -394,7 +440,7 @@
             <div class="input-group"><label data-i18n="grade">학년</label><input type="text" name="ind_grade" data-i18n-ph="grade"></div>
             <div class="input-group full-width"><label data-i18n="job">직장</label><input type="text" name="ind_job" data-i18n-ph="opt"></div>
             
-            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="ind_prayer" rows="4"></textarea></div>
+            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="ind_prayer" rows="3"></textarea></div>
           </div>
         </div>
 
@@ -411,7 +457,7 @@
             <div class="input-group"><label data-i18n="rep_phone">인솔자 연락처</label><input type="tel" name="grp_repPhone"></div>
             <div class="input-group full-width"><label data-i18n="rep_email">인솔자 E-mail</label><input type="email" name="grp_repEmail"></div>
             
-            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="grp_prayer" rows="4"></textarea></div>
+            <div class="input-group full-width"><label data-i18n="prayer">기도제목 (구체적으로 작성해주십시오)</label><textarea name="grp_prayer" rows="3"></textarea></div>
           </div>
 
           <div class="table-container">
@@ -421,15 +467,15 @@
               <table id="members-table">
                 <thead>
                   <tr>
-                    <th style="width:40px;">No</th>
-                    <th style="min-width:90px;" data-i18n="name">이름</th>
-                    <th style="min-width:70px;" data-i18n="gender">성별</th>
-                    <th style="min-width:130px;" data-i18n="phone">연락처</th>
-                    <th style="min-width:140px;" data-i18n="email">E-mail</th>
-                    <th style="min-width:120px;" data-i18n="birth">생년월일</th>
-                    <th style="min-width:100px;" data-i18n="category">구분</th>
-                    <th style="min-width:100px;" data-i18n="training">기존 훈련</th>
-                    <th style="min-width:90px;" data-i18n="note">비고</th>
+                    <th style="width:30px;">No</th>
+                    <th style="min-width:75px;" data-i18n="name">이름</th>
+                    <th style="min-width:65px;" data-i18n="gender">성별</th>
+                    <th style="min-width:115px;" data-i18n="phone">연락처</th>
+                    <th style="min-width:130px;" data-i18n="email">E-mail</th>
+                    <th style="min-width:110px;" data-i18n="birth">생년월일</th>
+                    <th style="min-width:95px;" data-i18n="category">구분</th>
+                    <th style="min-width:95px;" data-i18n="training">기존 훈련</th>
+                    <th style="min-width:80px;" data-i18n="note">비고</th>
                   </tr>
                 </thead>
                 <tbody id="members-body"></tbody>
@@ -444,7 +490,7 @@
 
       <div id="success-message">
         <h2 data-i18n="succ_title">Application Complete</h2>
-        <p data-i18n="succ_p1">신청서 접수가 완료되었습니다. 아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.</p>
+        <p data-i18n="succ_p1">신청서 접수가 완료되었습니다.<br>아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.</p>
         
         <div class="success-summary-card">
           <div class="summary-head" id="summary-track-title">훈련 신청 내역</div>
@@ -454,7 +500,7 @@
           </div>
           <div class="summary-row">
             <span class="label">입금 기한</span>
-            <span class="val">선등록 ~12/27(주일) / 일반등록 12/28(월)~</span>
+            <span class="val">선등록 ~12/27(주일)<br>일반등록 12/28(월)~</span>
           </div>
 
           <div class="refund-box">
@@ -589,7 +635,7 @@
         m: "남", f: "여", c1: "어린이", c2: "중고등부", c3: "대학생 청년", c4: "교사 교역자", c5: "선교사",
         t1: "처음 참석", t2: "기존 참석", t3: "훈련생", att_y: "참석", att_n: "불참",
         req_x: "필수 (없으면 x)", opt: "(해당시)", 
-        succ_title: "Application Complete", succ_p1: "신청서 접수가 완료되었습니다. 아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.", succ_p2: "상세 안내 및 준비사항은 공식 웹사이트를 확인해 주십시오.",
+        succ_title: "Application Complete", succ_p1: "신청서 접수가 완료되었습니다.<br>아래 안내된 계좌로 입금을 진행해 주시기 바랍니다.", succ_p2: "상세 안내 및 준비사항은 공식 웹사이트를 확인해 주십시오.",
         refund_title: "훈련비 환불 규정", refund_1: "모든 훈련비 환불은 경배와찬양학교가 마무리된 후에 진행됩니다.", refund_2: "훈련 시작 2주일 전 환불 요청 시: 100% 환불", refund_3: "2주 전 ~ 훈련 전일 환불 요청 시: 80% 환불 (20% 공제)", refund_4: "훈련 당일 환불 요청 시: 50% 환불 (50% 공제)",
         alert_track: "훈련 트랙을 선택해주세요.", alert_ind: "[개인 신청] 빈 항목이 있습니다. 해당 없으면 x를 기입해주세요.", alert_grp: "[단체 신청] 헤더 빈 항목이 있습니다.", alert_mem: "인원 명단 빈 항목을 채워주세요."
       },
@@ -606,7 +652,7 @@
         m: "Male", f: "Female", c1: "Kids", c2: "Teens", c3: "Youth", c4: "Teacher/Pastor", c5: "Missionary",
         t1: "First Time", t2: "Returning", t3: "Trainee", att_y: "Yes", att_n: "No",
         req_x: "Required (or x)", opt: "(Optional)", 
-        succ_title: "Application Complete", succ_p1: "Your application has been received. Please transfer the fee to the designated account below.", succ_p2: "Check the official website for schedules and details.",
+        succ_title: "Application Complete", succ_p1: "Your application has been received.<br>Please transfer the fee to the designated account below.", succ_p2: "Check the official website for schedules and details.",
         refund_title: "Refund Policy", refund_1: "All refunds will be processed after the school is completed.", refund_2: "Request 2 weeks prior: 100% refund", refund_3: "Between 2 weeks prior and the day before: 80% refund (20% deduction)", refund_4: "Request on the day of the event: 50% refund (50% deduction)",
         alert_track: "Please select a training track.", alert_ind: "Please fill all fields (put x if N/A).", alert_grp: "Please fill all group header fields.", alert_mem: "Please fill all fields for members."
       },
@@ -623,7 +669,7 @@
         m: "男", f: "女", c1: "儿童", c2: "青少年", c3: "青年", c4: "教师/牧者", c5: "宣教士",
         t1: "首次参加", t2: "曾参加", t3: "受训生", att_y: "参加", att_n: "不参加",
         req_x: "必填(或x)", opt: "(选填)",
-        succ_title: "Application Complete", succ_p1: "申请已完成，请向下方账户汇款。", succ_p2: "详细日程及准备事项请确认官方网站。",
+        succ_title: "Application Complete", succ_p1: "申请已完成，<br>请向下方账户汇款。", succ_p2: "详细日程及准备事项请确认官方网站。",
         refund_title: "退款政策", refund_1: "所有训练费退款将在学校结束后进行。", refund_2: "提前2周申请退款：100%退款", refund_3: "提前2周至活动前一天：80%退款（扣除20%）", refund_4: "活动当天申请退款：50%退款（扣除50%）",
         alert_track: "请选择训练课程。", alert_ind: "请填写所有空格。", alert_grp: "请填写团体基本信息。", alert_mem: "请填写人员名单所有空格。"
       }
@@ -637,7 +683,7 @@
       event.target.classList.add('active');
 
       document.querySelectorAll('[data-i18n]').forEach(el => {
-        el.innerText = i18n[lang][el.getAttribute('data-i18n')];
+        el.innerHTML = i18n[lang][el.getAttribute('data-i18n')];
       });
       document.querySelectorAll('[data-i18n-ph]').forEach(el => {
         el.placeholder = i18n[lang][el.getAttribute('data-i18n-ph')];
@@ -650,9 +696,8 @@
     function addTableRow() {
       rowCount++;
       const tr = document.createElement('tr');
-      // YYYY/MM/DD 변경 부분 적용
       tr.innerHTML = `
-        <td style="color: var(--sub); font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 600;">${rowCount}</td>
+        <td style="color: var(--sub); font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 600;">${rowCount}</td>
         <td><input type="text" class="m-name"></td>
         <td><select class="m-gender"><option value=""></option><option value="남" data-i18n="m">남</option><option value="여" data-i18n="f">여</option></select></td>
         <td><input type="text" class="m-phone"></td>
@@ -730,7 +775,6 @@ function submitData() {
 
   const GAS_URL = "https://script.google.com/macros/s/AKfycbxSn4_Z6Fed76Ff8X2lajrZJOtewnlHCRXkNTjbn1LQT_jKURFYrlb4sWnL0lAl0G6rBA/exec";
 
-  // 오류 원인 파악을 위한 에러 핸들링 보강
   fetch(GAS_URL, {
     method: "POST",
     body: JSON.stringify(payload),
