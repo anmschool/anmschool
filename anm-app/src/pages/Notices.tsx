@@ -4,8 +4,6 @@ import { useLang, type Lang } from "../i18n";
 import { fmtRange, Footer, Head, Icon, Section, useContent, useSeason } from "../ui";
 
 type L = Record<Lang, string>;
-const YT = "https://www.youtube.com/channel/UC0VvfP8f7DVWfju4pLEYZog";
-const LISTEN: L = { ko: "모임 찬양 듣기 (YouTube) →", en: "Listen to our worship songs (YouTube) →", zh: "收听聚会诗歌 (YouTube) →" };
 const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; info?: L; to?: L }[] = [
   {
     en: "Worship & Praise School", kr: { ko: "경배와찬양학교", en: "Worship & Praise School", zh: "敬拜赞美学校" }, img: "/images/about/2.jpg",
@@ -25,7 +23,7 @@ const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; i
     to: { ko: "2027 WINTER 안내 →", en: "2027 WINTER details →", zh: "2027 WINTER 详情 →" },
   },
   {
-    en: "Thursday Worship", kr: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" }, img: "/images/about/1.jpg",
+    en: "Thursday Worship", kr: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" }, img: "/images/about/4.jpg",
     body: [
       { ko: "하나님의 임재를 경험하는 예배, 영적 회복과 치유가 있는 예배, 십자가의 길과 순교자의 삶을 살기로 결단하는 예배.",
         en: "Worship where we experience God's presence; worship with spiritual restoration and healing; worship where we resolve to walk the way of the cross and live the life of a martyr.",
@@ -107,7 +105,6 @@ export default function Notices() {
                     {m.body.map((x, i) => <p key={i}>{x[lang]}</p>)}
                     {m.info && <p className="info">{m.info[lang]}</p>}
                     {m.to && <Link to="/" className="more">{m.to[lang]}</Link>}
-                    {(m.en === "Thursday Worship" || m.en === "7000 Gathering") && <a href={YT} target="_blank" rel="noopener noreferrer" className="more">{LISTEN[lang]}</a>}
                   </article>
                 ))}
                 {others.map(p => (

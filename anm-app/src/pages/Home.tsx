@@ -47,8 +47,6 @@ const TRACKS: { name: L; dates: L; nights: L }[] = [
     dates: { ko: "1/6(수) ~ 1/9(토)", en: "Jan 6 (Wed) – 9 (Sat)", zh: "1月6日(周三) ~ 9日(周六)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
 ];
-const YT = "https://www.youtube.com/channel/UC0VvfP8f7DVWfju4pLEYZog";
-const LISTEN: L = { ko: "모임 찬양 듣기 · YouTube", en: "Listen to our worship songs · YouTube", zh: "收听聚会诗歌 · YouTube" };
 const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
     when: { ko: "매주 목요일 오후 6시 30분", en: "Every Thursday, 6:30 PM", zh: "每周四 下午6:30" },
@@ -253,7 +251,6 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          <a className="btn line listen" href={YT} target="_blank" rel="noopener noreferrer">{LISTEN[lang]}</a>
         </section>
         <Footer />
       </main>
