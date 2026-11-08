@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import qrcode from "qrcode-generator";
 import { getToken, logout } from "../api";
 import { useLang } from "../i18n";
 import { CopyButton, fmtRange, Footer, Head, Section, Skeleton, useMe, useSeason, won } from "../ui";
@@ -11,11 +9,6 @@ export default function MePage() {
   const { t } = useLang();
   const nav = useNavigate();
   const { me, stale } = useMe(s?.id);
-  const svg = useMemo(() => {
-    if (!me) return "";
-    const q = qrcode(0, "M"); q.addData(me.code); q.make();
-    return q.createSvgTag({ margin: 0, scalable: true });
-  }, [me]);
 
   if (s && !getToken(s.id)) return <Navigate to="/login" replace />;
   if (!me) return <div className="app"><Head title={t("myInfo")} /><main className="body"><Skeleton lines={6} /></main></div>;
@@ -34,6 +27,11 @@ export default function MePage() {
           {me.church && <><dt>{t("church")}</dt><dd>{me.church}</dd></>}
           {me.period.length > 0 && <><dt>{t("period")}</dt><dd className="num">{me.period.map(([a, b]) => fmtRange(a, b)).join(" / ")}</dd></>}
         </dl>
+
+        <div className="cta">
+          <Link className="btn" to="/schedule">{t("schedule")}</Link>
+          <Link className="btn line" to="/guide">{t("guide")}</Link>
+        </div>
 
         <Section label="Fee" title={t("payment")}>
           <dl className="rows">
@@ -57,13 +55,6 @@ export default function MePage() {
             ))}<Link to="/places" className="btn text">{t("places")} →</Link></div>}
         </Section>
 
-        <Section label="Check-in" title={t("checkin")}>
-          <div className="qr">
-            <div dangerouslySetInnerHTML={{ __html: svg }} aria-label={me.code} />
-            <span className="code">{me.code}</span>
-            <span className="small" style={{ textAlign: "center" }}>{me.checkedIn ? t("checkedIn") : t("checkinNote")}</span>
-          </div>
-        </Section>
 
         <button className="btn line" onClick={() => { if (s) logout(s.id); nav("/", { replace: true }); }}>{t("logout")}</button>
         <Footer />

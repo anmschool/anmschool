@@ -1,5 +1,6 @@
 import type { Content, Me, Stats } from "./types";
 import { DEMO_CONTENT, demoLogin, demoStats } from "./demo";
+import SNAP from "./snapshot.json";
 
 // Apps Script 웹앱 (anmschool). Vercel 환경변수 VITE_API_URL이 있으면 그것을 우선
 const DEFAULT_API = "https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec";
@@ -31,7 +32,8 @@ function write(k: string, v: unknown) {
   try { store(k).setItem(k, JSON.stringify(v)); } catch { /* 저장 불가 환경: 무시 */ }
 }
 
-export function cachedContent(): Content | null { return DEMO ? DEMO_CONTENT : read<Content>(KEY_CONTENT); }
+/** 첫 방문에도 바로 그리도록 배포 시점 내용(snapshot.json)을 기본값으로 — 곧바로 최신 내용으로 교체됨 */
+export function cachedContent(): Content | null { return DEMO ? DEMO_CONTENT : read<Content>(KEY_CONTENT) ?? (SNAP as unknown as Content | null); }
 
 export async function fetchContent(): Promise<Content> {
   if (DEMO) return DEMO_CONTENT;
