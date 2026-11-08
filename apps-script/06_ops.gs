@@ -128,7 +128,7 @@ function nightlyBackup() {
 /* ───────────── 트리거 한 번에 ───────────── */
 
 function setupOpsTriggers() {
-  const want = { buildLoginCache: b => b.everyMinutes(10), nightlyBackup: b => b.everyDays(1).atHour(3), dailyReport: b => b.everyDays(1).atHour(8) };
+  const want = { translateContent: b => b.everyHours(1), buildLoginCache: b => b.everyMinutes(10), nightlyBackup: b => b.everyDays(1).atHour(3), dailyReport: b => b.everyDays(1).atHour(8) };
   ScriptApp.getProjectTriggers().filter(t => want[t.getHandlerFunction()]).forEach(t => ScriptApp.deleteTrigger(t));
   Object.keys(want).forEach(fn => want[fn](ScriptApp.newTrigger(fn).timeBased()).create());
   buildLoginCache();
@@ -173,4 +173,33 @@ function assetB64_(id, w) {
     { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
   const b = r.getBlob();
   return { ok: r.getResponseCode() === 200, type: b.getContentType(), data: Utilities.base64Encode(b.getBytes()) };
+}
+
+/* ───────────── ⑦ 자동 번역 ('ANM 앱' 시트) ───────────── */
+/** 번역 열(…(en), …(zh))이 없으면 만들고, 빈칸만 구글 번역으로 채움. 사람이 고친 칸은 덮어쓰지 않음. 매시간 자동 */
+function translateContent() {
+  const ss = appSheet_();
+  let n = 0;
+  Object.keys(TR_FIELDS).forEach(tab => {
+    const sh = ss.getSheetByName(tab);
+    if (!sh || sh.getLastRow() < 2) return;
+    let head = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].map(String);
+    const need = [];
+    Object.keys(TR_FIELDS[tab]).forEach(c => ['en', 'zh'].forEach(L => { if (head.indexOf(c + '(' + L + ')') === -1) need.push(c + '(' + L + ')'); }));
+    if (need.length) { sh.getRange(1, head.length + 1, 1, need.length).setValues([need]).setBackground('#EFE8EA'); head = head.concat(need); }
+    const rg = sh.getRange(2, 1, sh.getLastRow() - 1, head.length), v = rg.getValues();
+    let changed = false;
+    v.forEach(row => Object.keys(TR_FIELDS[tab]).forEach(c => {
+      const src = String(row[head.indexOf(c)] || '').trim();
+      if (!src || /^[\x00-\x7F]*$/.test(src)) return; // 비었거나 이미 영문·숫자뿐이면 건너뜀
+      [['en', 'en'], ['zh', 'zh-CN']].forEach(([L, code]) => {
+        const i = head.indexOf(c + '(' + L + ')');
+        if (row[i]) return;
+        try { row[i] = LanguageApp.translate(src, 'ko', code); n++; changed = true; } catch (e) { console.log('번역 실패: ' + e.message); }
+      });
+    }));
+    if (changed) rg.setValues(v);
+  });
+  CacheService.getScriptCache().remove('content_v1');
+  console.log('번역 ' + n + '칸 채움');
 }

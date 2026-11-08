@@ -185,6 +185,15 @@ function getContent_() {
   return data;
 }
 
+/** 번역할 열: 시트 열 이름 → 앱 필드 */
+const TR_FIELDS = {
+  프로젝트: { 제목: 'title', 부제: 'subtitle', 장소: 'venue', 소개: 'about' },
+  공지: { 제목: 'title', 내용: 'body' },
+  시간표: { 제목: 'title', 장소: 'place', 메모: 'note' },
+  안내: { 섹션: 'section', 제목: 'title', 내용: 'body' },
+  장소: { 이름: 'name', 설명: 'body' },
+};
+
 /** 순수 함수: 관리 시트 행 → 앱용 JSON (숨김 프로젝트·비공개 공지 제외) */
 function buildContent_(t) {
   const d = v => (v instanceof Date ? Utilities.formatDate(v, 'Asia/Seoul', 'yyyy-MM-dd') : String(v || '').trim());
@@ -197,20 +206,23 @@ function buildContent_(t) {
   const ok = {}; projects.forEach(p => (ok[p.id] = 1));
   const inScope = id => id === '전체' || ok[id];
   const truthy = v => v === true || String(v).toUpperCase() === 'TRUE';
+  // 번역 열 "제목(en)", "제목(zh)" … → tr: { en: { title }, zh: { title } }
+  const tr = (r, k) => { const o = {}; ['en', 'zh'].forEach(L => { const x = {}; Object.keys(TR_FIELDS[k]).forEach(c => { const v = r[c + '(' + L + ')']; if (v) x[TR_FIELDS[k][c]] = v; }); if (Object.keys(x).length) o[L] = x; }); return o; };
+  projects.forEach(p => { const r = t.projects.find(x => String(x.ID) === p.id); if (r) p.tr = tr(r, '프로젝트'); });
   return {
     updatedAt: new Date().toISOString(),
     projects,
     notices: t.notices.filter(r => r.제목 && inScope(String(r.프로젝트ID)) && (r.공개 === '' || truthy(r.공개))).map(r => ({
-      project: String(r.프로젝트ID), date: d(r.날짜), title: r.제목, body: r.내용, pinned: truthy(r.고정), track: r['대상 트랙'] || '전체',
+      project: String(r.프로젝트ID), date: d(r.날짜), title: r.제목, body: r.내용, pinned: truthy(r.고정), track: r['대상 트랙'] || '전체', tr: tr(r, '공지'),
     })).sort((a, b) => (b.pinned - a.pinned) || (a.date < b.date ? 1 : -1)),
     schedule: t.schedule.filter(r => r.제목 && inScope(String(r.프로젝트ID))).map(r => ({
-      project: String(r.프로젝트ID), track: r.트랙 || '전체', date: d(r.날짜), start: tm(r.시작), end: tm(r.끝), title: r.제목, place: r.장소, note: r.메모,
+      project: String(r.프로젝트ID), track: r.트랙 || '전체', date: d(r.날짜), start: tm(r.시작), end: tm(r.끝), title: r.제목, place: r.장소, note: r.메모, tr: tr(r, '시간표'),
     })).sort((a, b) => (a.date + a.start < b.date + b.start ? -1 : 1)),
     guides: t.guides.filter(r => r.제목 && inScope(String(r.프로젝트ID))).map(r => ({
-      project: String(r.프로젝트ID), section: r.섹션, title: r.제목, body: r.내용, order: Number(r.순서) || 99,
+      project: String(r.프로젝트ID), section: r.섹션, title: r.제목, body: r.내용, order: Number(r.순서) || 99, tr: tr(r, '안내'),
     })).sort((a, b) => a.order - b.order),
     places: t.places.filter(r => r.이름 && inScope(String(r.프로젝트ID))).map(r => ({
-      project: String(r.프로젝트ID), name: r.이름, kind: r.종류, body: r.설명, map: r['지도 링크'], image: r.이미지, video: r.영상, order: Number(r.순서) || 99,
+      project: String(r.프로젝트ID), name: r.이름, kind: r.종류, body: r.설명, map: r['지도 링크'], image: r.이미지, video: r.영상, order: Number(r.순서) || 99, tr: tr(r, '장소'),
     })).sort((a, b) => a.order - b.order),
   };
 }

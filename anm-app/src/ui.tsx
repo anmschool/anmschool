@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { cachedContent, cachedMe, fetchContent, getToken, isFresh, refreshMe } from "./api";
 import type { Content, Me, Project } from "./types";
@@ -18,8 +18,18 @@ function pickSeason(c: Content | null): Project | undefined {
     ?? c.projects.find(p => p.status === "진행") ?? c.projects[0];
 }
 
+/** 시트의 번역 열(tr.en / tr.zh)이 있으면 그 언어로 바꿔 보여 줌 — 없으면 한국어 그대로 */
+type Tr = { tr?: Partial<Record<Lang, Record<string, string>>> };
+function localize(c: Content | null, lang: Lang): Content | null {
+  if (!c || lang === "ko") return c;
+  const m = <T extends Tr>(xs: T[]) => xs.map(x => (x.tr?.[lang] ? { ...x, ...x.tr[lang] } : x));
+  return { ...c, projects: m(c.projects), notices: m(c.notices), schedule: m(c.schedule), guides: m(c.guides), places: m(c.places) };
+}
+
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [content, setContent] = useState<Content | null>(cachedContent());
+  const [raw, setContent] = useState<Content | null>(cachedContent());
+  const { lang } = useLang();
+  const content = useMemo(() => localize(raw, lang), [raw, lang]);
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState(false);
   const load = useCallback(() => {

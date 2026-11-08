@@ -1,6 +1,6 @@
 export type ProjectStatus = "준비" | "진행" | "종료";
 
-export interface Project {
+export interface Project extends Tr {
   id: string;
   kind: string; // 경배와찬양학교 | 큰잔치 | 훈련 | 기타
   title: string;
@@ -17,10 +17,11 @@ export interface Project {
   about?: string;
 }
 
-export interface Notice { project: string; date: string; title: string; body?: string; pinned: boolean; track: string }
-export interface ScheduleItem { project: string; track: string; date: string; start: string; end: string; title: string; place?: string; note?: string }
-export interface Guide { project: string; section: string; title: string; body: string; order: number }
-export interface Place { project: string; name: string; kind?: string; body?: string; map?: string; image?: string; video?: string; order: number }
+type Tr = { tr?: Partial<Record<"ko" | "en" | "zh", Record<string, string>>> };
+export interface Notice extends Tr { project: string; date: string; title: string; body?: string; pinned: boolean; track: string }
+export interface ScheduleItem extends Tr { project: string; track: string; date: string; start: string; end: string; title: string; place?: string; note?: string }
+export interface Guide extends Tr { project: string; section: string; title: string; body: string; order: number }
+export interface Place extends Tr { project: string; name: string; kind?: string; body?: string; map?: string; image?: string; video?: string; order: number }
 
 export interface Content {
   updatedAt: string;
