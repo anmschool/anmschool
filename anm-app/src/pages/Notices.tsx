@@ -4,6 +4,8 @@ import { useLang, type Lang } from "../i18n";
 import { fmtRange, Footer, Head, Icon, Section, useContent, useSeason } from "../ui";
 
 type L = Record<Lang, string>;
+const YT = "https://www.youtube.com/channel/UC0VvfP8f7DVWfju4pLEYZog";
+const LISTEN: L = { ko: "모임 찬양 듣기 (YouTube) →", en: "Listen to our worship songs (YouTube) →", zh: "收听聚会诗歌 (YouTube) →" };
 const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; info?: L; to?: L }[] = [
   {
     en: "Worship & Praise School", kr: { ko: "경배와찬양학교", en: "Worship & Praise School", zh: "敬拜赞美学校" }, img: "/images/about/2.jpg",
@@ -105,6 +107,7 @@ export default function Notices() {
                     {m.body.map((x, i) => <p key={i}>{x[lang]}</p>)}
                     {m.info && <p className="info">{m.info[lang]}</p>}
                     {m.to && <Link to="/" className="more">{m.to[lang]}</Link>}
+                    {(m.en === "Thursday Worship" || m.en === "7000 Gathering") && <a href={YT} target="_blank" rel="noopener noreferrer" className="more">{LISTEN[lang]}</a>}
                   </article>
                 ))}
                 {others.map(p => (

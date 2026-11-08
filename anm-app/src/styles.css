@@ -362,6 +362,7 @@ a, button { -webkit-touch-callout: none; }
 .min-about .verse .ref { display: block; margin-top: 2px; font: 400 12px var(--sans); color: var(--mute); }
 .min-about .info { font-size: 13px; color: var(--ink); }
 .min-about .more { font-size: 13px; color: var(--wine); }
+.listen { margin-top: 18px; width: 100%; }
 .min-img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; margin: 0 0 14px; }
 @media (min-width: 768px) {
   .masthead .facts { border: 0; }
