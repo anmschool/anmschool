@@ -401,6 +401,8 @@ a, button { -webkit-touch-callout: none; }
 .dots button.on::after { background: #fff; }
 .dday { margin-left: 12px; padding-left: 12px; border-left: 0.5px solid currentColor; letter-spacing: 0.18em; }
 .home-sec { display: flex; flex-direction: column; gap: 4px; }
+.home-sec .col-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--ink); }
+.home-sec .col-head .more { font: 500 12.5px var(--sans); letter-spacing: 0; text-transform: none; color: var(--sub); white-space: nowrap; }
 .track-grid, .week-grid { display: grid; grid-template-columns: 1fr; }
 .track-card, .week-card { display: flex; flex-direction: column; gap: 4px; padding: 16px 0; border-bottom: 1px solid var(--hair); }
 .track-card .n { font: 600 13px var(--sans); letter-spacing: -0.2px; color: var(--wine); }
