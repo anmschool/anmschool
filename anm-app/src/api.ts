@@ -56,6 +56,12 @@ function setMe(project: string, me: Me | null) {
   write(KEY_ME, all);
 }
 
+/** 방금 받은 내 정보면 다시 묻지 않기 (로그인 직후 중복 요청 방지) */
+const fetchedAt: Record<string, number> = {};
+export function isFresh(project: string) { return Date.now() - (fetchedAt[project] || 0) < 60_000; }
+/** 로그인 화면이 열리면 서버를 미리 깨워 둔다 (첫 요청 지연 줄이기) */
+export function warmUp() { if (!DEMO) fetch(`${API_URL}?action=ping`).catch(() => {}); }
+
 export async function login(project: string, name: string, phone: string): Promise<{ ok: true; me: Me } | Fail> {
   if (DEMO) {
     const me = demoLogin(name, phone);
@@ -64,7 +70,7 @@ export async function login(project: string, name: string, phone: string): Promi
     return { ok: true, me };
   }
   const r = await post<{ token: string; me: Me }>({ action: "login", project, name, phone });
-  if (r.ok) { setToken(project, r.token); setMe(project, r.me); return { ok: true, me: r.me }; }
+  if (r.ok) { setToken(project, r.token); setMe(project, r.me); fetchedAt[project] = Date.now(); return { ok: true, me: r.me }; }
   return r;
 }
 
@@ -73,7 +79,7 @@ export async function refreshMe(project: string): Promise<{ ok: true; me: Me } |
   if (!token) return { ok: false, error: "no_token" };
   if (DEMO) { const me = cachedMe(project); return me ? { ok: true, me } : { ok: false, error: "no_token" }; }
   const r = await post<{ me: Me }>({ action: "me", token });
-  if (r.ok) { setMe(project, r.me); return { ok: true, me: r.me }; }
+  if (r.ok) { setMe(project, r.me); fetchedAt[project] = Date.now(); return { ok: true, me: r.me }; }
   if (r.error === "bad_token" || r.error === "not_found") logout(project);
   return r;
 }

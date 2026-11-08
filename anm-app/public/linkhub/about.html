@@ -7,57 +7,66 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Gowun+Batang&display=swap" rel="stylesheet">
 <style>
-:root{--paper:#FBFBF7;--ink:#1E1A1D;--sub:#75696D;--muted:#9E9598;--hair:#CDC3C2;--wine:#6E1F3A}
+:root{--paper:#FBFBF7;--ink:#1E1A1D;--body:#3F363A;--sub:#6A5F63;--muted:#8F8589;--hair:#D8CFCE;--wine:#6E1F3A;--wine-soft:rgba(110,31,58,.07)}
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{margin:0;background:#000;font-family:Pretendard,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased;word-break:keep-all}
-body::before{content:"";position:fixed;inset:-5%;background:url('https://lh3.googleusercontent.com/d/1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW') center/cover;filter:blur(8px) brightness(.45);z-index:-1}
-.page{max-width:560px;margin:0 auto;background:var(--paper);min-height:100vh;position:relative;overflow:hidden}
-.page::before{content:"";position:absolute;top:0;left:0;right:0;height:300px;background:url('https://lh3.googleusercontent.com/d/1vF_xYfKgIHLnQSdyMD83NM1fA65iAAym') top center/cover;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent);opacity:.9}
-.inner{position:relative;padding:28px 24px 56px}
-.back{font:500 12px Montserrat,sans-serif;letter-spacing:.14em;color:var(--sub);text-decoration:none}
-.back:hover{color:var(--wine)}
-header{padding:64px 0 34px;text-align:center}
-.eyebrow{font:600 10.5px Montserrat,sans-serif;letter-spacing:.28em;color:var(--wine)}
-h1{font:600 38px/1.1 'Cormorant Garamond',serif;margin:12px 0 8px;letter-spacing:.01em}
-.kr{font-size:14px;color:var(--sub)}
-.lead{position:relative;margin:34px 0 0;padding-top:26px;font:15px/1.9 'Gowun Batang',serif;text-align:left}
-.lead::before{content:"\201C";position:absolute;top:-14px;left:-6px;font:400 70px/1 'Cormorant Garamond',serif;color:var(--hair)}
-nav.toc{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;margin:30px 0 6px;padding:12px 0;border-top:.5px solid var(--hair);border-bottom:.5px solid var(--hair)}
-nav.toc a{font:500 11px Montserrat,sans-serif;letter-spacing:.12em;color:var(--sub);text-decoration:none}
-nav.toc a:hover{color:var(--wine)}
-section{padding-top:44px;scroll-margin-top:12px}
-.sec-en{font:600 10.5px Montserrat,sans-serif;letter-spacing:.26em;color:var(--wine);text-transform:uppercase}
-h2{font:600 21px/1.35 Pretendard,sans-serif;letter-spacing:-.3px;margin:6px 0 14px}
-p{font-size:14px;line-height:1.85;color:var(--sub);margin:0 0 12px}
-.item{padding:16px 0;border-top:.5px solid var(--hair)}
-.item:last-child{border-bottom:.5px solid var(--hair)}
-.item .n{font:italic 400 15px 'Cormorant Garamond',serif;color:var(--wine);margin-right:8px}
-.item h3{display:inline;font:600 15.5px Pretendard,sans-serif;color:var(--ink);margin:0}
-.item p{margin:8px 0 0;font-size:13.5px}
-.ref{font-size:12px;color:var(--muted)}
-.verse{font:15px/1.8 'Gowun Batang',serif;color:var(--ink);margin:4px 0 14px}
-.trio{display:flex;flex-direction:column;gap:2px;margin:6px 0 16px;font:15px/1.9 'Gowun Batang',serif;color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
-.chips span{font-size:13px;padding:6px 12px;border:.5px solid var(--hair);color:var(--ink)}
-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
-td{padding:9px 0;border-top:.5px solid var(--hair);vertical-align:top;color:var(--sub);line-height:1.6}
-td.y{width:64px;font:600 13px Montserrat,sans-serif;color:var(--wine)}
-tr:last-child td{border-bottom:.5px solid var(--hair)}
-.cta{display:block;margin-top:40px;padding:16px;text-align:center;border:.5px solid var(--wine);color:var(--wine);text-decoration:none;font-size:14px;letter-spacing:.02em}
-.cta:hover{background:rgba(110,31,58,.04)}
-footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;letter-spacing:.24em;color:var(--muted)}
+body::before{content:"";position:fixed;inset:-5%;background:url('/images/about/1.jpg') center/cover;filter:blur(10px) brightness(.4);z-index:-1}
+.page{max-width:600px;margin:0 auto;background:var(--paper);min-height:100vh;position:relative}
+.hero{position:relative;height:min(78vw,440px);background:url('/images/about/1.jpg') center 30%/cover;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:0 24px 30px}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,.05) 35%,rgba(20,12,16,.82) 100%)}
+.hero>*{position:relative;z-index:1}
+.back{position:absolute;top:18px;left:20px;z-index:2;font:600 12px Montserrat,sans-serif;letter-spacing:.14em;color:#fff;text-decoration:none;padding:8px 12px;border:1px solid rgba(255,255,255,.55);background:rgba(0,0,0,.2)}
+.eyebrow{font:600 11px Montserrat,sans-serif;letter-spacing:.3em;color:rgba(255,255,255,.85)}
+h1{font:600 36px/1.08 'Cormorant Garamond',serif;margin:10px 0 8px;letter-spacing:.01em}
+.hero .kr{font-size:15px;font-weight:600;color:rgba(255,255,255,.9)}
+.inner{padding:0 24px 64px}
+.lead{margin:30px 0 0;font:17px/1.85 'Gowun Batang',serif;color:var(--ink)}
+nav.toc{position:sticky;top:0;z-index:5;margin:28px -24px 0;padding:12px 24px;background:rgba(251,251,247,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--hair);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{flex:none;font:600 14px Pretendard,sans-serif;color:var(--ink);text-decoration:none;padding:9px 15px;border:1px solid var(--hair);background:#fff;border-radius:999px;transition:.2s}
+nav.toc a:hover{border-color:var(--wine);color:var(--wine)}
+nav.toc a.on{background:var(--wine);border-color:var(--wine);color:#fff}
+section{padding-top:52px;scroll-margin-top:70px}
+.sec-en{font:700 11px Montserrat,sans-serif;letter-spacing:.24em;color:var(--wine);text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.sec-en::after{content:"";flex:1;height:1px;background:var(--hair)}
+h2{font:700 25px/1.35 Pretendard,sans-serif;letter-spacing:-.6px;margin:10px 0 16px;color:var(--ink)}
+p{font-size:16px;line-height:1.85;color:var(--body);margin:0 0 14px}
+.item{padding:20px 0;border-top:1px solid var(--hair)}
+.item:last-child{border-bottom:1px solid var(--hair)}
+.item .n{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;margin-right:10px;border-radius:50%;background:var(--wine-soft);font:600 15px 'Cormorant Garamond',serif;color:var(--wine);vertical-align:2px}
+.item h3{display:inline;font:700 18px Pretendard,sans-serif;letter-spacing:-.3px;color:var(--ink);margin:0}
+.item p{margin:10px 0 0;font-size:15.5px}
+.ref{font-size:13.5px;color:var(--sub)}
+p.ref{margin-top:10px;padding:10px 12px;background:var(--wine-soft);color:var(--ink);font-size:14px;line-height:1.6}
+.verse{font:17px/1.8 'Gowun Batang',serif;color:var(--ink);margin:4px 0 14px}
+.trio{display:flex;flex-direction:column;gap:4px;margin:12px 0 14px;padding-left:14px;border-left:2px solid var(--wine);font:16.5px/1.8 'Gowun Batang',serif;color:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 16px}
+.chips span{font-size:15px;font-weight:600;padding:8px 14px;border:1px solid var(--wine);color:var(--wine);background:#fff}
+figure{margin:44px -24px 0}
+figure img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+figcaption{padding:10px 24px 0;font-size:13px;color:var(--sub)}
+table{width:100%;border-collapse:collapse;font-size:15px;margin-top:6px}
+td{padding:12px 0;border-top:1px solid var(--hair);vertical-align:top;color:var(--body);line-height:1.65}
+td.y{width:70px;font:700 15px Montserrat,sans-serif;color:var(--wine)}
+tr:last-child td{border-bottom:1px solid var(--hair)}
+.cta{display:block;margin-top:48px;padding:18px;text-align:center;background:var(--ink);color:#fff;text-decoration:none;font-size:16px;font-weight:700}
+.cta:hover{background:var(--wine)}
+footer{margin-top:44px;text-align:center;font:600 10px Montserrat,sans-serif;letter-spacing:.24em;color:var(--muted)}
+@media(min-width:601px){.page{margin:32px auto;box-shadow:0 30px 60px rgba(0,0,0,.5)}h1{font-size:44px}.hero{padding:0 40px 36px}.inner{padding:0 40px 72px}nav.toc{margin:28px -40px 0;padding:12px 40px}figure{margin:48px -40px 0}figcaption{padding:10px 40px 0}}
 </style></head>
-<body><div class="page"><div class="inner">
-<a class="back" href="/linkhub">← LINK HUB</a>
-<header>
+<body><div class="page">
+<div class="hero">
+  <a class="back" href="/linkhub">← LINK HUB</a>
   <div class="eyebrow">ABOUT ANM</div>
   <h1>All Nations Worship<br>&amp; Praise Ministries</h1>
   <div class="kr">올네이션스 경배와찬양</div>
-  <p class="lead">올네이션스 경배와찬양(ANM)은 모든 민족과 열방을 향하신 하나님 아버지의 마음을 가지고 나아가는 경배와찬양의 국제 명칭입니다.</p>
-</header>
+</div>
+<div class="inner">
+<p class="lead">올네이션스 경배와찬양(ANM)은 모든 민족과 열방을 향하신 하나님 아버지의 마음을 가지고 나아가는 경배와찬양의 국제 명칭입니다.</p>
 
 <nav class="toc">
-  <a href="#calling">CALLING</a><a href="#vision">VISION</a><a href="#spirit">MINISTRY</a><a href="#values">VALUES</a><a href="#direction">DIRECTION</a><a href="#works">WORKS</a><a href="#history">HISTORY</a>
+  <a href="#calling">부르심</a><a href="#vision">비전</a><a href="#spirit">사역정신</a><a href="#values">핵심 가치</a><a href="#direction">사역 방향</a><a href="#works">사역</a><a href="#history">연혁</a>
 </nav>
 
 <section id="calling">
@@ -68,6 +77,7 @@ footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;le
   <p>이 사역을 통해 한국교회 안에 참된 예배의 회복을 주셨고, 주님과 함께 고난받기를 소원하는 헌신된 형제자매들을 일으키셨습니다. 나아가 우상문화 속의 동남아시아 섬나라들, 15억의 중국과 10억의 모슬렘권, 포스트모더니즘과 세속문화 속의 서구 유럽을 향해 세계선교의 길을 열어 주셨습니다.</p>
   <p>ANM은 생명을 바쳐 복음을 증거한 12사도, 하나님의 일을 위해 준비된 기드온의 300 용사, 바알에게 무릎 꿇지 않은 7000명과 같은 믿음의 사람들이 열방 가운데 세워지기를 기도합니다. 그리고 거룩함과 신실함을 지키며, 주님께서 다시 오시는 그날까지 모든 언어와 민족과 문화를 초월한 복음의 행진을 지속할 것입니다.</p>
 </section>
+<figure><img src="/images/about/4.jpg" alt="" loading="lazy"></figure>
 
 <section id="vision">
   <div class="sec-en">Vision</div>
@@ -87,6 +97,7 @@ footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;le
   <div class="item"><span class="n">3</span><h3>전도와 세계선교</h3><p>참된 예배 속에 삶을 드린 사람들이 예수 그리스도를 알지 못하는 모든 열방과 족속에게 그리스도를 증거하기를 기도합니다.</p></div>
   <div class="item"><span class="n">4</span><h3>구제와 긍휼 사역</h3><p>참된 경건은 고아와 과부를 돌보는 것입니다(약 1:27). 나그네 된 우리를 돌아보신 아버지의 마음으로 소외된 이들에게 하나님의 사랑과 복음을 나눕니다.</p></div>
 </section>
+<figure><img src="/images/about/2.jpg" alt="" loading="lazy"></figure>
 
 <section id="values">
   <div class="sec-en">Core Values</div>
@@ -107,6 +118,7 @@ footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;le
   <div class="chips"><span>사막의 영성</span><span>십자가의 길 예배</span><span>예배예술 사역</span></div>
   <p>교회를 도시 밖으로 내몰려는 사단의 결박을 끊는 <b>사막의 영성</b>, 개인의 영성에 머물지 않고 잃어버린 영혼을 향한 하나님의 마음을 품는 <b>십자가의 길 예배</b>, 강한 용사들이 세상에 복음을 전하기 위한 <b>예배예술 사역</b>을 통해 주님이 주신 사명을 이루어 갑니다.</p>
 </section>
+<figure><img src="/images/about/3.jpg" alt="" loading="lazy"><figcaption>여러 나라 말로 함께 부르는 찬양</figcaption></figure>
 
 <section id="works">
   <div class="sec-en">Ministries</div>
@@ -125,6 +137,7 @@ footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;le
   <div class="item"><h3>지방사역</h3><p>지역 교회와 캠퍼스의 부흥을 위해 각 도시와 대학에서 특별모임을 갖습니다. 매년 3–6월, 9–11월에 각 지역 헌신자들의 기도와 나눔으로 열립니다.</p></div>
   <div class="item"><h3>해외사역 · 국제학교</h3><p>일본·대만·홍콩을 시작으로 싱가포르, 말레이시아, 몽골, 영국, 미국, 캐나다, 동남아 전역과 인도까지 공산권·모슬렘권·미전도 종족을 향해 나아갑니다. 국제학교와 국제 큰잔치에서는 선교 헌신자를 위한 일주일간의 훈련과 3일간의 선교 큰잔치가 열립니다.</p></div>
 </section>
+<figure><img src="/images/about/5.jpg" alt="" loading="lazy"></figure>
 
 <section id="history">
   <div class="sec-en">History</div>
@@ -153,4 +166,14 @@ footer{margin-top:44px;text-align:center;font:600 9.5px Montserrat,sans-serif;le
 
 <a class="cta" href="/">2027 WINTER 경배와찬양학교 안내 →</a>
 <footer>ALL NATIONS WORSHIP &amp; PRAISE MINISTRIES</footer>
-</div></div></body></html>
+</div></div>
+<script>
+(function(){
+  var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+  var map={};links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  function on(id){links.forEach(function(a){a.classList.toggle('on',a===map[id]);});var a=map[id];if(a&&a.scrollIntoView){var n=a.parentNode;n.scrollTo({left:a.offsetLeft-n.clientWidth/2+a.clientWidth/2,behavior:'smooth'});}}
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)on(e.target.id);});},{rootMargin:'-30% 0px -60% 0px'});Object.keys(map).forEach(function(id){var el=document.getElementById(id);if(el)io.observe(el);});}
+  links.forEach(function(a){a.addEventListener('click',function(){on(a.getAttribute('href').slice(1));});});
+})();
+</script>
+</body></html>

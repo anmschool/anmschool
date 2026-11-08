@@ -1,6 +1,6 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { DEMO, ERROR_TEXT, getToken, login } from "../api";
+import { DEMO, ERROR_TEXT, getToken, login, warmUp } from "../api";
 import { useLang } from "../i18n";
 import { Footer, Head, Skeleton, useSeason } from "../ui";
 
@@ -12,6 +12,7 @@ export default function Login() {
   const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  useEffect(() => { warmUp(); }, []);
 
   if (!s) return <div className="app"><Head title={t("loginTitle")} /><main className="body"><Skeleton /></main></div>;
   if (getToken(s.id)) return <Navigate to="/me" replace />;

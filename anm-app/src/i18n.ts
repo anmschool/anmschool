@@ -6,7 +6,7 @@ export type Lang = "ko" | "en" | "zh";
 const T = {
   ko: {
     noticesMinistries: "공지 · 사역 안내", myShort: "내 등록", seeAll: "전체 보기", schoolShort: "경배와찬양학교", capNoticesMin: "학교 소식 · 7000훈련학교 · 큰잔치", capNotices: "이번 학교 소식", capSchedule: "트랙별 일정", capSoon: "확정되면 공개", capMe: "숙소 · 훈련비 · 현장 QR", capLogin: "이름과 전화번호로", capGuide: "복장 · 식사 · 숙소 예절", capPlaces: "채플관 · 숙소 · 이동 영상", capMinistries: "큰잔치 · 훈련 안내", otherMinistries: "ANM 사역 안내", church: "교회", state: "상태", trackOnly: "과정 일정만 보여 드립니다", openMap: "지도 열기", theme: "주제",
-    ministries: "사역", now: "진행 중", soon: "준비 중", past: "지난 사역", apply: "신청하기", myInfo: "내 등록 확인",
+    ministries: "사역", now: "진행 중", soon: "준비 중", past: "지난 사역", apply: "신청하기", myInfo: "내 등록 확인", checkReg: "신청 및 입금 여부 조회",
     notices: "공지", schedule: "시간표", guide: "안내", places: "장소·길찾기", home: "홈", back: "뒤로",
     loginTitle: "내 등록 정보", loginLede: "신청할 때 적은 이름과 전화번호로 확인합니다.", name: "이름", phone: "전화번호",
     phoneHint: "숫자만 전체 입력 (010…). 단체 신청은 인솔자 전화번호로도 됩니다.", enter: "확인", checking: "확인 중…",
@@ -20,7 +20,7 @@ const T = {
   },
   en: {
     noticesMinistries: "Notices & Ministries", myShort: "My Page", seeAll: "See all", schoolShort: "Worship & Praise School", capNoticesMin: "School news · training · celebrations", capNotices: "News for this school", capSchedule: "By course", capSoon: "Coming soon", capMe: "Room · fee · check-in QR", capLogin: "With name and phone", capGuide: "Dress · meals · rooms", capPlaces: "Chapel · rooms · route videos", capMinistries: "Celebrations · training", otherMinistries: "ANM Ministries", church: "Church", state: "Status", trackOnly: "schedule only", openMap: "Open map", theme: "Theme",
-    ministries: "Ministries", now: "Now", soon: "Coming up", past: "Past", apply: "Apply", myInfo: "My registration",
+    ministries: "Ministries", now: "Now", soon: "Coming up", past: "Past", apply: "Apply", myInfo: "My registration", checkReg: "Registration status",
     notices: "Notices", schedule: "Schedule", guide: "Guide", places: "Places & routes", home: "Home", back: "Back",
     loginTitle: "My registration", loginLede: "Use the name and phone number you registered with.", name: "Name", phone: "Phone",
     phoneHint: "Full number, digits only. Group members may use the leader's number.", enter: "Continue", checking: "Checking…",
@@ -34,7 +34,7 @@ const T = {
   },
   zh: {
     noticesMinistries: "公告与事工", myShort: "我的", seeAll: "全部", schoolShort: "敬拜赞美学校", capNoticesMin: "学校消息 · 培训 · 大聚会", capNotices: "本期学校消息", capSchedule: "按课程", capSoon: "确定后公布", capMe: "宿舍 · 培训费 · 报到码", capLogin: "姓名和电话", capGuide: "着装 · 用餐 · 宿舍", capPlaces: "礼拜堂 · 宿舍 · 路线视频", capMinistries: "大聚会 · 培训", otherMinistries: "ANM 事工", church: "教会", state: "状态", trackOnly: "的日程", openMap: "打开地图", theme: "主题",
-    ministries: "事工", now: "进行中", soon: "即将举行", past: "往期", apply: "报名", myInfo: "我的报名",
+    ministries: "事工", now: "进行中", soon: "即将举行", past: "往期", apply: "报名", myInfo: "我的报名", checkReg: "查询报名状态",
     notices: "公告", schedule: "日程", guide: "须知", places: "场所与路线", home: "首页", back: "返回",
     loginTitle: "我的报名信息", loginLede: "请输入报名时填写的姓名和电话号码。", name: "姓名", phone: "电话",
     phoneHint: "请输入完整号码（仅数字）。团体报名可使用领队的号码。", enter: "确认", checking: "确认中…",

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { cachedContent, cachedMe, fetchContent, getToken, refreshMe } from "./api";
+import { cachedContent, cachedMe, fetchContent, getToken, isFresh, refreshMe } from "./api";
 import type { Content, Me, Project } from "./types";
 import { setLang, useLang, type Lang } from "./i18n";
 
@@ -48,6 +48,7 @@ export function useMe(seasonId?: string) {
   useEffect(() => {
     if (!seasonId || !getToken(seasonId)) { setMe(null); return; }
     setMe(cachedMe(seasonId));
+    if (isFresh(seasonId) && cachedMe(seasonId)) return;
     refreshMe(seasonId).then(r => {
       if (r.ok) { setMe(r.me); setStale(false); }
       else if (r.error === "network" || r.error === "server") setStale(true);

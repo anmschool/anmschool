@@ -175,8 +175,8 @@ export default function Home() {
                 {s.venue && <div><dt>Location</dt><dd>{s.venue}</dd></div>}
               </dl>
               <div className="cta">
-                <Link className="btn" to={loggedIn ? "/me" : "/login"}>{t("myInfo")}</Link>
-                {s.applyUrl && s.status !== "종료" && <a className="btn line" href={s.applyUrl}>{t("apply")}</a>}
+                {s.applyUrl && s.status !== "종료" && <a className="btn" href={s.applyUrl}>{t("apply")}</a>}
+                <Link className="btn line" to={loggedIn ? "/me" : "/login"}>{t("checkReg")}</Link>
               </div>
               {me && <Pass me={me} />}
             </>
@@ -212,7 +212,7 @@ export default function Home() {
         </div>
         {s?.id === "2027W" && (
           <section className="home-sec">
-            <div className="col-head"><span className="label">Programs</span></div>
+            <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>
             <div className="track-grid">
               {TRACKS.map(x => (
                 <Link key={x.name.ko} to="/schedule" className="track-card">
