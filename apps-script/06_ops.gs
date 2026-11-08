@@ -150,3 +150,16 @@ function migrateTeen2027W() {
   buildLoginCache();
   console.log('십대 전환 완료: ' + n + '칸');
 }
+
+/* ───────────── ⑤ 개인 계정 파일 → anmschool 이관 (1회) ───────────── */
+/** 개인 계정이 anmschool에 공유해 둔 파일을 anmschool 소유 사본으로 만든다. 확인 후 원본은 개인 계정에서 삭제 */
+function adoptPersonalFiles() {
+  const root = DriveApp.createFolder('웹·Linkhub 소스 (2026-11)');
+  copyTree_(DriveApp.getFolderById('1lL7A-EPwSWFVmq0YEoPbktxShSXveDkL'), root);
+  DriveApp.getFileById('1M802hMRpnwwR212x7caMS9U4AZzmDKb6_MV9n6PrxoA').makeCopy('올네이션스 경배와찬양(ANM) 사역 소개 정리', DriveApp.getRootFolder());
+  console.log('이관 완료: ' + root.getUrl());
+}
+function copyTree_(src, dst) {
+  const fs = src.getFiles(); while (fs.hasNext()) { const f = fs.next(); f.makeCopy(f.getName(), dst); }
+  const ds = src.getFolders(); while (ds.hasNext()) { const d = ds.next(); copyTree_(d, dst.createFolder(d.getName())); }
+}
