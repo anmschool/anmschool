@@ -1,7 +1,7 @@
 import type { Key } from "../i18n";
 import type { Me } from "../types";
 
-/** 트랙 필터: "전체" 또는 "미래세대, 청지기" 같은 목록 */
+/** 트랙 필터: "전체" 또는 "십대, 청지기" 같은 목록 */
 export const forTrack = (rowTrack: string, track?: string) =>
   !track || !rowTrack || rowTrack === "전체" || rowTrack.split(/[,/]\s*/).some(x => x.trim() && (track.includes(x.trim()) || x.trim().includes(track)));
 

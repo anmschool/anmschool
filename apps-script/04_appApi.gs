@@ -151,7 +151,7 @@ function doPost(e) {
     if (body.action === 'apply') return json_(apiApply_(body));
     if (body.action === 'register') return json_(apiRegister_(body));
     return json_({ ok: false, error: 'unknown_action' });
-  } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
+  } catch (err) { alert_('앱 API ' + (body.action || ''), String(err.message || err)); return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
 }
 
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
@@ -219,6 +219,8 @@ function apiLogin_(b) {
   if (fails >= 8) return { ok: false, error: 'too_many' };
   const proj = projectRow_(b.project);
   if (!proj || !proj.login) return { ok: false, error: 'no_project' };
+  const fast = cachedLogin_(proj.id, name, phone);
+  if (fast) { cache.remove(fk); return { ok: true, token: signToken_({ p: proj.id, c: fast.code, x: Date.now() + TOKEN_DAYS * 864e5 }), me: fast.me }; }
   const ops = readOps_(proj.opsId);
   const hit = findPerson_(ops, name, phone);
   appLog_(b.project, hit.ok ? '성공' : hit.error, hit.ok ? hit.code : '');
@@ -230,6 +232,8 @@ function apiLogin_(b) {
 function apiMe_(b) {
   const t = verifyToken_(b.token);
   if (!t) return { ok: false, error: 'bad_token' };
+  const fastMe = cachedMe_(t.p, t.c);
+  if (fastMe) return { ok: true, me: fastMe };
   const proj = projectRow_(t.p);
   if (!proj || !proj.login) return { ok: false, error: 'no_project' };
   const ops = readOps_(proj.opsId);
@@ -373,7 +377,8 @@ function appLog_(project, result, code) {
 
 const REG_TRACK_NAMES = {
   청지기: '청지기들을 위한 경배와찬양학교',
-  미래세대: '십대를 위한 경배와찬양학교',
+  십대: '십대를 위한 경배와찬양학교',
+  미래세대: '십대를 위한 경배와찬양학교', // 옛 신청서 호환
   어린이: '어린이를 위한 경배와찬양학교',
   대학청년: '대학 청년 및 일반인을 위한 경배와찬양학교',
 };
@@ -490,7 +495,7 @@ function ensureWebTab_(ss) {
 
 /** 배포 전 점검: 가짜 신청 2건(개인·단체)을 검사만 하고 줄 모양을 로그에 출력 (시트에 쓰지 않음) */
 function testRegister() {
-  const ind = { type: '개인', track: '미래세대', mode: '현장', consent: true, name: '테스트', gender: '여', birth: '100512', phone: '010-1234-5678',
+  const ind = { type: '개인', track: '십대', mode: '현장', consent: true, name: '테스트', gender: '여', birth: '100512', phone: '010-1234-5678',
     email: 't@t.t', address: '서울', church: '테스트교회', category: '중고등부', training: '처음 참석', prayer: '기도' };
   console.log(JSON.stringify(validateRegistration_(ind)));
   const row = buildWebRow_(ind, new Date(), 'ko');
