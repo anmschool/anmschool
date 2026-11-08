@@ -20,7 +20,7 @@
       --ink: #1E1A1D; 
       --sub: #75696D; 
       --muted: #9E9598;
-      --hairline: #CDC3C2; 
+      --hairline: #DCD3D1; 
       --wine: #6E1F3A; 
       --wine-light: #8A3554;
     }
@@ -69,11 +69,11 @@
     
     .info-card { margin: 24px auto 0; max-width: 440px; text-align: left; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
     .info-row { display: grid; grid-template-columns: 58px 1fr; gap: 14px; padding: 14px 6px; }
-    .info-row + .info-row { border-top: 0.5px solid var(--hairline); }
+    .info-row + .info-row { border-top: 1px solid var(--hairline); }
     .info-k { font: 700 10.5px Montserrat, sans-serif; letter-spacing: .22em; color: var(--wine); text-transform: uppercase; padding-top: 4px; }
     .info-v b { display: block; font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.5; word-break: keep-all; }
     .info-v small { display: block; margin-top: 2px; font-size: 13px; color: #75696D; line-height: 1.5; }
-    .map-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 6px 11px; font-size: 12.5px; font-weight: 600; color: var(--wine); border: 0.5px solid var(--wine); text-decoration: none; }
+    .map-link { display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; padding: 6px 11px; font-size: 12.5px; font-weight: 600; color: var(--wine); border: 1px solid var(--wine); text-decoration: none; }
     .map-link:hover { background: var(--wine); color: #fff; }
     .lang-btn { 
       background: transparent; border: none; 
@@ -96,7 +96,7 @@
     .theme-verse-main { font-family: 'Gowun Batang', serif; font-weight: 700; color: var(--ink); letter-spacing: -0.5px; z-index: 1; }
     .theme-verse-ref { font-family: 'Montserrat', 'Pretendard', sans-serif; font-weight: 600; color: var(--sub); letter-spacing: 1px; margin-top: 6px; z-index: 1; }
 
-    .tabs { display: flex; border-bottom: 0.5px solid var(--hairline); margin-bottom: 25px; }
+    .tabs { display: flex; border-bottom: 1px solid var(--hairline); margin-bottom: 25px; }
     .tab { flex: 1; text-align: center; padding: 14px 0; cursor: pointer; color: var(--sub); font-weight: 600; transition: 0.3s; letter-spacing: -0.2px; }
     .tab.active { color: var(--wine); border-bottom: 2px solid var(--wine); }
 
@@ -111,7 +111,7 @@
     .input-group label { display: block; font-family: 'Pretendard', sans-serif; font-weight: 600; margin-bottom: 6px; color: var(--sub); letter-spacing: -0.2px; }
     
     input[type="text"], input[type="email"], input[type="tel"], select, textarea {
-      width: 100%; background: transparent; border: none; border-bottom: 0.5px solid var(--hairline);
+      width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--hairline);
       font-family: 'Pretendard', sans-serif; font-weight: 400; box-sizing: border-box; outline: none; transition: 0.3s; color: var(--ink); border-radius: 0;
       -webkit-appearance: none;
     }
@@ -119,9 +119,9 @@
     input::placeholder, textarea::placeholder { color: #cfc7c8; font-weight: 400; }
     input:focus, select:focus, textarea:focus { border-bottom: 1px solid var(--wine); }
 
-    .fee-notice-card { margin-top: 10px; margin-bottom: 25px; border: 0.5px solid var(--hairline); background: rgba(255, 255, 255, 0.6); display: none; animation: fadeIn 0.3s ease; }
+    .fee-notice-card { margin-top: 10px; margin-bottom: 25px; border: 1px solid var(--hairline); background: rgba(255, 255, 255, 0.6); display: none; animation: fadeIn 0.3s ease; }
     .fee-notice-card.visible { display: block; }
-    .fee-card-header { display: flex; flex-direction: column; gap: 6px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 10px; margin-bottom: 12px; }
+    .fee-card-header { display: flex; flex-direction: column; gap: 6px; border-bottom: 1px solid var(--hairline); padding-bottom: 10px; margin-bottom: 12px; }
     .fee-track-name { font-weight: 700; color: var(--wine); word-break: keep-all; line-height: 1.4; }
     .fee-account { font-family: 'Montserrat', 'Pretendard', sans-serif; color: var(--sub); font-weight: 500; }
     
@@ -130,22 +130,22 @@
     .fee-row .fee-val { font-family: 'Montserrat', sans-serif; font-weight: 700; color: var(--ink); letter-spacing: 0.5px; }
     
     .all-fee-toggle { color: var(--sub); text-decoration: underline; text-underline-offset: 4px; cursor: pointer; display: inline-block; margin-top: 5px; margin-bottom: 25px; }
-    .all-fee-modal { display: none; border: 0.5px solid var(--hairline); background: #fff; margin-bottom: 25px; }
+    .all-fee-modal { display: none; border: 1px solid var(--hairline); background: #fff; margin-bottom: 25px; }
     .all-fee-modal.active { display: block; animation: fadeIn 0.3s ease; }
-    .all-fee-item { margin-bottom: 15px; padding-bottom: 12px; border-bottom: 0.5px dashed var(--hairline); }
+    .all-fee-item { margin-bottom: 15px; padding-bottom: 12px; border-bottom: 1px dashed var(--hairline); }
     .all-fee-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .all-fee-item h4 { margin: 0 0 4px 0; color: var(--wine); font-weight: 700; line-height: 1.4; word-break: keep-all; }
     .all-fee-item p { margin: 2px 0; color: var(--sub); line-height: 1.5; word-break: keep-all; }
 
-    .table-container { margin-top: 35px; border-top: 0.5px solid var(--ink); padding-top: 25px; }
+    .table-container { margin-top: 35px; border-top: 1px solid var(--ink); padding-top: 25px; }
     .table-title { font-family: 'Montserrat', sans-serif; color: var(--wine); font-weight: 700; margin-bottom: 6px; }
     .table-desc { margin-bottom: 15px; color: var(--sub); letter-spacing: -0.3px; font-weight: 400; line-height: 1.4; word-break: keep-all; }
     .table-responsive { overflow-x: auto; width: 100%; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
-    table { width: 100%; min-width: 900px; border-collapse: collapse; border-bottom: 0.5px solid var(--ink); }
-    th, td { border: none; border-bottom: 0.5px solid var(--hairline); text-align: left; }
+    table { width: 100%; min-width: 900px; border-collapse: collapse; border-bottom: 1px solid var(--ink); }
+    th, td { border: none; border-bottom: 1px solid var(--hairline); text-align: left; }
     th { background: transparent; color: var(--ink); font-weight: 600; font-family: 'Pretendard', sans-serif; border-bottom: 1px solid var(--hairline); white-space: nowrap; }
     td input, td select { border: none !important; width: 100%; text-align: left; font-family: 'Pretendard', sans-serif; font-weight: 400; }
-    td input:focus, td select:focus { border-bottom: 0.5px solid var(--wine) !important; }
+    td input:focus, td select:focus { border-bottom: 1px solid var(--wine) !important; }
 
     .btn-add-row { background: transparent; border: none; color: var(--sub); padding: 15px 0; cursor: pointer; font-family: 'Pretendard', sans-serif; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; transition: 0.3s; margin-top: 5px; }
     .btn-submit { width: 100%; font-family: 'Pretendard', sans-serif; font-weight: 600; cursor: pointer; transition: 0.3s; background-color: var(--ink); color: var(--paper); border: none; margin-top: 35px; letter-spacing: 1px; }
@@ -155,14 +155,14 @@
     #success-message p { line-height: 1.5; color: var(--ink); font-weight: 400; margin: 0 0 10px 0; word-break: keep-all; }
     #success-message a { color: var(--wine); text-decoration: none; border-bottom: 1px solid var(--wine); font-weight: 600; padding-bottom: 2px; }
 
-    .success-summary-card { margin: 25px auto; max-width: 100%; text-align: left; border: 0.5px solid var(--hairline); background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
-    .summary-head { font-weight: 700; color: var(--wine); margin-bottom: 12px; border-bottom: 0.5px solid var(--hairline); padding-bottom: 8px; }
-    .summary-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; color: var(--ink); border-bottom: 0.5px dashed rgba(205, 195, 194, 0.4); }
+    .success-summary-card { margin: 25px auto; max-width: 100%; text-align: left; border: 1px solid var(--hairline); background: #fff; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
+    .summary-head { font-weight: 700; color: var(--wine); margin-bottom: 12px; border-bottom: 1px solid var(--hairline); padding-bottom: 8px; }
+    .summary-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; color: var(--ink); border-bottom: 1px dashed rgba(205, 195, 194, 0.4); }
     .summary-row:last-of-type { border-bottom: none; }
     .summary-row .label { color: var(--sub); }
     .summary-row .val { font-weight: 600; word-break: keep-all; line-height: 1.4; }
 
-    .refund-box { margin-top: 20px; padding-top: 15px; border-top: 0.5px dashed var(--hairline); text-align: left; }
+    .refund-box { margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--hairline); text-align: left; }
     .refund-box h3 { font-weight: 700; color: var(--ink); margin: 0 0 8px 0; }
     .refund-box ul { color: var(--sub); padding-left: 16px; line-height: 1.6; margin: 0; font-weight: 400; }
     .refund-box ul li { margin-bottom: 4px; word-break: keep-all; }
@@ -221,7 +221,7 @@
        ========================================= */
     @media (min-width: 768px) {
       body { padding: 60px 15px; }
-      .form-container { max-width: 860px; margin: 0 auto; border-radius: 20px; border: 0.5px solid rgba(255,255,255,0.15); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
+      .form-container { max-width: 860px; margin: 0 auto; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 30px 60px rgba(0,0,0,0.4); }
       .form-inner { padding: 70px 60px 50px; }
       
       .grid-wrap { grid-template-columns: 1fr 1fr; gap: 30px 40px; }
@@ -488,7 +488,7 @@
       const f = FEE[key];
       if (f.one) return row(t.early, f.one[0]) + row(t.regular, f.one[1]);
       return f.early.map((n, i) => row(t.early + ' ' + t.cats[i], n)).join('') +
-        '<div style="margin-top:8px; border-top:0.5px dashed var(--hairline); padding-top:6px;">' + f.reg.map((n, i) => row(t.regular + ' ' + t.cats[i], n)).join('') + '</div>';
+        '<div style="margin-top:8px; border-top:1px dashed var(--hairline); padding-top:6px;">' + f.reg.map((n, i) => row(t.regular + ' ' + t.cats[i], n)).join('') + '</div>';
     }
     function feeName(key) { const t = T(); return key === '온라인' ? t.onlineName : t.trk[key] + ' (' + t.nights[key] + ')'; }
     function renderDyn() {
