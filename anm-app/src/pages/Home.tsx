@@ -33,20 +33,37 @@ function Slides() {
 }
 
 type L = Record<Lang, string>;
-const TRACKS: { name: L; dates: L; nights: L }[] = [
-  { name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
+const TRACKS: { key: string; name: L; dates: L; nights: L }[] = [
+  { key: "청지기", name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
     dates: { ko: "1/6(수) ~ 1/16(토)", en: "Jan 6 (Wed) – 16 (Sat)", zh: "1月6日(周三) ~ 16日(周六)" },
     nights: { ko: "10박 11일", en: "10 nights · 11 days", zh: "10晚11天" } },
-  { name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
+  { key: "십대", name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
     dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
-  { name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
+  { key: "어린이", name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
     dates: { ko: "1/14(목) ~ 1/16(토)", en: "Jan 14 (Thu) – 16 (Sat)", zh: "1月14日(周四) ~ 16日(周六)" },
     nights: { ko: "2박 3일", en: "2 nights · 3 days", zh: "2晚3天" } },
-  { name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
+  { key: "대학청년·일반", name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
     dates: { ko: "1/6(수) ~ 1/9(토)", en: "Jan 6 (Wed) – 9 (Sat)", zh: "1月6日(周三) ~ 9日(周六)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
 ];
+/** 운영 시트 트랙 탭의 입실·퇴실 → 날짜·박수 문구 (없으면 위 기본값) */
+const WK: L[] = [["일", "Sun", "周日"], ["월", "Mon", "周一"], ["화", "Tue", "周二"], ["수", "Wed", "周三"], ["목", "Thu", "周四"], ["금", "Fri", "周五"], ["토", "Sat", "周六"]].map(([ko, en, zh]) => ({ ko, en, zh }));
+const MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function pd(s: string) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function spanText(segs: [string, string][], lang: Lang) {
+  return segs.map(([a, b]) => {
+    const A = pd(a), B = pd(b), w = (x: Date) => WK[x.getDay()][lang];
+    if (lang === "en") return `${MON[A.getMonth()]} ${A.getDate()} (${w(A)}) – ${A.getMonth() === B.getMonth() ? "" : MON[B.getMonth()] + " "}${B.getDate()} (${w(B)})`;
+    if (lang === "zh") return `${A.getMonth() + 1}月${A.getDate()}日(${w(A)}) ~ ${A.getMonth() === B.getMonth() ? "" : B.getMonth() + 1 + "月"}${B.getDate()}日(${w(B)})`;
+    return `${A.getMonth() + 1}/${A.getDate()}(${w(A)}) ~ ${B.getMonth() + 1}/${B.getDate()}(${w(B)})`;
+  }).join(lang === "zh" ? "，" : ", ");
+}
+function nightsText(segs: [string, string][], lang: Lang) {
+  const n = segs.reduce((t, [a, b]) => t + Math.round((pd(b).getTime() - pd(a).getTime()) / 864e5), 0), d = n + segs.length;
+  return lang === "en" ? `${n} nights · ${d} days` : lang === "zh" ? `${n}晚${d}天` : `${n}박 ${d}일`;
+}
+
 const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
     when: { ko: "매주 목요일 오후 6시 30분", en: "Every Thursday, 6:30 PM", zh: "每周四 下午6:30" },
@@ -214,13 +231,17 @@ export default function Home() {
           <section className="home-sec">
             <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>
             <div className="track-grid">
-              {TRACKS.map(x => (
+              {TRACKS.map(x => {
+                const r = content?.tracks?.[s.id]?.list.find(t => t.name === x.key && t.mode !== "온라인");
+                const segs = (r ? [[r.in1, r.out1], [r.in2, r.out2]].filter(([a, b]) => a && b) : []) as [string, string][];
+                return (
                 <Link key={x.name.ko} to="/schedule" className="track-card">
-                  <span className="n">{x.nights[lang]}</span>
+                  <span className="n">{segs.length ? nightsText(segs, lang) : x.nights[lang]}</span>
                   <span className="t">{x.name[lang]}</span>
-                  <span className="d">{x.dates[lang]}</span>
+                  <span className="d">{segs.length ? spanText(segs, lang) : x.dates[lang]}</span>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           </section>
         )}

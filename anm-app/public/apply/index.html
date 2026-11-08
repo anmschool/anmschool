@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
   <base target="_top">
   <meta charset="UTF-8">
   <title>2027 Winter 경배와찬양학교 신청 / Application / 申请书</title>
@@ -40,7 +39,7 @@
       content: "";
       position: fixed;
       top: -5%; left: -5%; width: 110%; height: 110%;
-      background-image: url('https://lh3.googleusercontent.com/d/1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW=w900'); 
+      background-image: url('/linkhub/img/bg.jpg'); 
       background-size: cover; background-position: center; 
       filter: blur(25px) brightness(0.4); 
       z-index: -1;
@@ -57,7 +56,7 @@
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 360px;
-      background-image: url('https://lh3.googleusercontent.com/d/1vF_xYfKgIHLnQSdyMD83NM1fA65iAAym=w1000'); 
+      background-image: url('/linkhub/img/watercolor.jpg'); 
       background-size: cover; background-position: top center;
       -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
       mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
@@ -470,6 +469,7 @@
     });
 
     const ACC = { A: '1005-604-700231', B: '1005-404-679551' };
+    let SEASON = null; // 운영 시트에서 받아 온 트랙 정보 (없으면 아래 기본값)
     const FEE = {
       '청지기': { acc: 'A', one: [190000, 220000] },
       '십대': { acc: 'A', early: [120000, 100000, 80000], reg: [140000, 120000, 100000] },
@@ -491,6 +491,57 @@
         '<div style="margin-top:8px; border-top:1px dashed var(--hairline); padding-top:6px;">' + f.reg.map((n, i) => row(t.regular + ' ' + t.cats[i], n)).join('') + '</div>';
     }
     function feeName(key) { const t = T(); return key === '온라인' ? t.onlineName : t.trk[key] + ' (' + t.nights[key] + ')'; }
+    /* ── 운영 시트(트랙·금액·설정)에서 날짜·요금·선등록 마감을 받아 와서 기본값을 덮어씀 ── */
+    const WKD = { ko: ['일','월','화','수','목','금','토'], en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], zh: ['周日','周一','周二','周三','周四','周五','周六'] };
+    const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const pd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+    const md = (L, x, wk) => L === 'en' ? MON[x.getMonth()] + ' ' + x.getDate() + (wk ? ' (' + WKD.en[x.getDay()] + ')' : '') : L === 'zh' ? (x.getMonth() + 1) + '月' + x.getDate() + '日' + (wk ? '(' + WKD.zh[x.getDay()] + ')' : '') : (x.getMonth() + 1) + '/' + x.getDate() + (wk ? '(' + WKD.ko[x.getDay()] + ')' : '');
+    function applySeason(t, proj) {
+      const keyOf = n => String(n).replace(/^온라인\s*/, '').replace(/·일반$/, '').trim();
+      t.list.forEach(x => {
+        const k = keyOf(x.name); if (!KEYS.includes(k)) return;
+        const f = x.fees || {};
+        if (x.mode === '온라인') { const v = f['전체'] || f['일반']; if (v) ONLINE[k] = v[0]; return; }
+        const num = (String(x.account).match(/\d[\d-]{8,}/) || [])[0];
+        if (num) { const a = Object.keys(ACC).find(z => ACC[z] === num) || ('X' + k); ACC[a] = num; FEE[k].acc = a; }
+        if (f['전체']) FEE[k] = { acc: FEE[k].acc, one: f['전체'] };
+        else if (f['일반']) { const g = c => f[c] || f['일반']; FEE[k] = { acc: FEE[k].acc, early: [g('일반')[0], g('십대')[0], g('어린이')[0]], reg: [g('일반')[1], g('십대')[1], g('어린이')[1]] }; }
+        const segs = [[x.in1, x.out1], [x.in2, x.out2]].filter(p => p[0] && p[1]);
+        if (!segs.length) return;
+        const n = segs.reduce((a, p) => a + Math.round((pd(p[1]) - pd(p[0])) / 864e5), 0), days = n + segs.length;
+        Object.keys(i18n).forEach(L => {
+          i18n[L].nights[k] = L === 'en' ? n + ' nights · ' + days + ' days' : L === 'zh' ? n + '晚' + days + '天' : n + '박 ' + days + '일';
+          i18n[L].dates[k] = segs.map(p => md(L, pd(p[0])) + (L === 'en' ? ' – ' : ' ~ ') + md(L, pd(p[1]))).join(L === 'zh' ? '，' : ', ');
+        });
+      });
+      if (t.deadline && /^\d{4}-\d{2}-\d{2}$/.test(t.deadline)) {
+        const D = pd(t.deadline), N = new Date(D.getTime() + 864e5);
+        i18n.ko.early = '선등록 (~' + md('ko', D) + ')'; i18n.ko.regular = '일반등록 (' + md('ko', N) + '~)';
+        i18n.en.early = 'Early (by ' + md('en', D) + ')'; i18n.en.regular = 'Regular (from ' + md('en', N) + ')';
+        i18n.zh.early = '早鸟报名 (~' + md('zh', D) + ')'; i18n.zh.regular = '一般报名 (' + md('zh', N) + '起)';
+        i18n.ko.sum_due_v = '선등록 ~' + md('ko', D, 1) + '<br>일반등록 ' + md('ko', N, 1) + '~';
+        i18n.en.sum_due_v = 'Early: by ' + md('en', D, 1) + '<br>Regular: from ' + md('en', N, 1);
+        i18n.zh.sum_due_v = '早鸟报名：~' + md('zh', D, 1) + '<br>一般报名：' + md('zh', N, 1) + '起';
+      }
+      if (proj && proj.start && proj.end) {
+        const A = pd(proj.start), B = pd(proj.end);
+        i18n.ko.date_v = A.getFullYear() + '. ' + (A.getMonth() + 1) + '. ' + A.getDate() + ' (' + WKD.ko[A.getDay()] + ') – ' + (B.getMonth() + 1) + '. ' + B.getDate() + ' (' + WKD.ko[B.getDay()] + ')';
+        i18n.en.date_v = md('en', A, 1) + ' – ' + md('en', B, 1) + ', ' + B.getFullYear();
+        i18n.zh.date_v = A.getFullYear() + '年' + md('zh', A, 1) + ' – ' + md('zh', B, 1);
+      }
+      ['sum_due_v', 'date_v'].forEach(key => { const el = document.querySelector('[data-i18n="' + key + '"]'); if (el) el.innerHTML = i18n[currentLang][key]; });
+    }
+    function loadSeason() {
+      fetch(GAS_URL_CONTENT + '?action=content').then(r => r.json()).then(j => {
+        const d = j && j.data; const t = d && d.tracks && d.tracks['2027W'];
+        if (!t) return;
+        applySeason(t, (d.projects || []).find(p => p.id === '2027W'));
+        renderDyn();
+      }).catch(() => {});
+    }
+    const GAS_URL_CONTENT = "https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec";
+    document.addEventListener('DOMContentLoaded', loadSeason);
+
     function renderDyn() {
       const t = T();
       document.querySelectorAll('#global-track option').forEach(o => { const i = KEYS.indexOf(o.value); if (i >= 0) o.textContent = `${i + 1}. ${t.trk[o.value]} (${t.nights[o.value]} | ${t.dates[o.value]})`; });

@@ -136,6 +136,7 @@ function doGet(e) {
   try {
     if (p.action === 'content' || !p.action) return json_({ ok: true, data: getContent_() });
     if (p.action === 'ping') return json_({ ok: true, time: new Date().toISOString() });
+    if (p.action === 'asset') return json_(assetB64_(p.id, p.w));
     return json_({ ok: false, error: 'unknown_action' });
   } catch (err) { return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
 }
@@ -169,9 +170,15 @@ function getContent_() {
   const hit = cache.get('content_v1');
   if (hit) return JSON.parse(hit);
   const ss = appSheet_();
+  const projRows = rows_(ss.getSheetByName('프로젝트'));
   const data = buildContent_({
-    projects: rows_(ss.getSheetByName('프로젝트')), notices: rows_(ss.getSheetByName('공지')),
+    projects: projRows, notices: rows_(ss.getSheetByName('공지')),
     schedule: rows_(ss.getSheetByName('시간표')), guides: rows_(ss.getSheetByName('안내')), places: rows_(ss.getSheetByName('장소')),
+  });
+  // 트랙 날짜·요금·선등록 마감은 운영 시트 한 곳에서 (신청서·메인 앱이 함께 씀)
+  data.tracks = {};
+  projRows.filter(r => r.ID && STATUS_VISIBLE[r.상태] && String(r['운영 시트 ID'] || '').trim()).forEach(r => {
+    try { data.tracks[String(r.ID)] = tracksFor_(String(r['운영 시트 ID']).trim()); } catch (e) { console.log('트랙 읽기 실패 ' + r.ID + ': ' + e.message); }
   });
   const s = JSON.stringify(data);
   if (s.length < 95000) cache.put('content_v1', s, 120);
@@ -260,6 +267,23 @@ function projectRow_(id) {
 }
 
 /** 운영 시트에서 필요한 탭만 읽기 (머리글 이름 기준) */
+/** 운영 시트의 트랙·금액·설정 → 공개해도 되는 트랙 정보만 */
+function tracksFor_(opsId) {
+  const ss = SpreadsheetApp.openById(opsId);
+  const d = v => (v instanceof Date ? Utilities.formatDate(v, 'Asia/Seoul', 'yyyy-MM-dd') : String(v || '').trim());
+  const get = n => { const sh = ss.getSheetByName(n); return sh ? rows_(sh) : []; };
+  const fee = get('금액');
+  const dl = (get('설정').find(r => r.항목 === '선등록 마감') || {}).값;
+  return {
+    deadline: d(dl),
+    list: get('트랙').filter(r => r.트랙).map(r => {
+      const f = {};
+      fee.filter(x => x.트랙 === r.트랙).forEach(x => { f[x.요율] = [Number(x.선등록) || 0, Number(x.일반등록) || 0]; });
+      return { name: String(r.트랙), mode: String(r.형태 || ''), account: String(r.계좌 || ''), in1: d(r.입실1), out1: d(r.퇴실1), in2: d(r.입실2), out2: d(r.퇴실2), fees: f };
+    }),
+  };
+}
+
 function readOps_(opsId) {
   const ss = SpreadsheetApp.openById(opsId);
   const get = (n) => { const sh = ss.getSheetByName(n); return sh ? rows_(sh) : []; };

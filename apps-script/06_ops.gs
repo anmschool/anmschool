@@ -163,3 +163,14 @@ function copyTree_(src, dst) {
   const fs = src.getFiles(); while (fs.hasNext()) { const f = fs.next(); f.makeCopy(f.getName(), dst); }
   const ds = src.getFolders(); while (ds.hasNext()) { const d = ds.next(); copyTree_(d, dst.createFolder(d.getName())); }
 }
+
+/* ───────────── ⑥ 웹 사진 내려받기용 (공개해도 되는 사진 3장만) ───────────── */
+const PUBLIC_ASSETS = ['1LS8kohsuirFakmJN5kvrrIlV04-y8HpG', '1D_n7l6HRlDuE0OmtSwS6qi4_wDjsHysW', '1vF_xYfKgIHLnQSdyMD83NM1fA65iAAym'];
+function assetB64_(id, w) {
+  if (PUBLIC_ASSETS.indexOf(id) === -1) return { ok: false, error: 'not_allowed' };
+  const width = Math.min(Number(w) || 1200, 2000);
+  const r = UrlFetchApp.fetch('https://drive.google.com/thumbnail?id=' + id + '&sz=w' + width,
+    { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
+  const b = r.getBlob();
+  return { ok: r.getResponseCode() === 200, type: b.getContentType(), data: Utilities.base64Encode(b.getBytes()) };
+}
