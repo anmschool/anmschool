@@ -4,9 +4,9 @@ import { useLang, type Lang } from "../i18n";
 import { fmtRange, Footer, Head, Icon, Section, useContent, useSeason } from "../ui";
 
 type L = Record<Lang, string>;
-const ABOUT: { en: string; kr: L; verse?: L; ref?: L; body: L[]; info?: L; to?: L }[] = [
+const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; info?: L; to?: L }[] = [
   {
-    en: "Worship & Praise School", kr: { ko: "경배와찬양학교", en: "Worship & Praise School", zh: "敬拜赞美学校" },
+    en: "Worship & Praise School", kr: { ko: "경배와찬양학교", en: "Worship & Praise School", zh: "敬拜赞美学校" }, img: "/images/about/2.jpg",
     verse: { ko: "“마음을 다하고 성품을 다하고 힘을 다하여 네 하나님 여호와를 사랑하라”", en: "“You shall love the LORD your God with all your heart and with all your soul and with all your might.”", zh: "“你要尽心、尽性、尽力爱耶和华你的神。”" },
     ref: { ko: "신 6:4–9, 11:13–21", en: "Deut 6:4–9; 11:13–21", zh: "申 6:4–9；11:13–21" },
     body: [
@@ -23,7 +23,7 @@ const ABOUT: { en: string; kr: L; verse?: L; ref?: L; body: L[]; info?: L; to?: 
     to: { ko: "2027 WINTER 안내 →", en: "2027 WINTER details →", zh: "2027 WINTER 详情 →" },
   },
   {
-    en: "Thursday Worship", kr: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
+    en: "Thursday Worship", kr: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" }, img: "/images/about/1.jpg",
     body: [
       { ko: "하나님의 임재를 경험하는 예배, 영적 회복과 치유가 있는 예배, 십자가의 길과 순교자의 삶을 살기로 결단하는 예배.",
         en: "Worship where we experience God's presence; worship with spiritual restoration and healing; worship where we resolve to walk the way of the cross and live the life of a martyr.",
@@ -49,6 +49,30 @@ const ABOUT: { en: string; kr: L; verse?: L; ref?: L; body: L[]; info?: L; to?: 
     info: { ko: "매주 토요일 오후 4시 · 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)",
       en: "Every Saturday, 4:00 PM · Seobinggo Worship & Praise Training Center (21-2 Seobinggo-ro 59-gil, Yongsan-gu, Seoul)",
       zh: "每周六下午4:00 · 西冰库敬拜赞美训练院（首尔龙山区西冰库路59街21-2）" },
+  },
+  {
+    en: "Grand Celebration", kr: { ko: "큰잔치", en: "Grand Celebration", zh: "大聚会" },
+    body: [
+      { ko: "청년·청소년·어린이와 가정, 지역 교회를 초청해 하나님을 높이는 선교 축제입니다. 나라와 민족을 위해 중보하며 장애인과 함께하는 모임, 성탄절·부활절 큰잔치 등을 이어 왔습니다.",
+        en: "A mission festival that exalts God, inviting young adults, teenagers, children, families and local churches. We have interceded for our nation and peoples, and held gatherings with people with disabilities as well as Christmas and Easter celebrations.",
+        zh: "邀请青年、青少年、儿童、家庭和地方教会，一同高举神的宣教庆典。我们为国家和民族代祷，并举办了与残障人士同行的聚会，以及圣诞节、复活节大聚会等。" },
+    ],
+  },
+  {
+    en: "Regional Ministry", kr: { ko: "지방사역", en: "Regional Ministry", zh: "地方事工" },
+    body: [
+      { ko: "지역 교회와 캠퍼스의 부흥을 위해 각 도시와 대학에서 특별모임을 갖습니다. 매년 3–6월, 9–11월에 각 지역 헌신자들의 기도와 나눔으로 열립니다.",
+        en: "Praying for revival in local churches and campuses, we hold special gatherings in cities and universities. They take place every year from March to June and September to November through the prayer and sharing of local volunteers.",
+        zh: "为地方教会和校园的复兴，在各城市和大学举办特别聚会。每年3–6月、9–11月，借着各地奉献者的祷告与分享举行。" },
+    ],
+  },
+  {
+    en: "Overseas Ministry", kr: { ko: "해외사역 · 국제학교", en: "Overseas Ministry · International School", zh: "海外事工 · 国际学校" }, img: "/images/about/5.jpg",
+    body: [
+      { ko: "일본·대만·홍콩을 시작으로 싱가포르, 말레이시아, 몽골, 영국, 미국, 캐나다, 동남아 전역과 인도까지 공산권·모슬렘권·미전도 종족을 향해 나아갑니다. 국제학교와 국제 큰잔치에서는 선교 헌신자를 위한 일주일간의 훈련과 3일간의 선교 큰잔치가 열립니다.",
+        en: "Beginning with Japan, Taiwan and Hong Kong, we have gone on to Singapore, Malaysia, Mongolia, the UK, the US, Canada, all of Southeast Asia and India — toward communist nations, Muslim nations and unreached peoples. The International School and International Grand Celebration offer a week of training for mission volunteers followed by a three-day Mission Grand Celebration.",
+        zh: "从日本、台湾、香港开始，到新加坡、马来西亚、蒙古、英国、美国、加拿大、东南亚全境以及印度，向共产地区、穆斯林地区和未得之民前进。国际学校与国际大聚会为宣教奉献者举办为期一周的培训，以及三天的宣教大聚会。" },
+    ],
   },
 ];
 
@@ -76,6 +100,7 @@ export default function Notices() {
                   <article key={m.en} className="min-about">
                     <span className="label">{m.en}</span>
                     <h3>{m.kr[lang]}</h3>
+                    {m.img && <img className="min-img" src={m.img} alt="" loading="lazy" />}
                     {m.verse && m.ref && <p className="verse">{m.verse[lang]}<span className="ref">{m.ref[lang]}</span></p>}
                     {m.body.map((x, i) => <p key={i}>{x[lang]}</p>)}
                     {m.info && <p className="info">{m.info[lang]}</p>}

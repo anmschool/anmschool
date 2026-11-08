@@ -153,7 +153,7 @@ export default function Home() {
 
       <section className="masthead">
         <div className="cover-paper mast-text">
-          {!s && loading && <Skeleton lines={4} />}
+          {!s && loading && <div id="boot"><b>ANM</b><i></i></div>}
           {s && (
             <>
               <span className="label">{year} {season.toUpperCase()}{dday && <span className="dday">{dday}</span>}</span>
