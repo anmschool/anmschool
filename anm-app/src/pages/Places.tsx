@@ -9,10 +9,17 @@ const GROUPS: { id: string; kinds: string[]; label: L }[] = [
   { id: "lodging", kinds: ["숙소"], label: { ko: "숙소", en: "Rooms", zh: "宿舍" } },
 ];
 const PARK: L = { ko: "주차", en: "Parking", zh: "停车" };
-const PARK_ROWS: L[] = [
-  { ko: "채플관 옆 주차장", en: "Parking lot next to the Chapel", zh: "礼拜堂旁停车场" },
-  { ko: "채플관 옆 오른쪽 길로 올라가 온실 앞", en: "Up the road on the right of the Chapel, in front of the greenhouse", zh: "沿礼拜堂右侧道路上行，温室前" },
+const PARK_ROWS: { t: L; img: string; naver: string; google: string }[] = [
+  { t: { ko: "채플관 옆 주차장", en: "Parking lot next to the Chapel", zh: "礼拜堂旁停车场" }, img: "/images/facility/parking-chapel.png", naver: "https://naver.me/GyYWndK8", google: "https://maps.app.goo.gl/H5193Vf8fMRFwHYw8" },
+  { t: { ko: "채플관 옆 오른쪽 길로 올라가 온실 앞", en: "Up the road on the right of the Chapel, in front of the greenhouse", zh: "沿礼拜堂右侧道路上行，温室前" }, img: "/images/facility/parking-greenhouse.png", naver: "", google: "" },
 ];
+/** 장소별 지도 (시트 지도 칸보다 우선) */
+const LINKS: Record<string, [string, string]> = {
+  "60주년 기념 채플관": ["https://naver.me/GyYWndK8", "https://maps.app.goo.gl/H5193Vf8fMRFwHYw8"],
+  "식당": ["https://naver.me/FlBWIDS1", "https://maps.app.goo.gl/htBX67Hg14YKs43L7"],
+  "5동": ["https://naver.me/GJZ6k3oY", "https://maps.app.goo.gl/im9RUAJ1g4W9NiNc7"],
+  "명덕관": ["https://naver.me/x9BeSraH", "https://maps.app.goo.gl/KdwD1Qv3cyHaM35AA"],
+};
 const PARK_NOTE: L = { ko: "주차할 수 있는 곳은 아래 두 곳입니다.", en: "You can park in these two areas.", zh: "可停车区域为以下两处。" };
 /** 영상 파일 이름(course1_main_gate_to_chapel.mp4) → "정문 → 채플관" */
 const SPOT: Record<string, L> = {
@@ -26,9 +33,8 @@ function routeOf(v: string, lang: Lang) {
   const a = m[1].replace(/^course\d+_/, ""), b = m[2];
   return `${SPOT[a]?.[lang] ?? a} → ${SPOT[b]?.[lang] ?? b}`;
 }
-const KAKAO = "https://map.kakao.com/?q=" + encodeURIComponent("명지대학교 자연캠퍼스");
 const MAPS: L = { ko: "네이버지도", en: "Naver Map", zh: "Naver地图" };
-const KMAP: L = { ko: "카카오맵", en: "Kakao Map", zh: "Kakao地图" };
+const GMAP: L = { ko: "구글맵", en: "Google Maps", zh: "Google地图" };
 
 export default function Places() {
   const { content } = useContent();
@@ -67,13 +73,13 @@ export default function Places() {
                   {p.image && <img src={p.image} alt={p.name} loading="lazy" />}
                   {p.video && (
                     <figure className="pl-video">
-                      <figcaption><span className="label">{t("route")}</span>{routeOf(p.video, lang)}</figcaption>
+                      <figcaption><span className="rt">{t("route")}</span>{routeOf(p.video, lang)}</figcaption>
                       <video src={p.video} controls preload="none" playsInline poster={p.image} />
                     </figure>
                   )}
                   <div className="pl-btns">
-                    {p.map && <a className="pill" href={p.map} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>}
-                    <a className="pill" href={KAKAO} target="_blank" rel="noreferrer">{KMAP[lang]} ↗</a>
+                    {(LINKS[p.name]?.[0] || p.map) && <a className="pill" href={LINKS[p.name]?.[0] || p.map} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>}
+                    {LINKS[p.name]?.[1] && <a className="pill" href={LINKS[p.name][1]} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a>}
                   </div>
                 </article>
               ))}
@@ -84,7 +90,15 @@ export default function Places() {
           <section id="parking" className="pl-sec">
             <h2>{PARK[lang]}</h2>
             <p className="sub" style={{ margin: 0 }}>{PARK_NOTE[lang]}</p>
-            <ol className="pl-park">{PARK_ROWS.map(r => <li key={r.ko}>{r[lang]}</li>)}</ol>
+            <div className="pl-list two">
+              {PARK_ROWS.map((r, i) => (
+                <article key={r.img} className="pl">
+                  <div className="pl-head"><h3><span className="pk">P{i + 1}</span>{r.t[lang]}</h3></div>
+                  <img src={r.img} alt={r.t[lang]} loading="lazy" className="pk-map" />
+                  {r.naver && <div className="pl-btns"><a className="pill" href={r.naver} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a><a className="pill" href={r.google} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a></div>}
+                </article>
+              ))}
+            </div>
           </section>
         )}
         <Footer />

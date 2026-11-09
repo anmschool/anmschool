@@ -31,7 +31,7 @@ export interface Content {
   guides: Guide[];
   places: Place[];
   /** 운영 시트 트랙 탭 (날짜·요금·선등록 마감) — 시트 한 곳만 고치면 반영 */
-  tracks?: Record<string, { deadline: string; list: { name: string; mode: string; in1: string; out1: string; in2: string; out2: string }[] }>;
+  tracks?: Record<string, { deadline: string; list: { name: string; mode: string; account?: string; in1: string; out1: string; in2: string; out2: string; fees?: Record<string, [number, number]> }[] }>;
 }
 
 export type PayState = "paid" | "partial" | "unpaid" | "checking" | "cancelled";

@@ -64,7 +64,7 @@ function nightsText(segs: [string, string][], lang: Lang) {
   return lang === "en" ? `${n} nights · ${d} days` : lang === "zh" ? `${n}晚${d}天` : `${n}박 ${d}일`;
 }
 
-/** 등록비 — 신청서(public/apply)의 FEE·ONLINE과 같은 값 */
+/** 등록비 기본값 — 운영 시트(트랙·금액·설정 탭)를 받으면 그 값으로 바뀜 (FeeBoard) */
 const FEE: Record<string, { acc: "A" | "B"; one?: [number, number]; early?: number[]; reg?: number[]; online: number }> = {
   "청지기": { acc: "A", one: [190000, 220000], online: 75000 },
   "대학청년·일반": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
@@ -74,8 +74,45 @@ const FEE: Record<string, { acc: "A" | "B"; one?: [number, number]; early?: numb
 const CATS: Record<Lang, string[]> = { ko: ["일반·대학청년", "십대", "어린이"], en: ["Adults · University", "Teens", "Children"], zh: ["一般·大学青年", "青少年", "儿童"] };
 const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "십대": { ko: "십대", en: "Teens", zh: "青少年" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
 const wonT = (n: number, lang: Lang) => lang === "ko" ? `${n.toLocaleString("en-US")}원` : `₩${n.toLocaleString("en-US")}`;
-const DEADLINE: L = { ko: "~12/23", en: "to Dec 23", zh: "~12月23日" };
-const AFTER: L = { ko: "12/24~", en: "from Dec 24", zh: "12月24日~" };
+const md = (d: Date, lang: Lang) => lang === "en" ? `${MON[d.getMonth()]} ${d.getDate()}` : lang === "zh" ? `${d.getMonth() + 1}月${d.getDate()}日` : `${d.getMonth() + 1}/${d.getDate()}`;
+type TrackInfo = NonNullable<import("../types").Content["tracks"]>[string];
+
+/** 등록비 표 — 운영 시트 금액·계좌·선등록 마감을 그대로 사용 (없으면 기본값) */
+function FeeBoard({ info, lang, t }: { info?: TrackInfo; lang: Lang; t: (k: import("../i18n").Key) => string }) {
+  const accA = ACCOUNTS[0].no;
+  const data = TRACKS.map(x => {
+    const base = FEE[x.key];
+    const row = info?.list.find(r => r.name === x.key && r.mode !== "온라인");
+    const on = info?.list.find(r => r.mode === "온라인" && r.name.replace(/^온라인\s*/, "") === x.key);
+    const f = row?.fees ?? {};
+    const g = (c: string) => f[c] || f["일반"];
+    const lines: [string, number, number][] = f["전체"] ? [[t("allWho"), ...f["전체"]]]
+      : f["일반"] ? (["일반", "십대", "어린이"] as const).map((c, i) => [CATS[lang][i], g(c)[0], g(c)[1]])
+      : base.one ? [[t("allWho"), ...base.one]] : CATS[lang].map((c, i) => [c, base.early![i], base.reg![i]]);
+    const acc = (row?.account?.match(/\d[\d-]{8,}/) ?? [])[0] ?? (base.acc === "B" ? ACCOUNTS[1].no : accA);
+    const onl = on?.fees?.["전체"]?.[0] ?? on?.fees?.["일반"]?.[0] ?? base.online;
+    return { x, lines, acc, onl };
+  });
+  const D = info?.deadline && /^\d{4}-\d{2}-\d{2}$/.test(info.deadline) ? pd(info.deadline) : pd("2026-12-23");
+  const N = new Date(D.getTime() + 864e5);
+  return (
+    <div className="fb">
+      <div className="fb-tbl" role="table">
+        <div className="fb-head" role="row"><span className="fb-n">{t("fbTrack")}</span><div className="fb-row"><span>{t("fbWho")}</span><span>{t("early")}<small>~{md(D, lang)}</small></span><span>{t("regular")}<small>{md(N, lang)}~</small></span></div></div>
+        {data.map(({ x, lines, acc }) => (
+          <div key={x.key} className="fb-g" role="rowgroup">
+            <div className="fb-n"><b>{x.name[lang]}</b><small>{x.nights[lang]}</small>{acc !== accA && <span className="fb-tag">{t("fbSep")} · {acc}</span>}</div>
+            {lines.map(([c, a, b]) => <div key={c} className="fb-row" role="row"><span>{c}</span><b>{wonT(a, lang)}</b><span>{wonT(b, lang)}</span></div>)}
+          </div>
+        ))}
+      </div>
+      <div className="fb-on-h">{t("onlineFee")}</div>
+      <div className="fb-on">
+        {data.map(({ x, onl }) => <div key={x.key}><span>{SHORT[x.key][lang]}</span><small>{x.nights[lang]}</small><b>{wonT(onl, lang)}</b></div>)}
+      </div>
+    </div>
+  );
+}
 
 const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
@@ -279,35 +316,23 @@ export default function Home() {
               <span className="ex">{t("payEx")}</span>
             </div>
             <div className="acc-grid">
-              {ACCOUNTS.map(x => (
+              {ACCOUNTS.map((x0, i) => {
+                const r = content?.tracks?.[s.id]?.list.find(r => r.name === (i ? "어린이" : "청지기") && r.mode !== "온라인");
+                const x = { ...x0, no: (r?.account?.match(/\d[\d-]{8,}/) ?? [])[0] ?? x0.no };
+                return (
                 <div key={x.no} className="acc-card">
                   <span className="n">{x.who[lang]}</span>
                   <span className="d">{x.bank[lang]} · {ACC_TEXT.holder[lang]}</span>
                   <span className="t num">{x.no}</span>
                   <div className="acc-copy"><CopyButton acc text={`${x.bank[lang]} ${x.no}`} /></div>
                 </div>
-              ))}
+                );
+              })}
             </div>
             <p className="acc-note">ⓘ {t("copyAccHint")} · {t("family")}</p>
             <details className="fee-tg">
               <summary>{t("feeToggle")}</summary>
-              <div className="fee-tbl">
-                <div className="fee-h"><span /><span>{t("early")}<small>{DEADLINE[lang]}</small></span><span>{t("regular")}<small>{AFTER[lang]}</small></span></div>
-                {TRACKS.map(x => {
-                  const f = FEE[x.key];
-                  const rows: [string, number, number][] = f.one ? [[t("allWho"), f.one[0], f.one[1]]] : CATS[lang].map((c, i) => [c, f.early![i], f.reg![i]]);
-                  return (
-                    <div key={x.key} className="fee-g">
-                      <div className="fee-n">{x.name[lang]}{f.acc === "B" && <small>{ACCOUNTS[1].bank[lang]} {ACCOUNTS[1].no}</small>}</div>
-                      {rows.map(([c, a, b]) => <div key={c} className="fee-r"><span>{c}</span><b>{wonT(a, lang)}</b><span>{wonT(b, lang)}</span></div>)}
-                    </div>
-                  );
-                })}
-                <div className="fee-g">
-                  <div className="fee-n">{t("onlineFee")}</div>
-                  {TRACKS.map(x => <div key={x.key} className="fee-r"><span>{SHORT[x.key][lang]} · {x.nights[lang]}</span><b>{wonT(FEE[x.key].online, lang)}</b><span /></div>)}
-                </div>
-              </div>
+              <FeeBoard info={content?.tracks?.[s.id]} lang={lang} t={t} />
             </details>
             {loggedIn && <Link to="/me" className="more-link">{t("myFee")} →</Link>}
           </section>

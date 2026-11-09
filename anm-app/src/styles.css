@@ -460,18 +460,6 @@ a, button { -webkit-touch-callout: none; }
 .fee-tg summary::-webkit-details-marker { display: none; }
 .fee-tg summary::after { content: "+"; font: 400 20px/1 var(--num); }
 .fee-tg[open] summary::after { content: "−"; }
-.fee-tbl { padding-bottom: 14px; font-size: 13.5px; max-width: 640px; }
-.fee-h, .fee-r { display: grid; grid-template-columns: minmax(0, 1fr) 92px 92px; gap: 8px; align-items: baseline; }
-.fee-h { padding: 4px 0 8px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--sub); text-align: right; }
-.fee-h small { display: block; color: var(--mute); }
-.fee-g { padding: 10px 0; border-bottom: 1px solid var(--hair); }
-.fee-g:nth-child(odd) { background: var(--tint); margin: 0 -10px; padding: 10px; }
-.fee-n { font-weight: 600; margin-bottom: 4px; }
-.fee-n small { display: block; font-weight: 400; font-size: 12px; color: var(--wine); }
-.fee-r { padding: 3px 0; }
-.fee-r > span:first-child { color: var(--sub); }
-.fee-r b, .fee-r > span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
-.fee-r > span:last-child { color: var(--sub); }
 .more-link { color: var(--wine); font-size: 13.5px; font-weight: 500; }
 .home-sec > .more-link { margin-top: 12px; align-self: flex-start; }
 
@@ -514,7 +502,8 @@ a, button { -webkit-touch-callout: none; }
 .pl p { margin: 0; }
 .pl img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
 .pl-video { margin: 4px 0 0; display: flex; flex-direction: column; gap: 8px; }
-.pl-video figcaption { display: flex; align-items: baseline; gap: 10px; font-size: 14px; font-weight: 500; }
+.pl-video figcaption { display: flex; align-items: baseline; gap: 8px; font-size: 14px; font-weight: 500; }
+.pl-video figcaption .rt { font-size: 13px; font-weight: 600; color: var(--wine); }
 .pl-video video { width: 100%; background: #000; }
 .pl-btns { display: flex; flex-wrap: wrap; gap: 8px; }
 .pill { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--hair); border-radius: 999px; background: #fff; font-size: 13.5px; transition: background 0.15s; }
@@ -529,3 +518,44 @@ a, button { -webkit-touch-callout: none; }
   .head-in { max-width: 760px; }
   .app:not(.home) .body > .footer { max-width: 760px; }
 }
+
+/* 등록비 표 (홈 · 입금 금액 보기) — 신청서 등록비 안내와 같은 짜임, 폭 꽉 채움 */
+.fb { padding: 4px 0 18px; display: flex; flex-direction: column; gap: 14px; }
+.fb-tbl { border: 1px solid var(--hair); border-radius: 10px; overflow: hidden; background: #fff; }
+.fb-row { display: grid; grid-template-columns: minmax(0, 1fr) 96px 96px; gap: 10px; align-items: baseline; padding: 7px 14px; font-size: 14px; }
+.fb-row b, .fb-row > span:nth-child(n+2) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.fb-row b { font-weight: 700; }
+.fb-row > span:last-child { color: var(--sub); }
+.fb-row > span:first-child { color: var(--sub); }
+.fb-head { border-bottom: 1px solid var(--line); }
+.fb-head .fb-n { display: none; }
+.fb-head .fb-row { padding: 12px 14px; font-size: 12px; font-weight: 600; }
+.fb-head .fb-row > span { color: var(--ink); }
+.fb-head .fb-row > span:first-child { visibility: hidden; }
+.fb-head small { display: block; font-weight: 400; color: var(--mute); }
+.fb-g { padding: 8px 0; border-top: 1px solid var(--hair); }
+.fb-g:nth-child(even) { background: var(--tint); }
+.fb-n { padding: 6px 14px 4px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
+.fb-n b { font-size: 14.5px; font-weight: 700; letter-spacing: -0.3px; }
+.fb-n small { font-size: 12.5px; color: var(--sub); }
+.fb-tag { flex-basis: 100%; font-size: 12px; color: var(--wine); }
+.fb-on-h { font-weight: 600; font-size: 14px; }
+.fb-on { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fb-on > div { display: flex; flex-direction: column; gap: 2px; padding: 12px 14px; border: 1px solid var(--hair); border-radius: 10px; background: #fff; }
+.fb-on small { color: var(--sub); font-size: 12px; }
+.fb-on b { margin-top: 4px; font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (min-width: 768px) {
+  .fb-g { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 2fr); align-items: center; padding: 10px 0; }
+  .fb-n { flex-direction: column; gap: 2px; padding: 4px 24px; }
+  .fb-tag { flex-basis: auto; margin-top: 4px; }
+  .fb-g > .fb-row { grid-column: 2; }
+  .fb-row { grid-template-columns: minmax(0, 1fr) 150px 150px; padding: 8px 24px; font-size: 15px; }
+  .fb-head { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 2fr); align-items: end; }
+  .fb-head .fb-n { display: block; padding: 14px 24px; font-size: 13px; font-weight: 600; }
+  .fb-head .fb-row { padding: 14px 24px; font-size: 13px; }
+  .fb-head .fb-row > span:first-child { visibility: visible; }
+  .fb-on { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .fb-on > div { padding: 16px 18px; }
+}
+.pl h3 .pk { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; background: #4f6fd6; color: #fff; font-size: 12px; font-weight: 700; vertical-align: 1px; }
+.pl img.pk-map { aspect-ratio: 4 / 3; object-fit: cover; background: #dfe7f3; border: 1px solid var(--hair); }
