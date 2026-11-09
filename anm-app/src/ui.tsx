@@ -168,13 +168,14 @@ export function RichText({ text }: { text?: string }) {
   return <div className="prose">{blocks}</div>;
 }
 
-export function CopyButton({ text }: { text: string }) {
+/** 복사 버튼 — 계좌는 은행 이름까지 함께 복사 (acc) */
+export function CopyButton({ text, acc }: { text: string; acc?: boolean }) {
   const { t } = useLang();
   const [done, setDone] = useState(false);
   return (
-    <button className="btn tiny" onClick={() => {
-      navigator.clipboard?.writeText(text).then(() => { setDone(true); setTimeout(() => setDone(false), 1500); }).catch(() => {});
-    }}>{done ? t("copied") : t("copy")}</button>
+    <button type="button" className={"btn tiny" + (acc ? " copy-acc" : "") + (done ? " done" : "")} title={acc ? t("copyAccHint") : undefined} onClick={() => {
+      navigator.clipboard?.writeText(text).then(() => { setDone(true); setTimeout(() => setDone(false), 1800); }).catch(() => {});
+    }}>{done ? `✓ ${t("copied")}` : acc ? t("copyAcc") : t("copy")}</button>
   );
 }
 

@@ -33,17 +33,17 @@ function Slides() {
 }
 
 type L = Record<Lang, string>;
-const TRACKS: { key: string; name: L; dates: L; nights: L }[] = [
-  { key: "청지기", name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
+const TRACKS: { key: string; start: string; name: L; dates: L; nights: L }[] = [
+  { key: "청지기", start: "2027-01-06", name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
     dates: { ko: "1/6(수) ~ 1/16(토)", en: "Jan 6 (Wed) – 16 (Sat)", zh: "1月6日(周三) ~ 16日(周六)" },
     nights: { ko: "10박 11일", en: "10 nights · 11 days", zh: "10晚11天" } },
-  { key: "십대", name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
+  { key: "십대", start: "2027-01-11", name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
     dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
-  { key: "어린이", name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
+  { key: "어린이", start: "2027-01-14", name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
     dates: { ko: "1/14(목) ~ 1/16(토)", en: "Jan 14 (Thu) – 16 (Sat)", zh: "1月14日(周四) ~ 16日(周六)" },
     nights: { ko: "2박 3일", en: "2 nights · 3 days", zh: "2晚3天" } },
-  { key: "대학청년·일반", name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
+  { key: "대학청년·일반", start: "2027-01-06", name: { ko: "대학 청년 및 일반인을 위한 경배와찬양학교", en: "Worship & Praise School for University Students, Young Adults & General Adults", zh: "为大学青年及一般成人的敬拜赞美学校" },
     dates: { ko: "1/6(수) ~ 1/9(토)", en: "Jan 6 (Wed) – 9 (Sat)", zh: "1月6日(周三) ~ 9日(周六)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
 ];
@@ -63,6 +63,19 @@ function nightsText(segs: [string, string][], lang: Lang) {
   const n = segs.reduce((t, [a, b]) => t + Math.round((pd(b).getTime() - pd(a).getTime()) / 864e5), 0), d = n + segs.length;
   return lang === "en" ? `${n} nights · ${d} days` : lang === "zh" ? `${n}晚${d}天` : `${n}박 ${d}일`;
 }
+
+/** 등록비 — 신청서(public/apply)의 FEE·ONLINE과 같은 값 */
+const FEE: Record<string, { acc: "A" | "B"; one?: [number, number]; early?: number[]; reg?: number[]; online: number }> = {
+  "청지기": { acc: "A", one: [190000, 220000], online: 75000 },
+  "대학청년·일반": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
+  "십대": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
+  "어린이": { acc: "B", early: [100000, 80000, 70000], reg: [120000, 100000, 90000], online: 40000 },
+};
+const CATS: Record<Lang, string[]> = { ko: ["일반·대학청년", "십대", "어린이"], en: ["Adults · University", "Teens", "Children"], zh: ["一般·大学青年", "青少年", "儿童"] };
+const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "십대": { ko: "십대", en: "Teens", zh: "青少年" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
+const wonT = (n: number, lang: Lang) => lang === "ko" ? `${n.toLocaleString("en-US")}원` : `₩${n.toLocaleString("en-US")}`;
+const DEADLINE: L = { ko: "~12/23", en: "to Dec 23", zh: "~12月23日" };
+const AFTER: L = { ko: "12/24~", en: "from Dec 24", zh: "12月24日~" };
 
 const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
@@ -230,35 +243,73 @@ export default function Home() {
         {s?.id === "2027W" && (
           <section className="home-sec">
             <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>
-            <div className="track-grid">
+            <div className="prog-list">
               {TRACKS.map(x => {
                 const r = content?.tracks?.[s.id]?.list.find(t => t.name === x.key && t.mode !== "온라인");
                 const segs = (r ? [[r.in1, r.out1], [r.in2, r.out2]].filter(([a, b]) => a && b) : []) as [string, string][];
+                return { x, segs, start: segs[0]?.[0] || x.start };
+              }).sort((a, b) => a.start.localeCompare(b.start)).map(({ x, segs, start }) => {
+                const D = pd(start);
                 return (
-                <Link key={x.name.ko} to="/schedule" className="track-card">
-                  <span className="n">{segs.length ? nightsText(segs, lang) : x.nights[lang]}</span>
-                  <span className="t">{x.name[lang]}</span>
-                  <span className="d">{segs.length ? spanText(segs, lang) : x.dates[lang]}</span>
+                <Link key={x.key} to={`/schedule?track=${encodeURIComponent(x.key)}`} className="prog">
+                  <span className="prog-date" aria-hidden="true">
+                    <span>{lang === "en" ? MON[D.getMonth()] : lang === "zh" ? `${D.getMonth() + 1}月` : `${D.getMonth() + 1}월`}</span>
+                    <b>{D.getDate()}</b>
+                    <span>{WK[D.getDay()][lang]}</span>
+                  </span>
+                  <span className="prog-main">
+                    <span className="t">{x.name[lang]}</span>
+                    <span className="d">{segs.length ? spanText(segs, lang) : x.dates[lang]} · {segs.length ? nightsText(segs, lang) : x.nights[lang]}</span>
+                    {x.key === "청지기" && <span className="w">{t("withAll")}</span>}
+                  </span>
+                  <span className="go"><span className="go-t">{t("seeTT")}</span>{Icon.arrow}</span>
                 </Link>
                 );
               })}
             </div>
+            <p className="prog-online"><b>{t("onlineT")}</b> · {t("onlineD")}</p>
           </section>
         )}
         {s?.id === "2027W" && (
-          <section className="home-sec">
+          <section className="home-sec" id="payment">
             <div className="col-head"><span className="label">Payment</span></div>
+            <div className="pay-note">
+              <span className="chip">{t("payCheck")}</span>
+              <span>{t("payRule1")}<b>{t("payRule2")}</b>{t("payRule3")}</span>
+              <span className="ex">{t("payEx")}</span>
+            </div>
             <div className="acc-grid">
               {ACCOUNTS.map(x => (
                 <div key={x.no} className="acc-card">
                   <span className="n">{x.who[lang]}</span>
-                  <span className="t num">{x.bank[lang]} {x.no}</span>
-                  <span className="d">{ACC_TEXT.holder[lang]}</span>
-                  <div className="acc-copy"><CopyButton text={x.no} /></div>
+                  <span className="d">{x.bank[lang]} · {ACC_TEXT.holder[lang]}</span>
+                  <span className="t num">{x.no}</span>
+                  <div className="acc-copy"><CopyButton acc text={`${x.bank[lang]} ${x.no}`} /></div>
                 </div>
               ))}
             </div>
-            <p className="acc-note">{ACC_TEXT.note[lang]}</p>
+            <p className="acc-note">ⓘ {t("copyAccHint")} · {t("family")}</p>
+            <details className="fee-tg">
+              <summary>{t("feeToggle")}</summary>
+              <div className="fee-tbl">
+                <div className="fee-h"><span /><span>{t("early")}<small>{DEADLINE[lang]}</small></span><span>{t("regular")}<small>{AFTER[lang]}</small></span></div>
+                {TRACKS.map(x => {
+                  const f = FEE[x.key];
+                  const rows: [string, number, number][] = f.one ? [[t("allWho"), f.one[0], f.one[1]]] : CATS[lang].map((c, i) => [c, f.early![i], f.reg![i]]);
+                  return (
+                    <div key={x.key} className="fee-g">
+                      <div className="fee-n">{x.name[lang]}{f.acc === "B" && <small>{ACCOUNTS[1].bank[lang]} {ACCOUNTS[1].no}</small>}</div>
+                      {rows.map(([c, a, b]) => <div key={c} className="fee-r"><span>{c}</span><b>{wonT(a, lang)}</b><span>{wonT(b, lang)}</span></div>)}
+                    </div>
+                  );
+                })}
+                <div className="fee-g">
+                  <div className="fee-n">{t("onlineFee")}</div>
+                  {TRACKS.map(x => <div key={x.key} className="fee-r"><span>{SHORT[x.key][lang]} · {x.nights[lang]}</span><b>{wonT(FEE[x.key].online, lang)}</b><span /></div>)}
+                </div>
+              </div>
+            </details>
+            {loggedIn && <Link to="/me" className="more-link">{t("myFee")} →</Link>}
           </section>
         )}
         <section className="home-sec">

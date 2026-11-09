@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useLang } from "../i18n";
 import { dayOf, Footer, Head, todayIso, useContent, useMe, useSeason } from "../ui";
 import { forTrack } from "./shared";
@@ -8,7 +9,9 @@ export default function Schedule() {
   const s = useSeason();
   const { me } = useMe(s?.id);
   const { t } = useLang();
-  const items = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track));
+  const [qs] = useSearchParams();
+  const pick = qs.get("track") || me?.track;
+  const items = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, pick));
   const days = Array.from(new Set(items.map(x => x.date)));
   const today = todayIso();
   const [day, setDay] = useState<string | null>(null);
@@ -19,7 +22,7 @@ export default function Schedule() {
     <div className="app">
       <Head label="Schedule" title={t("schedule")} />
       <main className="body">
-        {me && <span className="small">{me.track} {t("trackOnly")}</span>}
+        {pick && <span className="small">{pick} {t("trackOnly")}{qs.get("track") && <> · <Link to="/schedule" className="more-link">{t("seeAll")}</Link></>}</span>}
         {days.length === 0 ? <div className="empty">{t("noSchedule")}</div> : (
           <>
             <div className="days" role="group">

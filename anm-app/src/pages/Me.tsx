@@ -38,8 +38,8 @@ export default function MePage() {
             <dt>{t("state")}</dt><dd><span className={`state ${pv.cls}`}>{pv.label}</span></dd>
             {pay.fee != null && <><dt>{t("fee")}</dt><dd className="num">{won(pay.fee)}</dd></>}
             {me.group && <><dt>{t("groupPaid")}</dt><dd>{me.group.name} · {me.group.status}</dd></>}
-            {pv.needPay && pay.account && <><dt>{t("account")}</dt><dd><div className="num">{pay.account}</div><div className="small">예금주 경배와찬양</div><div style={{ marginTop: 8 }}><CopyButton text={pay.account.replace(/^\S+\s/, "")} /></div></dd></>}
             {pv.needPay && !me.group && <><dt>{t("depositor")}</dt><dd>{pay.depositorHint}</dd></>}
+            {pv.needPay && pay.account && <><dt>{t("account")}</dt><dd><div className="num">{pay.account}</div><div className="small">예금주 경배와찬양</div><div style={{ marginTop: 8 }}><CopyButton acc text={pay.account} /></div></dd></>}
           </dl>
         </Section>
 

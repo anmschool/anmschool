@@ -428,3 +428,104 @@ a, button { -webkit-touch-callout: none; }
 .acc-copy { margin-top: 8px; }
 .acc-note { margin: 12px 0 0; font-size: 13px; line-height: 1.7; color: var(--sub); word-break: keep-all; }
 @media (min-width: 768px) { .acc-grid { grid-template-columns: 1fr 1fr; column-gap: 40px; } }
+
+/* ═════ 11/09 시안 반영: 프로그램 일정(시안 D) · 입금 안내 · 안내 목차 · 장소 · 가운데 정렬 ═════ */
+/* 프로그램 일정 — 줄 전체가 링크, 올리면 옅은 와인 + 버튼 채움 */
+.prog-list { display: flex; flex-direction: column; }
+.prog { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 18px 10px; border-bottom: 1px solid var(--hair); transition: background 0.15s; }
+.prog:hover, .prog:focus-visible { background: var(--tint); }
+.prog-date { display: flex; flex-direction: column; align-items: center; font-size: 12px; color: var(--sub); line-height: 1.35; }
+.prog-date b { font: 600 26px/1.1 var(--num); color: var(--wine); }
+.prog-main { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.prog-main .t { font: 600 16px/1.4 var(--sans); letter-spacing: -0.3px; }
+.prog-main .d { font-size: 13.5px; color: var(--sub); }
+.prog-main .w { font-size: 13px; font-weight: 500; color: var(--wine); }
+.prog .go { display: inline-flex; align-items: center; gap: 4px; padding: 8px 10px; border: 1px solid var(--wine); border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--wine); white-space: nowrap; transition: background 0.15s, color 0.15s; }
+.prog:hover .go, .prog:focus-visible .go { background: var(--wine); color: #fff; }
+.prog-online { margin: 14px 0 0; padding: 13px 16px; background: var(--tint); font-size: 13.5px; color: var(--sub); line-height: 1.6; }
+.prog-online b { color: var(--ink); font-weight: 600; }
+@media (max-width: 520px) { .prog { gap: 12px; padding: 16px 4px; } .prog .go-t { display: none; } .prog .go { padding: 6px; } }
+@media (min-width: 768px) { .prog { padding: 20px 16px; } .prog-main .t { font-size: 18px; } }
+
+/* 입금 안내 — 입금자명 먼저, 계좌는 크게, 금액은 펼쳐 보기 */
+.pay-note { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 14px 0 6px; padding: 15px 18px; background: var(--deep); color: #fff; font-size: 15px; }
+.pay-note .chip { padding: 3px 10px; border-radius: 999px; background: #fff; color: var(--deep); font-size: 12px; font-weight: 700; }
+.pay-note b { font-weight: 700; }
+.pay-note .ex { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+.acc-card .t { font: 700 24px/1.3 var(--sans); letter-spacing: -0.2px; font-variant-numeric: tabular-nums; }
+.btn.copy-acc { min-height: 38px; padding: 0 16px; border-radius: 999px; border-color: var(--wine); color: var(--wine); font-size: 13.5px; transition: background 0.15s, color 0.15s; }
+.btn.copy-acc:hover, .btn.copy-acc.done { background: var(--wine); color: #fff; }
+.fee-tg { margin-top: 14px; border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.fee-tg summary { list-style: none; cursor: pointer; padding: 14px 0; display: flex; justify-content: space-between; font-weight: 600; color: var(--wine); }
+.fee-tg summary::-webkit-details-marker { display: none; }
+.fee-tg summary::after { content: "+"; font: 400 20px/1 var(--num); }
+.fee-tg[open] summary::after { content: "−"; }
+.fee-tbl { padding-bottom: 14px; font-size: 13.5px; max-width: 640px; }
+.fee-h, .fee-r { display: grid; grid-template-columns: minmax(0, 1fr) 92px 92px; gap: 8px; align-items: baseline; }
+.fee-h { padding: 4px 0 8px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--sub); text-align: right; }
+.fee-h small { display: block; color: var(--mute); }
+.fee-g { padding: 10px 0; border-bottom: 1px solid var(--hair); }
+.fee-g:nth-child(odd) { background: var(--tint); margin: 0 -10px; padding: 10px; }
+.fee-n { font-weight: 600; margin-bottom: 4px; }
+.fee-n small { display: block; font-weight: 400; font-size: 12px; color: var(--wine); }
+.fee-r { padding: 3px 0; }
+.fee-r > span:first-child { color: var(--sub); }
+.fee-r b, .fee-r > span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.fee-r > span:last-child { color: var(--sub); }
+.more-link { color: var(--wine); font-size: 13.5px; font-weight: 500; }
+.home-sec > .more-link { margin-top: 12px; align-self: flex-start; }
+
+/* 안내 — 다 펼쳐 두고 목차로 이동 */
+.guide { display: flex; flex-direction: column; gap: 8px; }
+.gidx { display: none; }
+.gidx-m { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--gutter)); padding: 10px var(--gutter); background: rgba(251, 251, 247, 0.95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--hair); }
+.gidx-m::-webkit-scrollbar { display: none; }
+.gidx-m .chip { flex: none; padding: 7px 13px; border: 1px solid var(--hair); border-radius: 999px; background: #fff; font-size: 13.5px; color: var(--sub); white-space: nowrap; }
+.gidx-m .chip.on { background: var(--deep); border-color: var(--deep); color: #fff; }
+.gbody { display: flex; flex-direction: column; gap: 40px; }
+.gsec h2 { margin: 0; padding: 16px 0 14px; font: 700 21px/1.35 var(--sans); letter-spacing: -0.5px; border-bottom: 1px solid var(--ink); }
+.gitem { padding: 22px 0; border-bottom: 1px solid var(--hair); scroll-margin-top: 72px; }
+.gitem h3 { margin: 0 0 10px; font: 700 16.5px/1.4 var(--sans); letter-spacing: -0.3px; }
+@media (min-width: 768px) {
+  .app:not(.home) .body > .guide { max-width: 960px; }
+  .guide { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; align-items: start; }
+  .gidx-m { display: none; }
+  .gidx { display: flex; flex-direction: column; gap: 22px; position: sticky; top: 96px; }
+  .gidx > div { display: flex; flex-direction: column; }
+  .gidx-h { padding: 0 0 6px 14px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; }
+  .gidx-a { padding: 6px 14px; box-shadow: inset 1px 0 0 var(--hair); font-size: 14.5px; color: var(--sub); transition: color 0.15s; }
+  .gidx-a:hover { color: var(--ink); }
+  .gidx-a.on { box-shadow: inset 2px 0 0 var(--wine); background: var(--tint); color: var(--wine); font-weight: 700; }
+  .gitem { scroll-margin-top: 96px; }
+  .gsec h2 { padding-top: 0; font-size: 24px; }
+}
+
+/* 장소 — 용도가 큰 제목, 이름은 작게, 사진·영상은 위아래로 */
+.pl-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.pl-nav a { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 15px; border: 1px solid var(--hair); border-radius: 999px; background: #fff; font-size: 14px; transition: background 0.15s; }
+.pl-nav a::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--wine); }
+.pl-nav a:hover { background: var(--tint); }
+.pl-sec { display: flex; flex-direction: column; gap: 16px; scroll-margin-top: 88px; }
+.pl-sec h2 { margin: 0; padding-bottom: 12px; border-bottom: 1px solid var(--ink); font: 700 22px/1.35 var(--sans); letter-spacing: -0.5px; }
+.pl-list { display: flex; flex-direction: column; gap: 32px; }
+.pl { display: flex; flex-direction: column; gap: 10px; }
+.pl-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.pl h3 { margin: 0; font: 600 16px/1.4 var(--sans); letter-spacing: -0.3px; }
+.pl p { margin: 0; }
+.pl img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.pl-video { margin: 4px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.pl-video figcaption { display: flex; align-items: baseline; gap: 10px; font-size: 14px; font-weight: 500; }
+.pl-video video { width: 100%; background: #000; }
+.pl-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border: 1px solid var(--hair); border-radius: 999px; background: #fff; font-size: 13.5px; transition: background 0.15s; }
+.pill:hover { background: var(--tint); }
+.pl-park { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
+@media (min-width: 768px) { .pl-list.two { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; } }
+
+/* 모든 하위 화면: 본문 열을 가운데 기준으로 맞춤 (제목·가로선·버튼 폭 대칭) */
+@media (min-width: 768px) {
+  .app:not(.home) .body > * { margin-inline: auto !important; }
+  .app:not(.home) .body > .cta { max-width: 760px; }
+  .head-in { max-width: 760px; }
+  .app:not(.home) .body > .footer { max-width: 760px; }
+}
