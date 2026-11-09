@@ -25,12 +25,12 @@ const PARK_NOTE: L = { ko: "주차할 수 있는 곳은 아래 두 곳입니다.
 const SPOT: Record<string, L> = {
   main_gate: { ko: "정문", en: "Main gate", zh: "正门" }, chapel: { ko: "채플관", en: "Chapel", zh: "礼拜堂" },
   restaurant: { ko: "식당", en: "Dining hall", zh: "食堂" }, myeongdeok: { ko: "명덕관", en: "Myeongdeok Hall", zh: "明德馆" },
-  dorm5: { ko: "생활관 5동", en: "Dorm 5", zh: "宿舍5栋" },
+  dorm5: { ko: "생활관 5동 (식당 옆)", en: "Dorm 5 (next to the dining hall)", zh: "宿舍5栋（食堂旁）" },
 };
-function routeOf(v: string, lang: Lang) {
+function routeOf(v: string, lang: Lang, place = "") {
   const m = v.match(/([a-z0-9]+(?:_[a-z0-9]+)*?)_to_([a-z0-9_]+)\.\w+$/i);
   if (!m) return "";
-  const a = m[1].replace(/^course\d+_/, ""), b = m[2];
+  const a = m[1].replace(/^course\d+_/, ""), b = /5동/.test(place) && m[2] === "restaurant" ? "dorm5" : m[2]; // 5동은 식당 바로 옆 → 같은 영상
   return `${SPOT[a]?.[lang] ?? a} → ${SPOT[b]?.[lang] ?? b}`;
 }
 const MAPS: L = { ko: "네이버지도", en: "Naver Map", zh: "Naver地图" };
@@ -73,7 +73,7 @@ export default function Places() {
                   {p.image && <img src={p.image} alt={p.name} loading="lazy" />}
                   {p.video && (
                     <figure className="pl-video">
-                      <figcaption><span className="rt">{t("route")}</span>{routeOf(p.video, lang)}</figcaption>
+                      <figcaption><span className="rt">{t("route")}</span>{routeOf(p.video, lang, p.name)}</figcaption>
                       <video src={p.video} controls preload="none" playsInline poster={p.image} />
                     </figure>
                   )}
