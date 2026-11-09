@@ -10,8 +10,8 @@ const GROUPS: { id: string; kinds: string[]; label: L }[] = [
 ];
 const PARK: L = { ko: "주차", en: "Parking", zh: "停车" };
 const PARK_ROWS: { t: L; img: string; naver: string; google: string }[] = [
-  { t: { ko: "채플관 옆 주차장", en: "Parking lot next to the Chapel", zh: "礼拜堂旁停车场" }, img: "/images/facility/parking-chapel.png", naver: "https://naver.me/GyYWndK8", google: "https://maps.app.goo.gl/H5193Vf8fMRFwHYw8" },
-  { t: { ko: "채플관 옆 오른쪽 길로 올라가 온실 앞", en: "Up the road on the right of the Chapel, in front of the greenhouse", zh: "沿礼拜堂右侧道路上行，温室前" }, img: "/images/facility/parking-greenhouse.png", naver: "", google: "" },
+  { t: { ko: "채플관 옆 주차장", en: "Parking lot next to the Chapel", zh: "礼拜堂旁停车场" }, img: "", naver: "https://map.naver.com/p/entry/coordinates/3zqqir,2AxGbq?c=18.00,0,0,0,dh", google: "https://www.google.com/maps/search/?api=1&query=37.224074,127.186787" },
+  { t: { ko: "채플관 옆 오른쪽 길로 올라가 온실 앞", en: "Up the road on the right of the Chapel, in front of the greenhouse", zh: "沿礼拜堂右侧道路上行，温室前" }, img: "", naver: "https://map.naver.com/p/entry/coordinates/3zqnyx,2AxEK2?c=18.00,0,0,0,dh", google: "https://www.google.com/maps/search/?api=1&query=37.223520,127.185734" },
 ];
 /** 장소별 지도 (시트 지도 칸보다 우선) */
 const LINKS: Record<string, [string, string]> = {
@@ -92,9 +92,8 @@ export default function Places() {
             <p className="sub" style={{ margin: 0 }}>{PARK_NOTE[lang]}</p>
             <div className="pl-list two">
               {PARK_ROWS.map((r, i) => (
-                <article key={r.img} className="pl">
+                <article key={r.naver} className="pl">
                   <div className="pl-head"><h3><span className="pk">P{i + 1}</span>{r.t[lang]}</h3></div>
-                  <img src={r.img} alt={r.t[lang]} loading="lazy" className="pk-map" />
                   {r.naver && <div className="pl-btns"><a className="pill" href={r.naver} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a><a className="pill" href={r.google} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a></div>}
                 </article>
               ))}
