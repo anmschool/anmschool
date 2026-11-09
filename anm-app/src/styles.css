@@ -559,3 +559,19 @@ a, button { -webkit-touch-callout: none; }
 }
 .pl h3 .pk { display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; background: #4f6fd6; color: #fff; font-size: 12px; font-weight: 700; vertical-align: 1px; }
 .pl img.pk-map { aspect-ratio: 4 / 3; object-fit: cover; background: #dfe7f3; border: 1px solid var(--hair); }
+/* 캠퍼스 약도 */
+.cmap { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.cmap svg { width: 100%; height: auto; background: var(--tint); border: 1px solid var(--hair); border-radius: 10px; font-family: var(--sans); }
+.cmap-pt text { font-size: 19px; font-weight: 600; fill: #fff; text-anchor: middle; }
+.cmap-pt line { stroke: var(--sub); stroke-width: 1.5; }
+.cmap-pt .dot { fill: var(--ink); stroke: #fff; stroke-width: 2; }
+.cmap-pt.b rect { fill: var(--wine); }
+.cmap-pt.g rect { fill: var(--ink); }
+.cmap-pt.p circle { fill: #4f6fd6; stroke: #fff; stroke-width: 3; }
+.cmap-pt.p rect { fill: #fff; stroke: #4f6fd6; stroke-width: 1.5; }
+.cmap-pt.p rect + text { fill: #4f6fd6; }
+.cmap-pt text.pin { font-size: 15px; font-weight: 700; }
+.cmap-pt:hover rect, .cmap-pt:hover circle { opacity: 0.88; }
+.cmap-n path { fill: var(--sub); } .cmap-n text { font-size: 14px; font-weight: 400; fill: var(--sub); text-anchor: middle; }
+.cmap-s path { fill: none; stroke: var(--sub); stroke-width: 2; } .cmap-s text { font-size: 14px; font-weight: 400; fill: var(--sub); }
+.cmap figcaption { font-size: 12.5px; color: var(--sub); }
