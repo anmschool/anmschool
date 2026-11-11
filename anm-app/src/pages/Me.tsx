@@ -1,12 +1,12 @@
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getToken, logout } from "../api";
-import { useLang } from "../i18n";
+import { useLang, trackName } from "../i18n";
 import { CopyButton, fmtRange, Footer, Head, Section, Skeleton, useMe, useSeason, won } from "../ui";
 import { payView } from "./shared";
 
 export default function MePage() {
   const s = useSeason();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const nav = useNavigate();
   const { me, stale } = useMe(s?.id);
 
@@ -23,7 +23,7 @@ export default function MePage() {
         {me.cancelled && <div className="error">{t("cancelled")}</div>}
 
         <dl className="rows">
-          <dt>{t("track")}</dt><dd><strong>{me.track}</strong>{me.kind ? ` · ${me.kind}` : ""}</dd>
+          <dt>{t("track")}</dt><dd><strong>{trackName(me.track, lang)}</strong>{me.kind ? ` · ${me.kind}` : ""}</dd>
           {me.church && <><dt>{t("church")}</dt><dd>{me.church}</dd></>}
           {me.period.length > 0 && <><dt>{t("period")}</dt><dd className="num">{me.period.map(([a, b]) => fmtRange(a, b)).join(" / ")}</dd></>}
         </dl>

@@ -1,13 +1,15 @@
 import { useLang, type Lang } from "../i18n";
 import { Footer, Head, useContent, useMe, useSeason } from "../ui";
+import { IndexLayout } from "./IndexLayout";
 
 type L = Record<Lang, string>;
 /** 장소 종류(시트 '종류') → 큰 제목. 장소 이름은 그 아래 작게 */
 const GROUPS: { id: string; kinds: string[]; label: L }[] = [
-  { id: "worship", kinds: ["예배", "강의"], label: { ko: "예배·강의", en: "Worship & sessions", zh: "敬拜·讲座" } },
+  { id: "worship", kinds: ["예배", "강의"], label: { ko: "예배·강의", en: "Worship & Sessions", zh: "敬拜·讲座" } },
   { id: "dining", kinds: ["식당", "식사"], label: { ko: "식사", en: "Meals", zh: "用餐" } },
   { id: "lodging", kinds: ["숙소"], label: { ko: "숙소", en: "Rooms", zh: "宿舍" } },
 ];
+const MAPT: L = { ko: "캠퍼스 약도", en: "Campus Map", zh: "校园示意图" };
 const PARK: L = { ko: "주차", en: "Parking", zh: "停车" };
 const PARK_ROWS: { t: L; img: string; naver: string; google: string }[] = [
   { t: { ko: "채플관 옆 주차장", en: "Parking lot next to the Chapel", zh: "礼拜堂旁停车场" }, img: "", naver: "https://map.naver.com/p/entry/coordinates/3zqqir,2AxGbq?c=18.00,0,0,0,dh", google: "https://www.google.com/maps/search/?api=1&query=37.224074,127.186787" },
@@ -20,6 +22,15 @@ const LINKS: Record<string, [string, string]> = {
   "5동": ["https://naver.me/GJZ6k3oY", "https://maps.app.goo.gl/im9RUAJ1g4W9NiNc7"],
   "명덕관": ["https://naver.me/x9BeSraH", "https://www.google.com/maps/search/?api=1&query=37.224062,127.181884"],
 };
+/** 시트 이름이 언어별로 번역돼도 맞도록 종류·이름 일부로 지도 찾기 */
+function linksOf(p: { name: string; kind?: string }): [string, string] | undefined {
+  const n = p.name, k = p.kind ?? "";
+  if (/예배|강의/.test(k) || /채플|Chapel|礼拜/i.test(n)) return LINKS["60주년 기념 채플관"];
+  if (/식당|식사/.test(k) || /식당|Dining|食堂/i.test(n)) return LINKS["식당"];
+  if (/5\s*동|Dorm\s*5|5栋/i.test(n)) return LINKS["5동"];
+  if (/명덕|Myeongdeok|明德/i.test(n)) return LINKS["명덕관"];
+  return undefined;
+}
 const PARK_NOTE: L = { ko: "주차할 수 있는 곳은 아래 두 곳입니다.", en: "You can park in these two areas.", zh: "可停车区域为以下两处。" };
 /** 영상 파일 이름(course1_main_gate_to_chapel.mp4) → "정문 → 채플관" */
 const SPOT: Record<string, L> = {
@@ -90,16 +101,11 @@ export default function Places() {
   return (
     <div className="app">
       <Head label="Campus" title={t("places")} />
-      <main className="body">
-        {s?.venue && <p className="sub" style={{ margin: 0 }}>{s.venue}</p>}
+      <main className="body guide-body">
         {places.length === 0 && <div className="empty">{t("comingSoon")}</div>}
-        {park && <CampusMap lang={lang} />}
-        {groups.length > 0 && (
-          <nav className="pl-nav" aria-label={t("toc")}>
-            {groups.map(g => <a key={g.id} href={`#${g.id}`} onClick={e => { e.preventDefault(); document.getElementById(g.id)?.scrollIntoView({ behavior: "smooth" }); }}>{g.label[lang]}</a>)}
-            {park && <a href="#parking" onClick={e => { e.preventDefault(); document.getElementById("parking")?.scrollIntoView({ behavior: "smooth" }); }}>{PARK[lang]}</a>}
-          </nav>
-        )}
+        {places.length > 0 && (
+        <IndexLayout items={[...(park ? [{ id: "campus-map", title: MAPT[lang] }] : []), ...groups.map(g => ({ id: g.id, title: g.label[lang] })), ...(park ? [{ id: "parking", title: PARK[lang] }] : [])]}>
+        {park && <section id="campus-map" className="pl-sec"><h2>{MAPT[lang]}</h2><CampusMap lang={lang} /></section>}
         {groups.map(g => (
           <section key={g.id} id={g.id} className="pl-sec">
             <h2>{g.label[lang]}</h2>
@@ -116,8 +122,8 @@ export default function Places() {
                     </figure>
                   )}
                   <div className="pl-btns">
-                    {(LINKS[p.name]?.[0] || p.map) && <a className="pill" href={LINKS[p.name]?.[0] || p.map} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>}
-                    {LINKS[p.name]?.[1] && <a className="pill" href={LINKS[p.name][1]} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a>}
+                    {(linksOf(p)?.[0] || p.map) && <a className="pill" href={linksOf(p)?.[0] || p.map} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>}
+                    {linksOf(p)?.[1] && <a className="pill" href={linksOf(p)![1]} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a>}
                   </div>
                 </article>
               ))}
@@ -137,6 +143,8 @@ export default function Places() {
               ))}
             </div>
           </section>
+        )}
+        </IndexLayout>
         )}
         <Footer />
       </main>

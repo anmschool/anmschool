@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useLang, type Lang } from "../i18n";
+import { useLang, type Lang, trackName } from "../i18n";
 import type { Me } from "../types";
 import { CopyButton, Footer, Icon, LangToggle, SiteNav, Skeleton, todayIso, useContent, useMe, useSeason } from "../ui";
 import { forTrack, payView } from "./shared";
@@ -123,9 +123,9 @@ const WEEKLY: { name: L; when: L; where: L }[] = [
     where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
 ];
 const ACCOUNTS: { who: L; bank: L; no: string }[] = [
-  { who: { ko: "청지기 · 십대 · 대학 청년 및 일반인 · 온라인", en: "Stewards · Teens · University Students, Young Adults & General · Online", zh: "管家 · 青少年 · 大学青年及一般成人 · 线上" },
+  { who: { ko: "청지기 / 십대 / 대학 청년 및 일반인을 위한 경배와찬양학교 (온라인 포함)", en: "Worship & Praise School for Stewards / Teens / University Students, Young Adults & General (incl. Online)", zh: "为管家 / 青少年 / 大学青年及一般成人的敬拜赞美学校（含线上）" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-604-700231" },
-  { who: { ko: "어린이", en: "Children", zh: "儿童" },
+  { who: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-404-679551" },
 ];
 const ACC_TEXT = {
@@ -141,7 +141,7 @@ function krDate(iso: string, year = true) {
 }
 
 function Pass({ me }: { me: Me }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const pv = payView(me, t);
   const room = me.lodging.find(l => l.room);
   return (
@@ -152,7 +152,7 @@ function Pass({ me }: { me: Me }) {
           <div className="pass-name">{me.name}</div>
           <div className="pass-meta">{[me.church, me.kind].filter(Boolean).join(" · ")}</div>
         </div>
-        <span className="track-chip">{me.track}</span>
+        <span className="track-chip">{trackName(me.track, lang)}</span>
       </div>
       <div className="pass-cells">
         <div>
@@ -183,7 +183,7 @@ export default function Home() {
 
   const menu: [string, string, string, string, string?][] = [
     ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin")],
-    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
+    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? trackName(me.track, lang) : t("capSchedule")) : t("capSoon")],
     ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
     ["/guide", "Guide", t("guide"), t("capGuide")],
     ["/places", "Campus", t("places"), t("capPlaces")],
@@ -200,7 +200,7 @@ export default function Home() {
 
   const others = (content?.projects ?? []).filter(p => p.id !== s?.id);
   const tiles: [string, string, string, string][] = [
-    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? me.track : t("capSchedule")) : t("capSoon")],
+    ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? trackName(me.track, lang) : t("capSchedule")) : t("capSoon")],
     ["/guide", "Guide", t("guide"), t("capGuide")],
     ["/places", "Campus", t("places"), t("capPlaces")],
   ];

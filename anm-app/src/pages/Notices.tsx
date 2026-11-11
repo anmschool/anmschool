@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useLang, type Lang } from "../i18n";
-import { fmtRange, Footer, Head, Icon, Section, useContent, useSeason } from "../ui";
+import { fmtRange, Footer, Head, Icon, useContent, useSeason } from "../ui";
+import { IndexLayout } from "./IndexLayout";
 
 type L = Record<Lang, string>;
 const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; info?: L; to?: L }[] = [
@@ -90,23 +91,23 @@ export default function Notices() {
   return (
     <div className="app">
       <Head label="Notices & Ministries" title={t("noticesMinistries")} />
-      <main className="body">
-        <div>
-        {(
-          <div id="ministries">
-            <Section label="Ministries" title={t("otherMinistries")}>
-              <div>
-                {ABOUT.map(m => (
-                  <article key={m.en} className="min-about">
-                    <span className="label">{m.en}</span>
-                    <h3>{m.kr[lang]}</h3>
-                    {m.img && <img className="min-img" src={m.img} alt="" loading="lazy" />}
-                    {m.verse && m.ref && <p className="verse">{m.verse[lang]}<span className="ref">{m.ref[lang]}</span></p>}
-                    {m.body.map((x, i) => <p key={i}>{x[lang]}</p>)}
-                    {m.info && <p className="info">{m.info[lang]}</p>}
-                    {m.to && <Link to="/" className="more">{m.to[lang]}</Link>}
-                  </article>
-                ))}
+      <main className="body guide-body">
+        <div id="ministries">
+          <IndexLayout items={[...ABOUT.map((m, i) => ({ id: `m${i}`, title: m.kr[lang] })), ...(others.length ? [{ id: "others", title: t("otherMinistries") }] : [])]}>
+            {ABOUT.map((m, i) => (
+              <article key={m.en} id={`m${i}`} className="min-about gitem">
+                <span className="label">{m.en}</span>
+                <h3>{m.kr[lang]}</h3>
+                {m.img && <img className="min-img" src={m.img} alt="" loading="lazy" />}
+                {m.verse && m.ref && <p className="verse">{m.verse[lang]}<span className="ref">{m.ref[lang]}</span></p>}
+                {m.body?.map((x, j) => <p key={j}>{x[lang]}</p>)}
+                {m.info && <p className="info">{m.info[lang]}</p>}
+                {m.to && <Link to="/" className="more">{m.to[lang]}</Link>}
+              </article>
+            ))}
+            {others.length > 0 && (
+              <section id="others" className="gitem">
+                <h3>{t("otherMinistries")}</h3>
                 {others.map(p => (
                   <Link key={p.id} to={`/p/${encodeURIComponent(p.id)}`} className="ministry" style={{ ["--c" as string]: p.color }}>
                     <span className="bar-c" />
@@ -118,10 +119,9 @@ export default function Notices() {
                     <span className="arrow">{Icon.arrow}</span>
                   </Link>
                 ))}
-              </div>
-            </Section>
-          </div>
-        )}
+              </section>
+            )}
+          </IndexLayout>
         </div>
         <Footer />
       </main>

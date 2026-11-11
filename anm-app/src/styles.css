@@ -386,6 +386,7 @@ a, button { -webkit-touch-callout: none; }
   .masthead .btn.line { background: transparent; color: var(--deep); border: 1px solid var(--deep); }
   .mast-text { justify-content: flex-end; }
   .cta { max-width: 420px; }
+  .masthead .pass { max-width: 420px; box-sizing: border-box; }
   .slides { aspect-ratio: auto; min-height: 380px; }
 }
 .facts dt { white-space: nowrap; min-width: 84px; letter-spacing: 0.18em; }
@@ -475,7 +476,7 @@ a, button { -webkit-touch-callout: none; }
 .gitem { padding: 22px 0; border-bottom: 1px solid var(--hair); scroll-margin-top: 72px; }
 .gitem h3 { margin: 0 0 10px; font: 700 16.5px/1.4 var(--sans); letter-spacing: -0.3px; }
 @media (min-width: 768px) {
-  .app:not(.home) .body > .guide { max-width: 960px; }
+  .app:not(.home) .body > .guide, .app:not(.home) .body > #ministries { max-width: 960px; }
   .guide { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 56px; align-items: start; }
   .gidx-m { display: none; }
   .gidx { display: flex; flex-direction: column; gap: 22px; position: sticky; top: 96px; }
@@ -575,3 +576,8 @@ a, button { -webkit-touch-callout: none; }
 .cmap-n path { fill: var(--sub); } .cmap-n text { font-size: 14px; font-weight: 400; fill: var(--sub); text-anchor: middle; }
 .cmap-s path { fill: none; stroke: var(--sub); stroke-width: 2; } .cmap-s text { font-size: 14px; font-weight: 400; fill: var(--sub); }
 .cmap figcaption { font-size: 12.5px; color: var(--sub); }
+/* 영어 화면: 대·소제목과 목차는 첫 글자 대문자 */
+html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::first-letter { text-transform: uppercase; }
+.min-about.gitem, .pl-sec { scroll-margin-top: 72px; }
+@media (min-width: 768px) { .min-about.gitem, .pl-sec { scroll-margin-top: 96px; } }
+@media (min-width: 768px) { .app:has(.guide-body) .head-in { max-width: 960px; } }

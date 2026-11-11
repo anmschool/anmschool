@@ -66,3 +66,16 @@ export function useLang() {
   const l = useSyncExternalStore(cb => { subs.add(cb); return () => subs.delete(cb); }, () => lang);
   return { lang: l, t: (k: Key) => T[l][k] ?? T.ko[k] };
 }
+
+/** 트랙 이름(시트 값: 청지기·십대·어린이·대학청년…) → 화면 언어 */
+const TRACK_NAMES: Record<string, Record<Lang, string>> = {
+  "청지기": { ko: "청지기", en: "Stewards", zh: "管家" },
+  "십대": { ko: "십대", en: "Teens", zh: "青少年" },
+  "어린이": { ko: "어린이", en: "Children", zh: "儿童" },
+  "대학청년": { ko: "대학청년·일반", en: "University & Adults", zh: "大学青年·一般" },
+};
+export function trackName(k: string | undefined, lang: Lang) {
+  if (!k) return "";
+  const key = Object.keys(TRACK_NAMES).find(n => k.replace(/\s/g, "").startsWith(n));
+  return key ? TRACK_NAMES[key][lang] : k;
+}
