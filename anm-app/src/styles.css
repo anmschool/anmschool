@@ -581,3 +581,13 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 .min-about.gitem, .pl-sec { scroll-margin-top: 72px; }
 @media (min-width: 768px) { .min-about.gitem, .pl-sec { scroll-margin-top: 96px; } }
 @media (min-width: 768px) { .app:has(.guide-body) .head-in { max-width: 960px; } }
+/* 약도 v2 — 도로 따라 그림 */
+.cmap-wrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 10px; -webkit-overflow-scrolling: touch; }
+.cmap .cmap-wrap svg { display: block; min-width: 540px; border: 0; border-radius: 0; background: none; }
+.cmap-bg { fill: #f3f1ec; }
+.cmap-campus { fill: #ece6ea; }
+.cmap-road-c { fill: none; stroke: #d9d2d6; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
+.cmap-road { fill: none; stroke: #fff; stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+.cmap-route { fill: none; stroke: var(--wine); stroke-width: 3.5; stroke-dasharray: 2 7; stroke-linecap: round; stroke-linejoin: round; }
+.cmap-lg text { font-size: 14px; font-weight: 400; fill: var(--sub); }
+.cmap-bld > * { fill: #ddd2d8; }

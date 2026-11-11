@@ -44,40 +44,59 @@ function routeOf(v: string, lang: Lang, place = "") {
   const a = m[1].replace(/^course\d+_/, ""), b = /5동/.test(place) && m[2] === "restaurant" ? "dorm5" : m[2]; // 5동은 식당 바로 옆 → 같은 영상
   return `${SPOT[a]?.[lang] ?? a} → ${SPOT[b]?.[lang] ?? b}`;
 }
-/** 캠퍼스 약도 — 네이버 좌표(위도·경도)를 그대로 옮긴 위치. 동서 1m=1, 남북 1m=1.3 으로 그림 */
-/** 캠퍼스 약도 — 네이버 좌표를 그대로 옮긴 위치(동서 1m=1, 남북 1m=1.3). 점=실제 위치, 이름표는 옆으로 빼서 겹치지 않게 */
-const PTS: { id: string; lat: number; lng: number; t: L; kind: "b" | "p" | "g"; dx: number; dy: number; go: string }[] = [
-  { id: "gate", lat: 37.224858, lng: 127.187789, kind: "g", t: { ko: "정문", en: "Main gate", zh: "正门" }, dx: -62, dy: 0, go: "" },
-  { id: "chapel", lat: 37.223813, lng: 127.186859, kind: "b", t: { ko: "60주년 채플관", en: "Chapel", zh: "礼拜堂" }, dx: 44, dy: 44, go: "worship" },
-  { id: "p1", lat: 37.224074, lng: 127.186787, kind: "p", t: { ko: "", en: "", zh: "" }, dx: 0, dy: 0, go: "parking" },
-  { id: "p2", lat: 37.22352, lng: 127.185734, kind: "p", t: { ko: "온실 앞", en: "Greenhouse", zh: "温室前" }, dx: 0, dy: 40, go: "parking" },
-  { id: "dining", lat: 37.223738, lng: 127.183078, kind: "b", t: { ko: "식당", en: "Dining", zh: "食堂" }, dx: 56, dy: 46, go: "dining" },
-  { id: "dorm5", lat: 37.223762, lng: 127.182734, kind: "b", t: { ko: "생활관 5동", en: "Dorm 5", zh: "宿舍5栋" }, dx: -24, dy: 46, go: "lodging" },
-  { id: "md", lat: 37.224062, lng: 127.181884, kind: "b", t: { ko: "명덕관", en: "Myeongdeok", zh: "明德馆" }, dx: 10, dy: -44, go: "lodging" },
+/** 캠퍼스 약도 — 네이버 지도(2026.11 캡처)의 도로를 따라 그린 그림. 좌표 단위는 캡처 화면 px(100m≈130) */
+const ROADS = [
+  "M729 790 L722 905 L700 903 L610 900 L560 912 L520 930 L460 945 L380 940 L300 937 L220 925 L150 913 L60 905 L20 905",
+  "M722 905 L735 980 L750 1040 L820 1100 L900 1140",
+  "M462 950 L470 1035 L530 1030 L525 945",
+  "M470 1035 L550 1085 L600 1120",
+  "M65 912 L80 960 L110 1072",
+  "M20 1080 L60 1074 L300 1062 L400 1060 L460 1090 L500 1135",
+  "M140 935 L135 1068",
 ];
-const px = (lng: number) => 40 + (lng - 127.1815) * 88700;
-const py = (lat: number) => 20 + (37.225 - lat) * 111000 * 1.3;
+/** 주 이동 동선(정문 → 채플관 / 채플관 → 식당·5동 / 정문 → 명덕관) */
+const ROUTE = "M729 812 L722 905 L700 903 L628 901 L560 912 L520 930 L460 945 L380 940 L300 937 L220 925 L150 913 L95 908";
+const SPURS = ["M628 901 L628 948", "M219 926 L219 962", "M180 921 L180 962", "M95 908 L92 920"];
+const PTS: { id: string; x: number; y: number; t: L; kind: "b" | "p" | "g"; dx: number; dy: number; go: string }[] = [
+  { id: "gate", x: 729, y: 812, kind: "g", t: { ko: "정문", en: "Main Gate", zh: "正门" }, dx: -58, dy: 0, go: "" },
+  { id: "chapel", x: 628, y: 962, kind: "b", t: { ko: "60주년 채플관", en: "Chapel", zh: "礼拜堂" }, dx: 30, dy: 44, go: "worship" },
+  { id: "p1", x: 621, y: 925, kind: "p", t: { ko: "", en: "", zh: "" }, dx: 0, dy: 0, go: "parking" },
+  { id: "p2", x: 497, y: 990, kind: "p", t: { ko: "온실 앞", en: "Greenhouse", zh: "温室前" }, dx: 0, dy: 50, go: "parking" },
+  { id: "dining", x: 219, y: 972, kind: "b", t: { ko: "식당", en: "Dining", zh: "食堂" }, dx: 40, dy: 46, go: "dining" },
+  { id: "dorm5", x: 180, y: 970, kind: "b", t: { ko: "생활관 5동", en: "Dorm 5", zh: "宿舍5栋" }, dx: -40, dy: 46, go: "lodging" },
+  { id: "md", x: 92, y: 930, kind: "b", t: { ko: "명덕관", en: "Myeongdeok", zh: "明德馆" }, dx: 20, dy: -50, go: "lodging" },
+];
 const tw = (s: string) => [...s].reduce((n, c) => n + (/[\x00-\x7f]/.test(c) ? 11 : 19), 0) + 26;
 function CampusMap({ lang }: { lang: Lang }) {
   const jump = (id: string) => id && document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   return (
     <figure className="cmap">
-      <svg viewBox="0 0 640 300" role="img" aria-label={({ ko: "캠퍼스 약도", en: "Campus map", zh: "校园示意图" } as L)[lang]}>
-        <g className="cmap-n" transform="translate(30 40)"><path d="M0 -16 L7 6 L0 1 L-7 6 Z" /><text y="24">N</text></g>
-        <g className="cmap-s" transform="translate(24 288)"><path d="M0 -6 V0 H100 V-6" /><text x="108" y="0">100m</text></g>
+      <div className="cmap-wrap" ref={el => { if (el && !el.dataset.c) { el.dataset.c = "1"; el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2; } }}>
+      <svg viewBox="10 770 790 340" role="img" aria-label={MAPT[lang]}>
+        <rect x="10" y="770" width="790" height="340" className="cmap-bg" />
+        <path className="cmap-campus" d="M20 900 L150 905 L300 928 L460 936 L560 902 L700 893 L760 880 L800 870 L800 1160 L20 1160 Z" />
+        <g className="cmap-bld"><circle cx="618" cy="978" r="24" /><rect x="476" y="962" width="22" height="14" rx="2" /><rect x="150" y="950" width="64" height="16" rx="2" /><rect x="205" y="978" width="40" height="22" rx="2" /><rect x="40" y="915" width="70" height="40" rx="3" /></g>
+        {ROADS.map(d => <path key={d} d={d} className="cmap-road-c" />)}
+        {ROADS.map(d => <path key={d + "w"} d={d} className="cmap-road" />)}
+        <path d={ROUTE} className="cmap-route" />
+        {SPURS.map(d => <path key={d} d={d} className="cmap-route" />)}
+        <g className="cmap-n" transform="translate(40 800)"><path d="M0 -16 L7 6 L0 1 L-7 6 Z" /><text y="24">N</text></g>
+        <g className="cmap-s" transform="translate(30 1092)"><path d="M0 -6 V0 H130 V-6" /><text x="138" y="0">100m</text></g>
+        <g className="cmap-lg" transform="translate(600 1092)"><path d="M0 -5 H34" className="cmap-route" /><text x="42" y="0">{({ ko: "주요 동선", en: "Main route", zh: "主要动线" } as L)[lang]}</text></g>
         {PTS.map(p => {
-          const x = px(p.lng), y = py(p.lat), cx = x + p.dx, cy = y + p.dy, w = tw(p.t[lang]);
+          const { x, y } = p, cx = x + p.dx, cy = y + p.dy, w = tw(p.t[lang]);
           return (
             <g key={p.id} className={"cmap-pt " + p.kind} onClick={() => jump(p.go)} style={{ cursor: p.go ? "pointer" : undefined }}>
               {p.t[lang] && (p.dx || p.dy) ? <line x1={x} y1={y} x2={cx} y2={cy} /> : null}
-              {p.kind === "p" ? <circle cx={x} cy={y} r="17" /> : <circle className="dot" cx={x} cy={y} r="6" />}
+              {p.kind === "p" ? <circle cx={x} cy={y} r="15" /> : <circle className="dot" cx={x} cy={y} r="7" />}
               {p.kind === "p" && <text x={x} y={y + 5} className="pin">P{p.id.slice(1)}</text>}
               {p.t[lang] && <><rect x={cx - w / 2} y={cy - 16} width={w} height="32" rx="16" /><text x={cx} y={cy + 6}>{p.t[lang]}</text></>}
             </g>
           );
         })}
       </svg>
-      <figcaption>{({ ko: "실제 위치 기준 약도입니다. 이름을 누르면 해당 안내로 이동합니다.", en: "Drawn to scale. Tap a name to jump to its section.", zh: "按实际位置绘制，点击名称可跳转到对应说明。" } as L)[lang]}</figcaption>
+      </div>
+      <figcaption>{({ ko: "네이버 지도를 따라 그린 약도입니다. 이름을 누르면 해당 안내로 이동하고, 폰에서는 좌우로 밀어 볼 수 있어요.", en: "Traced from Naver Map. Tap a name to jump to its section; swipe sideways on a phone.", zh: "依据Naver地图绘制，点击名称可跳转到对应说明；手机上可左右滑动查看。" } as L)[lang]}</figcaption>
     </figure>
   );
 }
