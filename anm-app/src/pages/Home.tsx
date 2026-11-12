@@ -1,3 +1,4 @@
+import { THEME_2027W } from "../theme2027W";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang, type Lang, trackName } from "../i18n";
@@ -177,7 +178,8 @@ export default function Home() {
   const { me, loggedIn } = useMe(s?.id);
   const [year, season] = (s?.title.match(/^(\d{4})\s+(\w+)/)?.slice(1) ?? [s?.start?.slice(0, 4) ?? "", ""]) as [string, string];
   const title = s?.title.replace(/^\d{4}\s+\w+\s*/, "") ?? "";
-  const [themeText, themeRef] = (s?.subtitle?.match(/^(.*?)\s*\(([^)]+)\)\s*$/)?.slice(1) ?? [s?.subtitle ?? "", ""]) as [string, string];
+  const T27 = s?.id === "2027W" ? THEME_2027W : null;
+  const [themeText, themeRef] = T27 ? [T27.title[lang], T27.ref[lang]] : (s?.subtitle?.match(/^(.*?)\s*\(([^)]+)\)\s*$/)?.slice(1) ?? [s?.subtitle ?? "", ""]) as [string, string];
   const notices = (content?.notices ?? []).filter(n => (n.project === s?.id || n.project === "전체") && forTrack(n.track, me?.track));
   const schedCount = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track)).length;
 
@@ -230,7 +232,8 @@ export default function Home() {
               {themeText && (
                 <div className="theme">
                   <span className="q">‘{themeText}’</span>
-                  {themeRef && <span className="ref">{themeRef}</span>}
+                  {T27 && <span className="v">{T27.verse[lang]}</span>}
+                  {themeRef && <span className="ref">({themeRef})</span>}
                 </div>
               )}
             </>
@@ -277,6 +280,14 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        {T27 && (
+          <section className="home-sec invite">
+            <div className="col-head"><span className="label">Invitation</span></div>
+            <h2 className="invite-t">{T27.title[lang]}</h2>
+            {T27.invite.map((x, i) => <p key={i}>{x[lang]}</p>)}
+            <p className="invite-s">{T27.sign.map((x, i) => <span key={i}>{x[lang]}</span>)}</p>
+          </section>
+        )}
         {s?.id === "2027W" && (
           <section className="home-sec">
             <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>
