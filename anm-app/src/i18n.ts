@@ -11,7 +11,7 @@ const T = {
     loginTitle: "내 등록 정보", loginLede: "신청할 때 적은 이름과 전화번호로 확인합니다.", name: "이름", phone: "전화번호",
     phoneHint: "숫자만 전체 입력 (010…). 단체 신청은 인솔자 전화번호로도 됩니다.", enter: "확인", checking: "확인 중…",
     hello: "님, 환영합니다", payment: "훈련비", lodging: "숙소", paid: "입금 확인 완료", partial: "일부 입금", unpaid: "입금 전",
-    checkingPay: "확인 중", cancelled: "취소됨", fee: "훈련비", account: "입금 계좌", depositor: "입금자명", copy: "복사", copied: "복사됨", copyAcc: "은행·계좌번호 복사", copyAccHint: "은행 이름과 계좌번호가 함께 복사됩니다", payCheck: "입금 전 꼭 확인", payRule1: "입금자명은 ", payRule2: "이름(교회)", payRule3: "로 적어 주세요", payEx: "예: 홍길동(○○교회)", feeToggle: "입금 금액 보기", myFee: "내 입금 금액 확인", seeTT: "시간표 보기", withAll: "대학청년·십대·어린이 학교 전 일정에 함께합니다.", onlineT: "온라인(비대면) 참여", onlineD: "모든 프로그램이 라이브로 송출되어, 위 일정과 시간표 그대로 함께하실 수 있습니다.", parking: "주차", route: "이동 경로", toc: "목차", early: "선등록", regular: "일반등록", onlineFee: "온라인 등록 · 비대면, 등록 시기·대상 구분 없음", allWho: "전체", fbTrack: "과정", fbWho: "대상", fbSep: "별도 계좌", family: "어린이 학교와 다른 과정을 함께 신청하셨다면, 계좌별로 나누어 입금해 주세요.",
+    checkingPay: "확인 중", cancelled: "취소됨", fee: "훈련비", account: "입금 계좌", depositor: "입금자명", copy: "복사", copied: "복사됨", copyAcc: "은행·계좌번호 복사", copyAccHint: "은행 이름과 계좌번호가 함께 복사됩니다", payCheck: "입금 전 꼭 확인", payRule1: "입금자명은 ", payRule2: "이름(교회)", payRule3: "로 적어 주세요", payEx: "예: 홍길동(○○교회)", feeToggle: "입금 금액 보기", myFee: "내 입금 금액 확인", seeTT: "시간표 보기", withAll: "대학청년·미래세대·어린이 학교 일정에 함께합니다.", onlineT: "온라인(비대면) 참여", onlineD: "모든 프로그램이 라이브로 송출되어, 위 일정과 시간표 그대로 함께하실 수 있습니다.", parking: "주차", route: "이동 경로", toc: "목차", early: "선등록", regular: "일반등록", onlineFee: "온라인 등록 · 비대면, 등록 시기·대상 구분 없음", allWho: "전체", fbTrack: "과정", fbWho: "대상", fbSep: "별도 계좌", family: "어린이 학교와 다른 과정을 함께 신청하셨다면, 계좌별로 나누어 입금해 주세요.",
     assigned: "배정 완료", pending: "배정 중", pendingNote: "숙소 배정이 끝나면 여기에 표시됩니다.", online: "온라인 참여 (숙소 없음)",
     segment: "구간", checkin: "현장 등록", checkinNote: "도착하면 등록 데스크에서 이 화면을 보여 주세요.", checkedIn: "현장 등록 완료",
     logout: "로그아웃", noSchedule: "시간표는 확정되면 이곳에 올라옵니다.", noNotice: "아직 공지가 없습니다.", today: "오늘",
@@ -70,7 +70,7 @@ export function useLang() {
 /** 트랙 이름(시트 값: 청지기·십대·어린이·대학청년…) → 화면 언어 */
 const TRACK_NAMES: Record<string, Record<Lang, string>> = {
   "청지기": { ko: "청지기", en: "Stewards", zh: "管家" },
-  "십대": { ko: "십대", en: "Teens", zh: "青少年" },
+  "십대": { ko: "미래세대", en: "Next Generation", zh: "下一代" },
   "어린이": { ko: "어린이", en: "Children", zh: "儿童" },
   "대학청년": { ko: "대학청년·일반", en: "University & Adults", zh: "大学青年·一般" },
 };

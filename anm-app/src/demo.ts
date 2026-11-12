@@ -5,7 +5,7 @@ export const DEMO_CONTENT: Content = {
   updatedAt: new Date().toISOString(),
   projects: [
     {
-      id: "2027W", kind: "경배와찬양학교", title: "2027 WINTER 새 예루살렘을 향한 경배와찬양학교 및 7000학교", subtitle: "얽매이지 않는 삶 - 믿음의 경주 (히 12:1)",
+      id: "2027W", kind: "경배와찬양학교", title: "2027 WINTER 새 예루살렘을 향한 경배와찬양학교 및 7000학교", subtitle: "얽매이지 않는 삶 (히 12:1)",
       start: "2027-01-06", end: "2027-01-16", venue: "명지대학교 자연캠퍼스 60주년 기념 채플관", status: "진행", order: 1,
       applyUrl: "https://forms.gle/rdfXzXvHyYnkXaQv7", login: true, color: "#6E1F3A",
       about: "하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 십대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/6~9 · 청지기 1/6~16",

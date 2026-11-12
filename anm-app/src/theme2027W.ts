@@ -3,7 +3,7 @@ type L = Record<Lang, string>;
 
 /** 2027 WINTER 주제·말씀·초대의 글 (시트 부제보다 우선) */
 export const THEME_2027W: { title: L; verse: L; ref: L; invite: L[]; sign: L[] } = {
-  title: { ko: "얽매이지 않는 삶 - 믿음의 경주", en: "An Unbound Life — The Race of Faith", zh: "不被辖制的生活 — 信心的赛程" },
+  title: { ko: "얽매이지 않는 삶", en: "An Unbound Life", zh: "不被辖制的生活" },
   verse: {
     ko: "“… 모든 무거운 것과 얽매이기 쉬운 죄를 벗어 버리고 …”",
     en: "“… let us throw off everything that hinders and the sin that so easily entangles …”",

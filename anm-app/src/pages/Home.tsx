@@ -36,9 +36,9 @@ function Slides() {
 type L = Record<Lang, string>;
 const TRACKS: { key: string; start: string; name: L; dates: L; nights: L }[] = [
   { key: "청지기", start: "2027-01-06", name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
-    dates: { ko: "1/6(수) ~ 1/16(토)", en: "Jan 6 (Wed) – 16 (Sat)", zh: "1月6日(周三) ~ 16日(周六)" },
-    nights: { ko: "10박 11일", en: "10 nights · 11 days", zh: "10晚11天" } },
-  { key: "십대", start: "2027-01-11", name: { ko: "십대를 위한 경배와찬양학교", en: "Worship & Praise School for Teens", zh: "为青少年的敬拜赞美学校" },
+    dates: { ko: "1/6(수) ~ 1/9(토), 1/11(월) ~ 1/16(토)", en: "Jan 6 (Wed) – 9 (Sat), 11 (Mon) – 16 (Sat)", zh: "1月6日(周三) ~ 9日(周六)、11日(周一) ~ 16日(周六)" },
+    nights: { ko: "8박 10일", en: "8 nights · 10 days", zh: "8晚10天" } },
+  { key: "십대", start: "2027-01-11", name: { ko: "미래세대를 위한 경배와찬양학교", en: "Worship & Praise School for the Next Generation", zh: "为下一代的敬拜赞美学校" },
     dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
   { key: "어린이", start: "2027-01-14", name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
@@ -73,7 +73,7 @@ const FEE: Record<string, { acc: "A" | "B"; one?: [number, number]; early?: numb
   "어린이": { acc: "B", early: [100000, 80000, 70000], reg: [120000, 100000, 90000], online: 40000 },
 };
 const CATS: Record<Lang, string[]> = { ko: ["일반·대학청년", "십대", "어린이"], en: ["Adults · University", "Teens", "Children"], zh: ["一般·大学青年", "青少年", "儿童"] };
-const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "십대": { ko: "십대", en: "Teens", zh: "青少年" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
+const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "십대": { ko: "미래세대", en: "Next Generation", zh: "下一代" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
 const wonT = (n: number, lang: Lang) => lang === "ko" ? `${n.toLocaleString("en-US")}원` : `₩${n.toLocaleString("en-US")}`;
 const md = (d: Date, lang: Lang) => lang === "en" ? `${MON[d.getMonth()]} ${d.getDate()}` : lang === "zh" ? `${d.getMonth() + 1}月${d.getDate()}日` : `${d.getMonth() + 1}/${d.getDate()}`;
 type TrackInfo = NonNullable<import("../types").Content["tracks"]>[string];
@@ -124,7 +124,7 @@ const WEEKLY: { name: L; when: L; where: L }[] = [
     where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
 ];
 const ACCOUNTS: { who: L; bank: L; no: string }[] = [
-  { who: { ko: "청지기 / 십대 / 대학 청년 및 일반인을 위한 경배와찬양학교 (온라인 포함)", en: "Worship & Praise School for Stewards / Teens / University Students, Young Adults & General (incl. Online)", zh: "为管家 / 青少年 / 大学青年及一般成人的敬拜赞美学校（含线上）" },
+  { who: { ko: "청지기 / 미래세대 / 대학 청년 및 일반인을 위한 경배와찬양학교 (온라인 포함)", en: "Worship & Praise School for Stewards / Next Generation / University Students, Young Adults & General (incl. Online)", zh: "为管家 / 下一代 / 大学青年及一般成人的敬拜赞美学校（含线上）" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-604-700231" },
   { who: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
     bank: { ko: "우리은행", en: "Woori Bank", zh: "友利银行" }, no: "1005-404-679551" },
@@ -294,7 +294,8 @@ export default function Home() {
             <div className="prog-list">
               {TRACKS.map(x => {
                 const r = content?.tracks?.[s.id]?.list.find(t => t.name === x.key && t.mode !== "온라인");
-                const segs = (r ? [[r.in1, r.out1], [r.in2, r.out2]].filter(([a, b]) => a && b) : []) as [string, string][];
+                const segs0 = (r ? [[r.in1, r.out1], [r.in2, r.out2]].filter(([a, b]) => a && b) : []) as [string, string][];
+                const segs = x.key === "청지기" && segs0.length < 2 ? [] : segs0; // 청지기는 1/6~9, 1/11~16 두 구간 (시트가 한 구간이면 기본값)
                 return { x, segs, start: segs[0]?.[0] || x.start };
               }).sort((a, b) => a.start.localeCompare(b.start)).map(({ x, segs, start }) => {
                 const D = pd(start);
