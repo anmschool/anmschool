@@ -8,7 +8,7 @@ export const DEMO_CONTENT: Content = {
       id: "2027W", kind: "경배와찬양학교", title: "2027 WINTER 새 예루살렘을 향한 경배와찬양학교 및 7000학교", subtitle: "얽매이지 않는 삶 (히 12:1)",
       start: "2027-01-06", end: "2027-01-16", venue: "명지대학교 자연캠퍼스 60주년 기념 채플관", status: "진행", order: 1,
       applyUrl: "https://forms.gle/rdfXzXvHyYnkXaQv7", login: true, color: "#6E1F3A",
-      about: "하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 십대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/6~9 · 청지기 1/6~16",
+      about: "하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다. 미래세대 1/11~14 · 어린이 1/14~16 · 대학 청년 및 일반인 1/6~9 · 청지기 1/6~16",
     },
     { id: "매주예배", kind: "예배", title: "매주 예배 · 목요모임 · 7000모임", subtitle: "목요일 오후 7시 · 토요일 오후 4시", status: "진행", order: 2, login: false, color: "#6E1F3A", about: "목요모임\n- 일시: 매주 목요일 오후 7시 (18:30부터 기도모임으로 시작합니다)\n- 장소: 온누리교회 (서울 용산구 이촌로 347-11)\n7000모임\n- 일시: 매주 토요일 오후 4시\n- 장소: 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)" },
     { id: "2026-11-큰잔치", kind: "큰잔치", title: "경배와찬양 큰잔치 · 시편학교", status: "준비", order: 2, login: false, color: "#3A1022" },
@@ -18,8 +18,8 @@ export const DEMO_CONTENT: Content = {
     { project: "2027W", date: "2026-10-26", title: "2027 WINTER 경배와찬양학교 신청이 열렸습니다", body: "선등록은 12월 23일(수)까지입니다. 신청 후 안내된 계좌로 훈련비를 입금해 주세요.", pinned: true, track: "전체" },
   ],
   schedule: [
-    { project: "2027W", track: "십대, 청지기", date: "2027-01-11", start: "14:00", end: "15:30", title: "등록", place: "채플관 로비" },
-    { project: "2027W", track: "십대, 청지기", date: "2027-01-11", start: "19:30", end: "22:30", title: "새 예루살렘을 향하여 Celebration I", place: "60주년 기념 채플관" },
+    { project: "2027W", track: "미래세대, 청지기", date: "2027-01-11", start: "14:00", end: "15:30", title: "등록", place: "채플관 로비" },
+    { project: "2027W", track: "미래세대, 청지기", date: "2027-01-11", start: "19:30", end: "22:30", title: "새 예루살렘을 향하여 Celebration I", place: "60주년 기념 채플관" },
     { project: "2027W", track: "전체", date: "2027-01-12", start: "08:00", end: "10:30", title: "침묵기도 I", place: "60주년 기념 채플관" },
   ],
   guides: [
@@ -55,7 +55,7 @@ export const demoStats: Stats = {
   lodging: { lines: 341, assigned: 220 },
   tracks: [
     { track: "청지기", total: 58, paid: 41, partial: 6, unpaid: 11, brother: 21, sister: 37 },
-    { track: "십대", total: 141, paid: 102, partial: 9, unpaid: 30, brother: 60, sister: 81 },
+    { track: "미래세대", total: 141, paid: 102, partial: 9, unpaid: 30, brother: 60, sister: 81 },
     { track: "어린이", total: 63, paid: 50, partial: 2, unpaid: 11, brother: 30, sister: 33 },
     { track: "대학청년·일반", total: 50, paid: 22, partial: 3, unpaid: 25, brother: 18, sister: 32 },
   ],

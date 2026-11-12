@@ -3,7 +3,7 @@
  *  ① 텔레그램 알림   : tgConnect() 1회 → 오류·일일 요약이 텔레그램으로
  *  ② 로그인 빠르게    : buildLoginCache() 10분마다 → 로그인·내 정보가 시트를 읽지 않음
  *  ③ 매일 백업        : nightlyBackup() 매일 03시 → 'ANM 백업' 폴더에 사본, 14일 보관
- *  ④ 십대 전환(1회)   : migrateTeen2027W() → 운영 시트·앱 시트의 '미래세대'를 '십대'로
+ *  ④ 미래세대 전환(1회): migrateNextGen2027W() → 트랙 이름 '십대'를 '미래세대'로 (참가자 구분·요율 '십대'는 그대로)
  *  setupOpsTriggers() 한 번 실행하면 ②③과 일일 요약 트리거가 모두 걸림.
  *
  * 텔레그램 토큰은 코드에 쓰지 말 것: 프로젝트 설정 → 스크립트 속성 → TG_TOKEN 에 저장.
@@ -149,6 +149,53 @@ function migrateTeen2027W() {
   CacheService.getScriptCache().remove('content_v1');
   buildLoginCache();
   console.log('십대 전환 완료: ' + n + '칸');
+}
+
+
+/* ───────────── ④-2 십대 → 미래세대 (트랙 이름만, 1회) ───────────── */
+/** 트랙 이름만 바꾼다. 참가자 구분/요율의 '십대'(나이 구분)는 건드리지 않는다.
+ *  - 모든 탭: '2027W-십대-'(코드) · '십대를 위한'(트랙 제목) · '온라인 십대'
+ *  - 머리글이 '트랙'인 열: 칸 값이 정확히 '십대'인 것만
+ *  - 앱 시트 시간표 '트랙' 열: 목록 안의 '십대' 토큰 */
+function migrateNextGen2027W() {
+  let n = 0;
+  const fix = sh => {
+    n += sh.createTextFinder('2027W-십대-').replaceAllWith('2027W-미래세대-');
+    n += sh.createTextFinder('십대를 위한').replaceAllWith('미래세대를 위한');
+    n += sh.createTextFinder('온라인 십대').replaceAllWith('온라인 미래세대');
+    const lastR = sh.getLastRow(), lastC = sh.getLastColumn();
+    if (lastR < 1 || lastC < 1) return;
+    const head = sh.getRange(1, 1, Math.min(3, lastR), lastC).getValues();
+    head.forEach((row, hi) => row.forEach((h, ci) => {
+      if (String(h).trim() !== '트랙' || lastR <= hi + 1) return;
+      const rg = sh.getRange(hi + 2, ci + 1, lastR - hi - 1, 1), v = rg.getValues();
+      let ch = 0;
+      v.forEach(r => {
+        const parts = String(r[0]).split(/\s*,\s*/);
+        if (parts.indexOf('십대') === -1) return;
+        r[0] = parts.map(x => (x === '십대' ? '미래세대' : x)).join(', '); ch++;
+      });
+      if (ch) { rg.setValues(v); n += ch; }
+    }));
+  };
+  const ops = openOps_();
+  ops.getSheets().forEach(fix);
+  // 트랙 탭: 키워드·폼 선택지 열도 '십대' → '미래세대'
+  const trk = ops.getSheetByName('트랙');
+  if (trk && trk.getLastRow() > 1) {
+    const rg = trk.getRange(2, 2, trk.getLastRow() - 1, 2), v = rg.getValues();
+    v.forEach(r => [0, 1].forEach(i => { r[i] = String(r[i]).replace(/(^|\+)십대(?=\+|$)/g, '$1미래세대'); }));
+    rg.setValues(v);
+  }
+  const app = appSheet_();
+  ['시간표', '프로젝트'].forEach(name => { const sh = app.getSheetByName(name); if (sh) fix(sh); });
+  const pj = app.getSheetByName('프로젝트');
+  if (pj) n += pj.createTextFinder('십대 1/11').replaceAllWith('미래세대 1/11');
+  try { openDb_().getSheets().forEach(sh => { n += sh.createTextFinder('2027W-십대-').replaceAllWith('2027W-미래세대-'); n += sh.createTextFinder('십대를 위한').replaceAllWith('미래세대를 위한'); }); }
+  catch (e) { console.log('ANM_DB 건너뜀: ' + e.message); }
+  CacheService.getScriptCache().remove('content_v1');
+  buildLoginCache();
+  console.log('미래세대 전환 완료: ' + n + '칸');
 }
 
 /* ───────────── ⑤ 개인 계정 파일 → anmschool 이관 (1회) ───────────── */

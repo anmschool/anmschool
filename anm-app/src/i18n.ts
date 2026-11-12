@@ -70,7 +70,8 @@ export function useLang() {
 /** 트랙 이름(시트 값: 청지기·십대·어린이·대학청년…) → 화면 언어 */
 const TRACK_NAMES: Record<string, Record<Lang, string>> = {
   "청지기": { ko: "청지기", en: "Stewards", zh: "管家" },
-  "십대": { ko: "미래세대", en: "Next Generation", zh: "下一代" },
+  "미래세대": { ko: "미래세대", en: "Next Generation", zh: "下一代" },
+  "십대": { ko: "미래세대", en: "Next Generation", zh: "下一代" }, // 옛 값
   "어린이": { ko: "어린이", en: "Children", zh: "儿童" },
   "대학청년": { ko: "대학청년·일반", en: "University & Adults", zh: "大学青年·一般" },
 };

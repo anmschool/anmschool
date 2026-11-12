@@ -38,7 +38,7 @@ const TRACKS: { key: string; start: string; name: L; dates: L; nights: L }[] = [
   { key: "청지기", start: "2027-01-06", name: { ko: "청지기를 위한 경배와찬양학교", en: "Worship & Praise School for Stewards", zh: "为管家的敬拜赞美学校" },
     dates: { ko: "1/6(수) ~ 1/9(토), 1/11(월) ~ 1/16(토)", en: "Jan 6 (Wed) – 9 (Sat), 11 (Mon) – 16 (Sat)", zh: "1月6日(周三) ~ 9日(周六)、11日(周一) ~ 16日(周六)" },
     nights: { ko: "8박 10일", en: "8 nights · 10 days", zh: "8晚10天" } },
-  { key: "십대", start: "2027-01-11", name: { ko: "미래세대를 위한 경배와찬양학교", en: "Worship & Praise School for the Next Generation", zh: "为下一代的敬拜赞美学校" },
+  { key: "미래세대", start: "2027-01-11", name: { ko: "미래세대를 위한 경배와찬양학교", en: "Worship & Praise School for the Next Generation", zh: "为下一代的敬拜赞美学校" },
     dates: { ko: "1/11(월) ~ 1/14(목)", en: "Jan 11 (Mon) – 14 (Thu)", zh: "1月11日(周一) ~ 14日(周四)" },
     nights: { ko: "3박 4일", en: "3 nights · 4 days", zh: "3晚4天" } },
   { key: "어린이", start: "2027-01-14", name: { ko: "어린이를 위한 경배와찬양학교", en: "Worship & Praise School for Children", zh: "为儿童的敬拜赞美学校" },
@@ -69,11 +69,11 @@ function nightsText(segs: [string, string][], lang: Lang) {
 const FEE: Record<string, { acc: "A" | "B"; one?: [number, number]; early?: number[]; reg?: number[]; online: number }> = {
   "청지기": { acc: "A", one: [190000, 220000], online: 75000 },
   "대학청년·일반": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
-  "십대": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
+  "미래세대": { acc: "A", early: [120000, 100000, 80000], reg: [140000, 120000, 100000], online: 55000 },
   "어린이": { acc: "B", early: [100000, 80000, 70000], reg: [120000, 100000, 90000], online: 40000 },
 };
 const CATS: Record<Lang, string[]> = { ko: ["일반·대학청년", "십대", "어린이"], en: ["Adults · University", "Teens", "Children"], zh: ["一般·大学青年", "青少年", "儿童"] };
-const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "십대": { ko: "미래세대", en: "Next Generation", zh: "下一代" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
+const SHORT: Record<string, L> = { "청지기": { ko: "청지기", en: "Stewards", zh: "管家" }, "대학청년·일반": { ko: "대학청년·일반", en: "Adults", zh: "大学青年·一般" }, "미래세대": { ko: "미래세대", en: "Next Generation", zh: "下一代" }, "어린이": { ko: "어린이", en: "Children", zh: "儿童" } };
 const wonT = (n: number, lang: Lang) => lang === "ko" ? `${n.toLocaleString("en-US")}원` : `₩${n.toLocaleString("en-US")}`;
 const md = (d: Date, lang: Lang) => lang === "en" ? `${MON[d.getMonth()]} ${d.getDate()}` : lang === "zh" ? `${d.getMonth() + 1}月${d.getDate()}日` : `${d.getMonth() + 1}/${d.getDate()}`;
 type TrackInfo = NonNullable<import("../types").Content["tracks"]>[string];
