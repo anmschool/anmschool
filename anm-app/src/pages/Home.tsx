@@ -117,7 +117,7 @@ function FeeBoard({ info, lang, t }: { info?: TrackInfo; lang: Lang; t: (k: impo
 
 const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
-    when: { ko: "매주 목요일 오후 6시 30분", en: "Every Thursday, 6:30 PM", zh: "每周四 下午6:30" },
+    when: { ko: "매주 목요일 오후 7시", en: "Every Thursday, 7:00 PM", zh: "每周四 下午7:00" },
     where: { ko: "온누리교회", en: "Onnuri Church", zh: "온누리教会" } },
   { name: { ko: "7000모임", en: "7000 Gathering", zh: "7000聚会" },
     when: { ko: "매주 토요일 오후 4시", en: "Every Saturday, 4:00 PM", zh: "每周六 下午4:00" },

@@ -33,9 +33,9 @@ const ABOUT: { en: string; kr: L; img?: string; verse?: L; ref?: L; body: L[]; i
         en: "In this generation, God is looking for people who realize that ‘the church is mission’ and can follow His calling. In the name of the Lord, we invite everyone who longs to march toward the nations, resolved to give their lives for Him, to the Worship & Praise Thursday Worship.",
         zh: "神在这个世代寻找明白“教会就是宣教”、能跟随神呼召的人。我们奉主的名，邀请所有愿以为主舍命的决心向万国前进的神的子民，来参加敬拜赞美周四聚会。" },
     ],
-    info: { ko: "매주 목요일 오후 6시 30분 · 온누리교회 (오후 5–6시 중보기도로 예배를 준비합니다)",
-      en: "Every Thursday, 6:30 PM · Onnuri Church (intercessory prayer from 5 to 6 PM prepares the worship)",
-      zh: "每周四下午6:30 · 온누리教会（下午5点至6点以代祷预备敬拜）" },
+    info: { ko: "매주 목요일 오후 7시 · 온누리교회 (오후 5–6시 중보기도로 예배를 준비합니다)",
+      en: "Every Thursday, 7:00 PM · Onnuri Church (intercessory prayer from 5 to 6 PM prepares the worship)",
+      zh: "每周四下午7:00 · 온누리教会（下午5点至6点以代祷预备敬拜）" },
   },
   {
     en: "7000 Gathering", kr: { ko: "7000모임", en: "7000 Gathering", zh: "7000聚会" },
