@@ -3,8 +3,8 @@
  *
  * 처음 한 번: setupNametag() 실행 → 템플릿 슬라이드 생성 · 운영 시트 메뉴 · 매일 밤 자동 생성 트리거
  * 이후:
- *   - 매일 01시: 새로 입금 완료된 사람만 명찰 PDF 생성 (없으면 아무것도 안 만듦)
- *   - 운영 시트 메뉴 [명찰]: 새로 입금한 사람만 / 전체 다시 / 빈 명찰
+ *   - 매일 01시: 새로 입금 완료된 사람이 6명(A4 한 장) 이상 모이면 6의 배수만큼만 PDF 생성. 남는 사람은 다음으로 넘김
+ *   - 운영 시트 메뉴 [명찰]: 새로 입금한 사람만(남은 칸은 빈 명찰) / 전체 다시 / 빈 명찰
  * 결과: 2027W/06_현장·출력물/명찰 폴더에 PDF(인쇄용) + 슬라이드(수정용). 운영 시트 '명찰' 탭에 출력일 기록
  *
  * 디자인: 바뀌지 않는 부분(배경·행사명·주제·하단 문구·흰 판)은 '명찰배경_2027W.png' 한 장.
@@ -30,8 +30,8 @@ const NT_HEAD = ['코드', '과정', '교회', '구분', '이름', '입금여부
 function setupNametag() {
   ntTemplate_(true);
   const ss = openOps_();
-  ScriptApp.getProjectTriggers().filter(t => ['makeNewNametags', 'onOpsOpen'].indexOf(t.getHandlerFunction()) > -1).forEach(t => ScriptApp.deleteTrigger(t));
-  ScriptApp.newTrigger('makeNewNametags').timeBased().everyDays(1).atHour(1).create();
+  ScriptApp.getProjectTriggers().filter(t => ['makeNewNametags', 'autoNametags', 'onOpsOpen'].indexOf(t.getHandlerFunction()) > -1).forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('autoNametags').timeBased().everyDays(1).atHour(1).create();
   ScriptApp.newTrigger('onOpsOpen').forSpreadsheet(ss).onOpen().create();
   ntSyncTab_();
   console.log('명찰 설치 완료: 템플릿 · 매일 01시 자동 생성 · 운영 시트 [명찰] 메뉴');
@@ -48,9 +48,10 @@ function onOpsOpen() {
 
 /* ───────── 실행 ───────── */
 
-function makeNewNametags() { return ntRun_(false); }
+function makeNewNametags() { return ntRun_('new'); }
+function autoNametags() { return ntRun_('auto'); }
 function refreshNametagTab() { ntSyncTab_(); }
-function makeAllNametags() { return ntRun_(true); }
+function makeAllNametags() { return ntRun_('all'); }
 
 function makeBlankNametags() {
   let n = 12;
@@ -63,13 +64,18 @@ function makeBlankNametags() {
   ntNotify_(`빈 명찰 ${n}장을 만들었습니다.`, f);
 }
 
-function ntRun_(all) {
+/** mode: auto = 6명 단위로만(종이 낭비 없음) · new = 새로 입금한 사람 전부 · all = 전원. 수동은 남는 칸을 빈 명찰로 채움 */
+function ntRun_(mode) {
   const lock = LockService.getScriptLock(); if (!lock.tryLock(30000)) return;
   try {
-    const rows = ntSyncTab_(), todo = rows.filter(r => all || !r.printed);
-    if (!todo.length) { console.log('새로 만들 명찰 없음'); return; }
+    const rows = ntSyncTab_();
+    let todo = rows.filter(r => mode === 'all' || !r.printed);
+    if (mode === 'auto') todo = todo.slice(0, Math.floor(todo.length / 6) * 6);
+    if (!todo.length) { console.log('만들 명찰 없음 (자동은 6명 이상 모일 때만)'); return; }
+    const tags = todo.map(r => r.tag);
+    while (tags.length % 6) tags.push({ label: '', name: '', church: '' });
     const stamp = Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyyMMdd_HHmm');
-    const f = ntBuild_(todo.map(r => r.tag), `${NT.prefix}_${all ? '전체' : '추가'}_${stamp}_${todo.length}명`);
+    const f = ntBuild_(tags, `${NT.prefix}_${mode === 'all' ? '전체' : '추가'}_${stamp}_${todo.length}명`);
     // 출력일 기록
     const sh = openOps_().getSheetByName(NT.tab), v = sh.getRange(2, 1, Math.max(1, sh.getLastRow() - 1), NT_HEAD.length).getValues();
     const done = {}; todo.forEach(r => (done[r.code] = 1));
@@ -140,10 +146,13 @@ function ntFolder_() {
 /** 템플릿: A4(209.9×297mm) 한 장에 배경 6개 + 칸마다 {{L1}} {{N1}} {{C1}} … */
 function ntTemplate_(force) {
   const props = PropertiesService.getScriptProperties(), id = props.getProperty('NAMETAG_TPL');
-  if (id && !force) { try { DriveApp.getFileById(id); return id; } catch (e) { /* 다시 만듦 */ } }
   const folder = ntFolder_(), bgIt = folder.getFilesByName(NT.bg);
   if (!bgIt.hasNext()) throw new Error(`명찰 폴더에 ${NT.bg} 가 없습니다`);
-  const bg = bgIt.next().getBlob(), E = mm => Math.round(mm * 36000);
+  const bgFile = bgIt.next(), ver = bgFile.getId() + '@' + bgFile.getLastUpdated().getTime();
+  // 배경 그림이 바뀌면 템플릿을 새로 만듦
+  if (id && !force && props.getProperty('NAMETAG_BG') === ver) { try { DriveApp.getFileById(id); return id; } catch (e) { /* 다시 만듦 */ } }
+  if (id) { try { DriveApp.getFileById(id).setTrashed(true); } catch (e) { /* 이미 없음 */ } }
+  const bg = bgFile.getBlob(), E = mm => Math.round(mm * 36000);
   const pres = Slides.Presentations.create({ title: '명찰 템플릿 (지우지 마세요)', pageSize: { width: { magnitude: E(209.9), unit: 'EMU' }, height: { magnitude: E(297), unit: 'EMU' } } });
   DriveApp.getFileById(pres.presentationId).moveTo(folder);
   const deck = SlidesApp.openById(pres.presentationId), s = deck.getSlides()[0];
@@ -165,7 +174,7 @@ function ntTemplate_(force) {
     box(`{{C${k}}}`, 'C' + k, x + 12, y + 64.4, 78.8, 8, 9, '#75696D', false, true);
   });
   deck.saveAndClose();
-  props.setProperty('NAMETAG_TPL', pres.presentationId);
+  props.setProperty('NAMETAG_TPL', pres.presentationId); props.setProperty('NAMETAG_BG', ver);
   return pres.presentationId;
 }
 
