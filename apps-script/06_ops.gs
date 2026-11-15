@@ -250,3 +250,68 @@ function translateContent() {
   CacheService.getScriptCache().remove('content_v1');
   console.log('번역 ' + n + '칸 채움');
 }
+
+
+/* ───────────── ⑤ 테스트 신청 정리 + 남은 '십대' 트랙값 정리 (1회) ───────────── */
+/** 운영 시트·ANM_DB에서 아래 코드의 테스트 신청을 지운다.
+ *  - Master_DB(등록)·숙소 줄 삭제, 단체(G) 줄 삭제
+ *  - 웹 신청 원본 줄은 내용만 비움(줄 번호가 처리 기록과 묶여 있어 삭제하면 다른 신청이 다시 들어감)
+ *  - ANM_DB: 이 신청으로 새로 생긴 사람·참석 줄, 다른 데서 안 쓰는 신규(자동) 교회 줄 삭제
+ *  - 덤: '경배와찬양학교 구분' 열의 '십대' → '미래세대', 등록현황 다시 만들기 */
+const TEST_CODES_2027W = ['2027W-미래세대-0029', '2027W-미래세대-0030', '2027W-미래세대-0031', '2027W-어린이-0001', '2027W-어린이-0002',
+  '2027W-청지기-0003', '2027W-청지기-0004', '2027W-온라인-0001'];
+const TEST_GROUPS_2027W = ['2027W-G003', '2027W-G004', '2027W-G005'];
+
+function purgeTest2027W() {
+  const ss = openOps_(), codes = {}, out = [];
+  TEST_CODES_2027W.forEach(c => (codes[c] = 1));
+  const delRows = (sh, keep) => {      // keep(row) === false 인 줄을 아래에서부터 삭제
+    if (!sh || sh.getLastRow() < 2) return 0;
+    const v = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues();
+    let n = 0;
+    for (let i = v.length - 1; i >= 0; i--) if (!keep(v[i])) { sh.deleteRow(i + 2); n++; }
+    return n;
+  };
+  // 1) 등록: 지우기 전에 원본행·개인코드·교회코드 모아 두기
+  const reg = ss.getSheetByName(T.reg);
+  const rv = reg.getRange(2, 1, Math.max(1, reg.getLastRow() - 1), REG_INPUT_COLS).getValues();
+  const srcs = {}, pcs = {}, ccs = {}, keepP = {}, keepC = {};
+  rv.forEach(r => {
+    if (codes[r[COL.코드]]) { srcs[r[COL.원본]] = 1; if (r[COL.DB개인코드]) pcs[r[COL.DB개인코드]] = 1; if (r[COL.교회코드]) ccs[r[COL.교회코드]] = 1; }
+    else if (r[COL.코드]) { keepP[r[COL.DB개인코드]] = 1; keepC[r[COL.교회코드]] = 1; }
+  });
+  out.push('등록 ' + delRows(reg, r => !codes[r[0]]));
+  out.push('숙소 ' + delRows(ss.getSheetByName(T.lod), r => !codes[r[0]]));
+  const g = ss.getSheetByName(T.grp);
+  g && g.getRange(2, 1, Math.max(1, g.getLastRow() - 1), 13).getValues().forEach(r => { if (TEST_GROUPS_2027W.indexOf(r[0]) > -1) srcs[r[12]] = 1; });
+  out.push('단체 ' + delRows(g, r => TEST_GROUPS_2027W.indexOf(r[0]) === -1));
+  // 2) 웹 신청 원본 줄 비우기 (W행번호)
+  const web = ss.getSheetByName(WEB_TAB); let w = 0;
+  Object.keys(srcs).forEach(s => { const m = String(s).match(/^W(\d+)$/); if (m && web) { web.getRange(Number(m[1]), 1, 1, web.getLastColumn()).clearContent(); w++; } });
+  out.push('웹 신청 비움 ' + w);
+  // 3) ANM_DB
+  try {
+    const db = openDb_();
+    const P = Object.keys(pcs).filter(p => !keepP[p]), Pset = {}; P.forEach(p => (Pset[p] = 1));
+    out.push('DB 참석 ' + delRows(db.getSheetByName('참석'), r => !(Pset[r[3]] && String(r[1]) === '2027W')));
+    // 이번 학기 신청으로 처음 생긴 사람만 (메모 열에 '2027W' 표시)
+    out.push('DB 사람 ' + delRows(db.getSheetByName('사람'), r => !(Pset[r[0]] && String(r[14]).indexOf('2027W') === 0)));
+    const usedC = {}; readTable_(db.getSheetByName('사람')).forEach(r => (usedC[r[6]] = 1));
+    out.push('DB 교회 ' + delRows(db.getSheetByName('교회'), r => !(ccs[r[0]] && !keepC[r[0]] && !usedC[r[0]] && String(r[15]) === '신규(자동)')));
+  } catch (e) { out.push('DB 건너뜀: ' + e.message); }
+  // 4) 남은 '십대' 트랙값 → '미래세대' (머리글이 '경배와찬양학교 구분'인 열)
+  let t = 0;
+  ss.getSheets().forEach(sh => {
+    if (sh.getLastRow() < 2) return;
+    sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0].forEach((h, ci) => {
+      if (String(h).indexOf('경배와찬양학교 구분') !== 0) return;
+      const rg = sh.getRange(2, ci + 1, sh.getLastRow() - 1, 1), v = rg.getValues();
+      let ch = 0; v.forEach(r => { if (r[0] === '십대') { r[0] = '미래세대'; ch++; } else if (r[0] === '온라인 십대') { r[0] = '온라인 미래세대'; ch++; } });
+      if (ch) { rg.setValues(v); t += ch; }
+    });
+  });
+  out.push('십대→미래세대 ' + t);
+  buildDashboard_(ss);
+  SpreadsheetApp.flush();
+  console.log('테스트 정리 완료: ' + out.join(' · '));
+}
