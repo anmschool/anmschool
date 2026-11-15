@@ -385,8 +385,9 @@ a, button { -webkit-touch-callout: none; }
   .masthead .btn { background: var(--deep); color: #fff; }
   .masthead .btn.line { background: transparent; color: var(--deep); border: 1px solid var(--deep); }
   .mast-text { justify-content: flex-end; }
-  .cta { max-width: 420px; }
-  .masthead .pass { max-width: 420px; box-sizing: border-box; }
+  .mast-text { width: fit-content; max-width: 100%; min-width: 360px; }
+  .mast-text > .theme, .mast-text > .facts, .mast-text > .cta, .mast-text > .pass { contain: inline-size; }
+  .masthead .pass { box-sizing: border-box; } /* 너비는 제목에 맞춤 (.mast-text) */
   .slides { aspect-ratio: auto; min-height: 380px; }
 }
 .facts dt { white-space: nowrap; min-width: 84px; letter-spacing: 0.18em; }
@@ -600,3 +601,10 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 .invite .invite-s { margin-top: 18px; display: flex; flex-direction: column; font-size: 14px; line-height: 1.6; color: var(--sub); }
 .invite .invite-s span:last-child { font-weight: 700; color: var(--ink); }
 @media (min-width: 768px) { .invite p, .invite-t { max-width: 760px; } .invite p { font-size: 16px; } .invite-t { font-size: 24px; } }
+
+/* 초대의 글 페이지 */
+.invite-v { color: var(--sub) !important; font-size: 14.5px !important; }
+.invite-v span { white-space: nowrap; }
+/* 홈 상단: 버튼·내 등록 상자 너비를 제목 너비에 맞춤 (제목만 폭을 정하고 나머지는 그 폭을 따름) */
+.facts dd.venue { white-space: pre-line; }
+.invite:not(:lang(ko)) p { word-break: normal; }

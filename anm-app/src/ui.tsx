@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { cachedContent, cachedMe, fetchContent, getToken, isFresh, refreshMe } from "./api";
 import type { Content, Me, Project } from "./types";
-import { setLang, useLang, type Lang } from "./i18n";
+import { curLang, setLang, useLang, type Lang } from "./i18n";
 
 /* ── 콘텐츠 (관리 시트) + 현재 시즌 ── */
 interface State { content: Content | null; loading: boolean; offline: boolean; season?: Project; reload: () => void }
@@ -97,7 +97,7 @@ export function SiteNav() {
     on(); window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
-  const links: [string, string][] = [["/notices", t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", t("places")]];
+  const links: [string, string][] = [["/invitation", t("invitation")], ["/notices", t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", t("places")]];
   return (
     <nav className={"sitenav" + (solid ? " solid" : "")} aria-label="site">
       <div className="sitenav-in">
@@ -185,6 +185,9 @@ export function fmtDate(iso?: string, withDay = true) {
   if (!iso) return "";
   const [y, m, d] = iso.split("-").map(Number);
   if (!y || !m || !d) return iso;
+  const l = curLang(), wd = new Date(y, m - 1, d).getDay();
+  if (l === "en") return `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][m - 1]} ${d}${withDay ? ` (${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][wd]})` : ""}`;
+  if (l === "zh") return `${m}月${d}日${withDay ? `(${["周日", "周一", "周二", "周三", "周四", "周五", "周六"][wd]})` : ""}`;
   return `${m}.${d}${withDay ? ` (${dayOf(iso)})` : ""}`;
 }
 export function fmtRange(a?: string, b?: string) { return !a ? "" : b && b !== a ? `${fmtDate(a)} – ${fmtDate(b)}` : fmtDate(a); }

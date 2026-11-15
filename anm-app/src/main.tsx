@@ -12,6 +12,7 @@ import Guide from "./pages/Guide";
 import Places from "./pages/Places";
 import Ministry from "./pages/Ministry";
 import Admin from "./pages/Admin";
+import Invitation from "./pages/Invitation";
 
 function ScrollTop() {
   const { pathname } = useLocation();
@@ -29,6 +30,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/login" element={<Login />} />
           <Route path="/q" element={<Navigate to="/login" replace />} />
           <Route path="/me" element={<MePage />} />
+          <Route path="/invitation" element={<Invitation />} />
           <Route path="/notices" element={<Notices />} />
           <Route path="/schedule" element={<Schedule />} />
           <Route path="/guide" element={<Guide />} />

@@ -5,7 +5,7 @@ export type Lang = "ko" | "en" | "zh";
 /** UI 문구만 번역 (공지·안내 본문은 관리 시트에 쓴 그대로 표시) */
 const T = {
   ko: {
-    noticesMinistries: "공지 · 사역 안내", myShort: "내 등록", seeAll: "전체 보기", schoolShort: "경배와찬양학교", capNoticesMin: "학교 소식 · 7000훈련학교 · 큰잔치", capNotices: "이번 학교 소식", capSchedule: "트랙별 일정", capSoon: "확정되면 공개", capMe: "숙소 · 훈련비 · 현장 QR", capLogin: "이름과 전화번호로", capGuide: "복장 · 식사 · 숙소 예절", capPlaces: "채플관 · 숙소 · 이동 영상", capMinistries: "큰잔치 · 훈련 안내", otherMinistries: "ANM 사역 안내", church: "교회", state: "상태", trackOnly: "과정 일정만 보여 드립니다", openMap: "지도 열기", theme: "주제",
+    invitation: "초대의 글", onlineLink: "온라인 참여 링크", onlineOpen: "온라인 참여하기", onlineSoon: "온라인 참여 링크는 개강 전에 이곳과 문자로 안내됩니다.", groupRooms: "우리 단체 숙소", groupRoomsNote: "인솔자에게만 보입니다.", capInvite: "주제 말씀 · 초대의 글", noticesMinistries: "공지 · 사역 안내", myShort: "내 등록", seeAll: "전체 보기", schoolShort: "경배와찬양학교", capNoticesMin: "학교 소식 · 7000훈련학교 · 큰잔치", capNotices: "이번 학교 소식", capSchedule: "트랙별 일정", capSoon: "확정되면 공개", capMe: "숙소 · 훈련비 · 현장 QR", capLogin: "이름과 전화번호로", capGuide: "복장 · 식사 · 숙소 예절", capPlaces: "채플관 · 숙소 · 이동 영상", capMinistries: "큰잔치 · 훈련 안내", otherMinistries: "ANM 사역 안내", church: "교회", state: "상태", trackOnly: "과정 일정만 보여 드립니다", openMap: "지도 열기", theme: "주제",
     ministries: "사역", now: "진행 중", soon: "준비 중", past: "지난 사역", apply: "신청하기", myInfo: "내 등록 정보", checkReg: "신청 및 입금 여부 조회",
     notices: "공지", schedule: "시간표", guide: "안내", places: "장소·길찾기", home: "홈", back: "뒤로",
     loginTitle: "내 등록 정보", loginLede: "신청할 때 적은 이름과 전화번호로 확인합니다.", name: "이름", phone: "전화번호",
@@ -19,7 +19,7 @@ const T = {
     admin: "관리자", pin: "관리자 PIN", refresh: "새로고침", total: "등록", lodgingDone: "숙소 배정", groups: "단체", comingSoon: "곧 안내가 올라옵니다",
   },
   en: {
-    noticesMinistries: "Notices & Ministries", myShort: "My Page", seeAll: "See all", schoolShort: "Worship & Praise School", capNoticesMin: "School news · training · celebrations", capNotices: "News for this school", capSchedule: "By course", capSoon: "Coming soon", capMe: "Room · fee · check-in QR", capLogin: "With name and phone", capGuide: "Dress · meals · rooms", capPlaces: "Chapel · rooms · route videos", capMinistries: "Celebrations · training", otherMinistries: "ANM Ministries", church: "Church", state: "Status", trackOnly: "schedule only", openMap: "Open map", theme: "Theme",
+    invitation: "Invitation", onlineLink: "Online link", onlineOpen: "Join online", onlineSoon: "The online link will be posted here and sent by text before the school begins.", groupRooms: "My group's rooms", groupRoomsNote: "Visible to the group leader only.", capInvite: "Theme verse · invitation", noticesMinistries: "Notices & Ministries", myShort: "My Page", seeAll: "See all", schoolShort: "Worship & Praise School", capNoticesMin: "School news · training · celebrations", capNotices: "News for this school", capSchedule: "By course", capSoon: "Coming soon", capMe: "Room · fee · check-in QR", capLogin: "With name and phone", capGuide: "Dress · meals · rooms", capPlaces: "Chapel · rooms · route videos", capMinistries: "Celebrations · training", otherMinistries: "ANM Ministries", church: "Church", state: "Status", trackOnly: "schedule only", openMap: "Open map", theme: "Theme",
     ministries: "Ministries", now: "Now", soon: "Coming up", past: "Past", apply: "Apply", myInfo: "My registration", checkReg: "Registration status",
     notices: "Notices", schedule: "Schedule", guide: "Guide", places: "Places & routes", home: "Home", back: "Back",
     loginTitle: "My registration", loginLede: "Use the name and phone number you registered with.", name: "Name", phone: "Phone",
@@ -33,7 +33,7 @@ const T = {
     admin: "Admin", pin: "Admin PIN", refresh: "Refresh", total: "Registered", lodgingDone: "Rooms assigned", groups: "Groups", comingSoon: "Details coming soon",
   },
   zh: {
-    noticesMinistries: "公告与事工", myShort: "我的", seeAll: "全部", schoolShort: "敬拜赞美学校", capNoticesMin: "学校消息 · 培训 · 大聚会", capNotices: "本期学校消息", capSchedule: "按课程", capSoon: "确定后公布", capMe: "宿舍 · 培训费 · 报到码", capLogin: "姓名和电话", capGuide: "着装 · 用餐 · 宿舍", capPlaces: "礼拜堂 · 宿舍 · 路线视频", capMinistries: "大聚会 · 培训", otherMinistries: "ANM 事工", church: "教会", state: "状态", trackOnly: "的日程", openMap: "打开地图", theme: "主题",
+    invitation: "邀请函", onlineLink: "线上参与链接", onlineOpen: "线上参与", onlineSoon: "线上参与链接将在开学前公布于此，并以短信通知。", groupRooms: "本团体宿舍", groupRoomsNote: "仅领队可见。", capInvite: "主题经文 · 邀请函", noticesMinistries: "公告与事工", myShort: "我的", seeAll: "全部", schoolShort: "敬拜赞美学校", capNoticesMin: "学校消息 · 培训 · 大聚会", capNotices: "本期学校消息", capSchedule: "按课程", capSoon: "确定后公布", capMe: "宿舍 · 培训费 · 报到码", capLogin: "姓名和电话", capGuide: "着装 · 用餐 · 宿舍", capPlaces: "礼拜堂 · 宿舍 · 路线视频", capMinistries: "大聚会 · 培训", otherMinistries: "ANM 事工", church: "教会", state: "状态", trackOnly: "的日程", openMap: "打开地图", theme: "主题",
     ministries: "事工", now: "进行中", soon: "即将举行", past: "往期", apply: "报名", myInfo: "我的报名", checkReg: "查询报名状态",
     notices: "公告", schedule: "日程", guide: "须知", places: "场所与路线", home: "首页", back: "返回",
     loginTitle: "我的报名信息", loginLede: "请输入报名时填写的姓名和电话号码。", name: "姓名", phone: "电话",
@@ -62,6 +62,7 @@ export function setLang(l: Lang) {
   document.documentElement.lang = l;
   subs.forEach(f => f());
 }
+export const curLang = () => lang;
 export function useLang() {
   const l = useSyncExternalStore(cb => { subs.add(cb); return () => subs.delete(cb); }, () => lang);
   return { lang: l, t: (k: Key) => T[l][k] ?? T.ko[k] };
@@ -80,3 +81,28 @@ export function trackName(k: string | undefined, lang: Lang) {
   const key = Object.keys(TRACK_NAMES).find(n => k.replace(/\s/g, "").startsWith(n));
   return key ? TRACK_NAMES[key][lang] : k;
 }
+
+/** 참가자 구분(시트 값) → 화면 언어 */
+const KINDS: Record<string, [string, string]> = {
+  "대학생 청년": ["University · Young adult", "大学生·青年"], "대학청년": ["University · Young adult", "大学生·青年"], "중고등부": ["Middle/High school", "初高中生"],
+  "어린이": ["Child", "儿童"], "교사 교역자": ["Teacher · Pastor", "教师·传道人"], "교사": ["Teacher", "教师"], "교역자": ["Pastor", "传道人"], "전도사": ["Evangelist", "传道"],
+  "선교사": ["Missionary", "宣教士"], "일반": ["Adult", "一般"], "직장인": ["Working adult", "上班族"], "평신도": ["Layperson", "平信徒"],
+};
+export function kindName(k: string | undefined, l: Lang) {
+  if (!k || l === "ko") return k ?? "";
+  const v = KINDS[k.trim()]; return v ? v[l === "en" ? 0 : 1] : k;
+}
+
+/** 로그인·관리 오류 문구 */
+const ERR: Record<string, [string, string, string]> = {
+  not_found: ["일치하는 등록 정보가 없습니다. 신청할 때 적은 이름과 전화번호를 확인해 주세요. 단체로 신청했다면 인솔자 전화번호로도 들어올 수 있습니다.", "No matching registration. Please check the name and phone number you applied with. Group members can also use the leader's phone number.", "找不到相符的报名信息。请确认报名时填写的姓名和电话号码。团体报名者也可使用领队的电话号码。"],
+  cancelled: ["취소된 등록입니다. 문의: 7000school@gmail.com", "This registration was cancelled. Contact: 7000school@gmail.com", "该报名已取消。咨询：7000school@gmail.com"],
+  too_many: ["시도가 너무 많습니다. 10분 뒤에 다시 해 주세요.", "Too many attempts. Please try again in 10 minutes.", "尝试次数过多，请10分钟后再试。"],
+  invalid_input: ["이름과 전화번호(숫자 전체)를 입력해 주세요.", "Please enter your name and full phone number.", "请输入姓名和完整电话号码。"],
+  no_project: ["지금은 이 행사의 내 정보 확인이 열려 있지 않습니다.", "Registration lookup is not open for this event right now.", "目前尚未开放此活动的报名查询。"],
+  network: ["인터넷 연결을 확인해 주세요.", "Please check your internet connection.", "请检查网络连接。"],
+  bad_pin: ["PIN이 맞지 않습니다.", "Incorrect PIN.", "PIN 不正确。"],
+  forbidden: ["이 프로젝트를 볼 권한이 없습니다.", "You don't have access to this project.", "您没有查看此项目的权限。"],
+  server: ["잠시 후 다시 시도해 주세요.", "Please try again shortly.", "请稍后再试。"],
+};
+export function errText(k: string, l: Lang = lang) { const v = ERR[k] ?? ERR.server; return v[l === "en" ? 1 : l === "zh" ? 2 : 0]; }

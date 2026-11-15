@@ -50,6 +50,8 @@ export interface Me {
   payment: { state: PayState; label: string; fee: number | null; account: string; depositorHint: string; groupPaid: boolean };
   group: { id: string; name: string; status: string } | null;
   lodging: { segment: string; checkIn: string; checkOut: string; building: string; room: string }[];
+  onlineUrl?: string;
+  members?: { name: string; track: string; kind: string; rooms: { segment: string; building: string; room: string }[] }[];
   checkedIn: boolean;
   cancelled: boolean;
 }

@@ -93,14 +93,6 @@ export async function adminStats(pin: string, project: string): Promise<{ ok: tr
   return post<{ admin: string; stats: Stats }>({ action: "admin", pin, project });
 }
 
-export const ERROR_TEXT: Record<string, string> = {
-  not_found: "일치하는 등록 정보가 없습니다. 신청할 때 적은 이름과 전화번호를 확인해 주세요. 단체로 신청했다면 인솔자 전화번호로도 들어올 수 있습니다.",
-  cancelled: "취소된 등록입니다. 문의: 7000school@gmail.com",
-  too_many: "시도가 너무 많습니다. 10분 뒤에 다시 해 주세요.",
-  invalid_input: "이름과 전화번호(숫자 전체)를 입력해 주세요.",
-  no_project: "지금은 이 행사의 내 정보 확인이 열려 있지 않습니다.",
-  network: "인터넷 연결을 확인해 주세요.",
-  bad_pin: "PIN이 맞지 않습니다.",
-  forbidden: "이 프로젝트를 볼 권한이 없습니다.",
-  server: "잠시 후 다시 시도해 주세요.",
-};
+import { errText } from "./i18n";
+/** 현재 화면 언어로 오류 문구 */
+export const ERROR_TEXT: Record<string, string> = new Proxy({} as Record<string, string>, { get: (_, k) => errText(String(k)) });

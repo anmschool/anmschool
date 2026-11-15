@@ -136,9 +136,11 @@ const ACC_TEXT = {
 };
 
 const WD = ["일", "월", "화", "수", "목", "금", "토"];
-function krDate(iso: string, year = true) {
-  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
-  return `${year ? y + "년 " : ""}${m}월 ${d}일(${WD[new Date(y, m - 1, d).getDay()]})`;
+function krDate(iso: string, year = true, lang: Lang = "ko") {
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number), w = new Date(y, m - 1, d).getDay();
+  if (lang === "en") return `${MON[m - 1]} ${d} (${WK[w].en})${year ? ", " + y : ""}`;
+  if (lang === "zh") return `${year ? y + "年" : ""}${m}月${d}日(${WK[w].zh})`;
+  return `${year ? y + "년 " : ""}${m}월 ${d}일(${WD[w]})`;
 }
 
 function Pass({ me }: { me: Me }) {
@@ -184,6 +186,7 @@ export default function Home() {
   const schedCount = (content?.schedule ?? []).filter(x => x.project === s?.id && forTrack(x.track, me?.track)).length;
 
   const menu: [string, string, string, string, string?][] = [
+    ...(T27 ? [["/invitation", "Invitation", t("invitation"), t("capInvite")] as [string, string, string, string]] : []),
     ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin")],
     ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? trackName(me.track, lang) : t("capSchedule")) : t("capSoon")],
     ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
@@ -198,7 +201,7 @@ export default function Home() {
     if (s.end && Date.parse(todayIso()) <= Date.parse(s.end)) return t("now");
     return "";
   })();
-  const lead = title.match(/^(.*?향한)\s+(.+)$/);
+  const lead = T27 ? [title, T27.lead[lang], T27.school[lang]] : title.match(/^(.*?향한)\s+(.+)$/);
 
   const others = (content?.projects ?? []).filter(p => p.id !== s?.id);
   const tiles: [string, string, string, string][] = [
@@ -241,8 +244,8 @@ export default function Home() {
           {s && (
             <>
               <dl className="facts">
-                {s.start && <div><dt>Date</dt><dd>{krDate(s.start)}{s.end && s.end !== s.start ? ` ~ ${krDate(s.end, s.end.slice(0, 4) !== s.start.slice(0, 4))}` : ""}</dd></div>}
-                {s.venue && <div><dt>Location</dt><dd>{s.venue}</dd></div>}
+                {s.start && <div><dt>Date</dt><dd>{s.end && s.end !== s.start ? `${krDate(s.start, lang !== "en" || s.end.slice(0, 4) !== s.start.slice(0, 4), lang)} ~ ${krDate(s.end, lang === "en" || s.end.slice(0, 4) !== s.start.slice(0, 4), lang)}` : krDate(s.start, true, lang)}</dd></div>}
+                {s.venue && <div><dt>Location</dt><dd className="venue">{T27 ? T27.venue[lang] : s.venue}</dd></div>}
               </dl>
               <div className="cta">
                 {s.applyUrl && s.status !== "종료" && <a className="btn" href={s.applyUrl}>{t("apply")}</a>}
@@ -280,14 +283,6 @@ export default function Home() {
             </Link>
           ))}
         </div>
-        {T27 && (
-          <section className="home-sec invite">
-            <div className="col-head"><span className="label">Invitation</span></div>
-            <h2 className="invite-t">{T27.title[lang]}</h2>
-            {T27.invite.map((x, i) => <p key={i}>{x[lang]}</p>)}
-            <p className="invite-s">{T27.sign.map((x, i) => <span key={i}>{x[lang]}</span>)}</p>
-          </section>
-        )}
         {s?.id === "2027W" && (
           <section className="home-sec">
             <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>

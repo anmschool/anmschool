@@ -6,7 +6,7 @@ import { Footer, Head, Skeleton, useSeason } from "../ui";
 
 export default function Login() {
   const s = useSeason();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const nav = useNavigate();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -38,11 +38,11 @@ export default function Login() {
         <p className="sub" style={{ margin: 0 }}>{t("loginLede")}</p>
         <form onSubmit={submit} noValidate style={{ display: "flex", flexDirection: "column", gap: 26 }}>
           <div className="field">
-            <label htmlFor="nm">Name · {t("name")}</label>
+            <label htmlFor="nm">{lang === "en" ? "Name" : `Name · ${t("name")}`}</label>
             <input id="nm" autoComplete="name" value={name} onChange={e => setName(e.target.value)} placeholder="홍길동" />
           </div>
           <div className="field">
-            <label htmlFor="ph">Phone · {t("phone")}</label>
+            <label htmlFor="ph">{lang === "en" ? "Phone" : `Phone · ${t("phone")}`}</label>
             <input id="ph" inputMode="numeric" autoComplete="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="010 1234 5678" />
             <span className="small">{t("phoneHint")}</span>
           </div>

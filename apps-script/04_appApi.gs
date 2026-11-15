@@ -299,7 +299,7 @@ function tracksFor_(opsId) {
 function readOps_(opsId) {
   const ss = SpreadsheetApp.openById(opsId);
   const get = (n) => { const sh = ss.getSheetByName(n); return sh ? rows_(sh) : []; };
-  return { reg: get('Master_DB(등록)'), lod: get('숙소'), grp: get('단체교회별 확인 표'), trk: get('트랙') };
+  return { reg: get('Master_DB(등록)'), lod: get('숙소'), grp: get('단체교회별 확인 표'), trk: get('트랙'), cfg: get('설정') };
 }
 
 /** 순수 함수: 이름 + 전화(본인 / 단체 인솔자 / 교역자)로 찾기 */
@@ -338,6 +338,13 @@ function buildMe_(ops, code, proj) {
     payment: { state, label: pay || '확인 중', fee: Number(r.훈련비) || null, account: r.계좌 || t.계좌 || '', depositorHint: r.이름 + (r.교회 ? '(' + r.교회 + ')' : ''), groupPaid: !!r.단체ID },
     group: g ? { id: g.단체ID, name: g['교회/단체명'], status: g['단체별 입금 완료 여부'] } : null,
     lodging,
+    // 온라인 참여자: 운영 시트 설정 탭 '온라인 링크' 값 (없으면 빈 칸 → 화면에 '개강 전 안내')
+    onlineUrl: String(((ops.cfg || []).find(x => x.항목 === '온라인 링크') || {}).값 || '').trim(),
+    // 단체 인솔자(이름·연락처가 단체 표의 인솔자와 같음)면 같은 단체 사람들의 숙소도 보여 줌 (이름·트랙·방만)
+    members: isLeader_(r, g) ? ops.reg.filter(x => x.단체ID === r.단체ID && String(x.코드) !== String(code) && x.상태 !== '취소').map(x => ({
+      name: String(x.이름 || ''), track: String(x['경배와찬양학교 구분'] || ''), kind: String(x.구분 || ''),
+      rooms: ops.lod.filter(l => String(l.코드) === String(x.코드) && l.입금여부 !== '취소').map(l => ({ segment: String(l.구간 || '1'), building: String(l.동 || ''), room: String(l.호실 || '') })),
+    })) : [],
     checkedIn: r['현장등록 확인여부'] === true,
     cancelled: r.상태 === '취소',
   };
@@ -387,6 +394,11 @@ function verifyToken_(tok) {
   } catch (e) { return null; }
 }
 
+function isLeader_(r, g) {
+  if (!g || normName_(g.인솔자명) !== normName_(r.이름)) return false;
+  const lp = normDigits_(g['인솔자 연락처']);
+  return !lp || String(r.연락처 || '').split('/').map(normDigits_).indexOf(lp) !== -1;
+}
 function normName_(s) { return String(s || '').replace(/\s/g, '').trim(); }
 function normDigits_(s) {
   let d = String(s == null ? '' : (typeof s === 'number' ? Math.round(s) : s)).replace(/\(?\+82\)?/, '').replace(/\D/g, '');

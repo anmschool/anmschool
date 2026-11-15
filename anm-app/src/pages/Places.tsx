@@ -19,7 +19,7 @@ const PARK_ROWS: { t: L; img: string; naver: string; google: string }[] = [
 const LINKS: Record<string, [string, string]> = {
   "60주년 기념 채플관": ["https://naver.me/GyYWndK8", "https://maps.app.goo.gl/H5193Vf8fMRFwHYw8"],
   "식당": ["https://naver.me/FlBWIDS1", "https://maps.app.goo.gl/htBX67Hg14YKs43L7"],
-  "5동": ["https://naver.me/GJZ6k3oY", "https://maps.app.goo.gl/im9RUAJ1g4W9NiNc7"],
+  "5동": ["https://naver.me/GJZ6k3oY", "https://maps.app.goo.gl/jQU1mhqM2LTzXCQc9"],
   "명덕관": ["https://naver.me/x9BeSraH", "https://www.google.com/maps/search/?api=1&query=37.224062,127.181884"],
 };
 /** 시트 이름이 언어별로 번역돼도 맞도록 종류·이름 일부로 지도 찾기 */

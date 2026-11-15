@@ -2,12 +2,15 @@ import type { Lang } from "./i18n";
 type L = Record<Lang, string>;
 
 /** 2027 WINTER 주제·말씀·초대의 글 (시트 부제보다 우선) */
-export const THEME_2027W: { title: L; verse: L; ref: L; invite: L[]; sign: L[] } = {
+export const THEME_2027W: { title: L; verse: L; ref: L; invite: L[]; sign: L[]; lead: L; school: L; venue: L } = {
+  lead: { ko: "새 예루살렘을 향한", en: "Toward the New Jerusalem", zh: "向着新耶路撒冷的" },
+  school: { ko: "경배와찬양학교 및 7000학교", en: "Worship & Praise School and 7000 School", zh: "敬拜赞美学校及7000学校" },
+  venue: { ko: "명지대학교 자연캠퍼스 60주년 기념 채플관", en: "Myongji University Natural Science Campus\n60th Anniversary Chapel", zh: "明知大学自然校区\n60周年纪念礼拜堂" },
   title: { ko: "얽매이지 않는 삶", en: "An Unbound Life", zh: "不被辖制的生活" },
   verse: {
-    ko: "“… 모든 무거운 것과 얽매이기 쉬운 죄를 벗어 버리고 …”",
-    en: "“… let us throw off everything that hinders and the sin that so easily entangles …”",
-    zh: "“……就当放下各样的重担，脱去容易缠累我们的罪……”",
+    ko: "“… 모든 무거운 것과 얽매이기 쉬운 죄를 벗어 버리고”",
+    en: "“… let us throw off everything that hinders and the sin that so easily entangles”",
+    zh: "“……就当放下各样的重担，脱去容易缠累我们的罪”",
   },
   ref: { ko: "히 12:1", en: "Hebrews 12:1", zh: "希伯来书 12:1" },
   invite: [
