@@ -624,3 +624,24 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 .slots .slot.quiet .time { font-size: 13px; color: var(--mute, #A99EA1); }
 .slots .slot.main { background: var(--tint, #F3EEF0); margin: 0 -12px; padding: 15px 12px; border-left: 3px solid var(--wine, #6E1F3A); border-bottom-color: transparent; }
 .slots .slot.main .what { color: var(--deep, #3A1022); }
+
+/* 시간표 표 — 홍보물 시간표와 같은 규칙 (프로그램이 바뀌면 진한 선, 시간만 나뉘면 연한 선) */
+.tt-sec .sub { margin: -8px 0 0; }
+.tt-sec h2 .mine { margin-left: 10px; vertical-align: 3px; }
+.tt-wrap { overflow-x: auto; margin: 0 -20px; padding: 0 20px; -webkit-overflow-scrolling: touch; }
+.tt { width: 100%; min-width: 560px; border-collapse: collapse; table-layout: fixed; font: 400 13px/1.4 var(--sans); color: var(--ink); }
+.tt th, .tt td { font-family: var(--sans); letter-spacing: normal; text-transform: none; white-space: normal; overflow-wrap: anywhere; padding: 9px 6px; text-align: center; vertical-align: middle; border-bottom: 1px solid #aba1a5; border-right: 1px solid #d3cbce; word-break: keep-all; }
+.tt tr > :last-child { border-right: 0; }
+.tt thead th { background: var(--wine); color: #fff; font-weight: 600; border-bottom: 0; border-right-color: rgba(255,255,255,.35); padding: 10px 6px; }
+.tt thead th.today { box-shadow: inset 0 -3px 0 #fff; }
+.tt th.tm { width: 108px; background: #f1eced; color: var(--ink); font-weight: 400; white-space: nowrap; font-variant-numeric: tabular-nums; position: sticky; left: 0; z-index: 1; }
+.tt thead th.tm { background: var(--wine); color: #fff; font-weight: 600; z-index: 2; }
+.tt td { font-weight: 600; }
+.tt td.q { font-weight: 400; }
+.tt .soft { border-bottom-color: #e6e0e2; }
+.tt tr.now th.tm { background: var(--wine); color: #fff; font-weight: 600; }
+.tt td.live { background: var(--tint); box-shadow: inset 0 0 0 2px var(--wine); position: relative; }
+.tt-now { display: block; width: fit-content; margin: 0 auto 4px; padding: 2px 7px; background: var(--wine); color: #fff; font: 600 10px/1.4 var(--latin); letter-spacing: .18em; text-transform: uppercase; }
+@media (prefers-reduced-motion: no-preference) { .tt td.live { animation: ttpulse 2.4s ease-in-out infinite; } }
+@keyframes ttpulse { 50% { background: #efe3e8; } }
+@media (min-width: 768px) { .tt-wrap { margin: 0; padding: 0; } .tt { font-size: 14px; } }
