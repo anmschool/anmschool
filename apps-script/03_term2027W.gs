@@ -478,6 +478,8 @@ function loadCtx_(ss) {
     if (m) seq[m[1]] = Math.max(seq[m[1]] || 0, Number(m[2]));
     const k = personKey_(r[COL.이름], r[COL.연락처], r[COL.생년월일]);
     if (k) dupe[k] = r[COL.코드] || '(코드 없음)';
+    const kc = churchKey_(r[COL.이름], r[COL.교회]);   // 전화가 없는 신청과도 맞춰 보도록 이름+교회 키도 둠
+    if (kc) dupe[kc] = r[COL.코드] || '(코드 없음)';
   });
   let gseq = 0;
   readTable_(ss.getSheetByName(T.grp)).forEach(r => { const m = String(r[0]).match(/-G(\d+)$/); if (m) gseq = Math.max(gseq, Number(m[1])); });
@@ -506,7 +508,7 @@ function processResponseRow_(row, H, src, ctx) {
       '기존 훈련': str_(row[H.prior]), 학교: str_(row[H.school]), 학과: str_(row[H.major]), 학년: str_(row[H.grade]),
       직장: str_(row[H.job]), 기도제목: str_(row[H.prayer]), 제출일시: ts, 원본: src,
     };
-    const k = personKey_(p.이름, p.연락처, p.생년월일);
+    const k = personKey_(p.이름, p.연락처, p.생년월일) || churchKey_(p.이름, p.교회);
     if (k && ctx.dupe[k]) return { regs: [], result: '중복', note: p.이름 + ' → 이미 ' + ctx.dupe[k] };
     const r = buildRegRow_(p, '', track, ctx);
     if (k) ctx.dupe[k] = r[COL.코드];
@@ -526,7 +528,7 @@ function processResponseRow_(row, H, src, ctx) {
   const regs = []; const notes = []; let dup = 0;
   const addMember = (m) => {
     const p = Object.assign(m, { 트랙: track ? track[0] : trackRaw, 등록경로: inline ? '웹 단체' : '단체폼', 교회: church, 제출일시: ts, 원본: src });
-    const k = personKey_(p.이름, p.연락처, p.생년월일);
+    const k = personKey_(p.이름, p.연락처, p.생년월일) || churchKey_(p.이름, p.교회);
     if (k && ctx.dupe[k]) { dup++; notes.push(p.이름 + '(중복 ' + ctx.dupe[k] + ')'); return; }
     const r = buildRegRow_(p, gid, track, ctx);
     if (k) ctx.dupe[k] = r[COL.코드];
@@ -794,6 +796,12 @@ function normBirth_(v) {
 }
 
 /** 중복 판정 키: 이름+전화(숫자) → 전화가 없으면 이름+생년월일 → 둘 다 없으면 판정 안 함 */
+/** 전화·생년월일이 없을 때 쓰는 키: 이름+교회 (공백 무시) */
+function churchKey_(name, church) {
+  const n = String(name || '').replace(/\s/g, ''), ch = String(church || '').replace(/\s/g, '');
+  return n && ch && ch !== '.' ? n + '_c' + ch : '';
+}
+
 function personKey_(name, phone, birth) {
   const n = String(name || '').replace(/\s/g, '');
   if (!n) return '';

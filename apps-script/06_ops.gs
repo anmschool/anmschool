@@ -275,9 +275,9 @@ function translateContent() {
  *  - 웹 신청 원본 줄은 내용만 비움(줄 번호가 처리 기록과 묶여 있어 삭제하면 다른 신청이 다시 들어감)
  *  - ANM_DB: 이 신청으로 새로 생긴 사람·참석 줄, 다른 데서 안 쓰는 신규(자동) 교회 줄 삭제
  *  - 덤: '경배와찬양학교 구분' 열의 '십대' → '미래세대', 등록현황 다시 만들기 */
-const TEST_CODES_2027W = ['2027W-미래세대-0029', '2027W-미래세대-0030', '2027W-미래세대-0031', '2027W-어린이-0001', '2027W-어린이-0002',
-  '2027W-청지기-0003', '2027W-청지기-0004', '2027W-온라인-0001'];
-const TEST_GROUPS_2027W = ['2027W-G003', '2027W-G004', '2027W-G005'];
+// 2026-11-16 실행 완료. 이 코드·단체ID는 이제 실제 신청에 다시 쓰였으므로 비워 둠 (다시 실행해도 아무것도 안 지움)
+const TEST_CODES_2027W = [];
+const TEST_GROUPS_2027W = [];
 
 function purgeTest2027W() {
   const ss = openOps_(), codes = {}, out = [];
@@ -346,4 +346,70 @@ function seedSchedule2027W() {
   sh.getRange(2, 1, rows.length, 8).setValues(rows);
   CacheService.getScriptCache().remove('content_v1');
   console.log('2027W 시간표 ' + SCHEDULE_2027W.length + '줄을 넣었습니다');
+}
+
+
+/* ───────────── ⑦ 하늘꿈교회 단체 재신청 정리 (1회) ─────────────
+ * G001(10/30 구글폼, 28명)과 G003(11/16 웹, 27명)이 같은 단체. 학생 22명이 전화번호가 없어 중복으로 안 걸러져 새 코드(0029~0050)로 들어감.
+ * 결정: 나중 신청(G003) 내용을 반영하되 코드·행은 G001 것을 유지(명찰 출력됨), 학생 정보(학년·나이·구분)는 G001의 자세한 값을 유지.
+ *  - G003로 생긴 22명 행 삭제(등록·숙소·ANM_DB 참석/신규 사람), G003 단체 줄 삭제. 웹 신청 원본 줄(W19)은 기록으로 남김
+ *  - 서하을 → 서하늘, 성인 3명 생년월일, 김지혁 구분(교사), 단체 교역자 참석·이메일
+ *  - 윤태호: G003 명단에 없음 → 상태 '취소'
+ *  - 바뀐 내용과 확인 필요 사항을 각 행 '비고'에 남김 */
+function fixHaneul2027W() {
+  const ss = openOps_(), out = [];
+  const reg = ss.getSheetByName(T.reg), H = reg.getRange(1, 1, 1, reg.getLastColumn()).getValues()[0];
+  const c = n => H.indexOf(n);
+  const v = reg.getRange(2, 1, reg.getLastRow() - 1, H.length).getValues();
+  const DEL = {}, pcs = {}, keepP = {};
+  v.forEach(r => { if (r[c('단체ID')] === '2027W-G003') { DEL[r[0]] = 1; if (r[c('DB개인코드')]) pcs[r[c('DB개인코드')]] = 1; } else if (r[0]) keepP[r[c('DB개인코드')]] = 1; });
+  // 1) G001 행 고치기 + 비고
+  const BASE = '11/16 웹 재신청(G003) 반영, 중복 등록분 삭제';
+  const FIX = {
+    서하을: { 이름: '서하늘', note: '이름 서하을→서하늘(재신청 기준) · 명찰 재출력 필요' },
+    유성기: { 생년월일: '1963-12-13', note: '생년월일 재신청 기준' },
+    유해경: { 생년월일: '1961-12-22', note: '생년월일 재신청 기준' },
+    곽성숙: { 생년월일: '1974-07-07', note: '생년월일 재신청 기준' },
+    김지혁: { 구분: '교사', note: '구분 대학청년→교사(재신청에 교사·교역자로 신청)' },
+    윤태호: { 상태: '취소', note: '재신청 명단에 없음 → 취소 처리. 교회 확인 필요 · 명찰 출력됨(폐기)' },
+    김영재: { note: '재신청엔 중고등부로 신청 → 기존(20세 대학청년, 120,000원) 유지. 교회 확인 필요' },
+    박기준: { note: '재신청엔 중고등부로 신청 → 기존(20세 대학청년, 120,000원) 유지. 교회 확인 필요' },
+  };
+  let fixed = 0;
+  v.forEach((r, i) => {
+    if (r[c('단체ID')] !== '2027W-G001') return;
+    const f = FIX[r[c('이름')]] || {};
+    ['이름', '생년월일', '구분', '상태'].forEach(k => { if (f[k] !== undefined) reg.getRange(i + 2, c(k) + 1).setValue(f[k]); });
+    const old = String(r[c('비고')] || '');
+    reg.getRange(i + 2, c('비고') + 1).setValue((old ? old + ' / ' : '') + BASE + (f.note ? ' · ' + f.note : ''));
+    fixed++;
+  });
+  out.push('G001 고침 ' + fixed);
+  // 2) 삭제 (아래에서부터)
+  const delRows = (sh, keep) => {
+    if (!sh || sh.getLastRow() < 2) return 0;
+    const d = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues(); let n = 0;
+    for (let i = d.length - 1; i >= 0; i--) if (!keep(d[i])) { sh.deleteRow(i + 2); n++; }
+    return n;
+  };
+  out.push('등록 삭제 ' + delRows(reg, r => !DEL[r[0]]));
+  out.push('숙소 삭제 ' + delRows(ss.getSheetByName(T.lod), r => !DEL[r[0]]));
+  const g = ss.getSheetByName(T.grp);
+  const gv = g.getRange(2, 1, g.getLastRow() - 1, 13).getValues();
+  gv.forEach((r, i) => {
+    if (r[0] !== '2027W-G001') return;
+    g.getRange(i + 2, 6).setValue('참석');                      // 교역자 참석
+    g.getRange(i + 2, 10).setValue('dhsrsj370@naver.com');      // 이메일(재신청)
+    g.getRange(i + 2, 12).setValue(String(r[11]) + ' · 11/16 웹 재신청(G003) 반영: 교역자 참석, 이메일 변경, 윤태호 취소, 서하늘 이름 수정, 중복 22명 삭제. 주소 경남 고성군 동해면 외산로 504-122');
+  });
+  out.push('단체 삭제 ' + delRows(g, r => r[0] !== '2027W-G003'));
+  // 3) ANM_DB: 이 중복으로 생긴 참석 줄, 이번 학기에 새로 생긴 사람 줄
+  try {
+    const db = openDb_(), P = {}; Object.keys(pcs).filter(p => !keepP[p]).forEach(p => (P[p] = 1));
+    out.push('DB 참석 ' + delRows(db.getSheetByName('참석'), r => !(P[r[3]] && String(r[1]) === '2027W')));
+    out.push('DB 사람 ' + delRows(db.getSheetByName('사람'), r => !(P[r[0]] && String(r[14]).indexOf('2027W') === 0)));
+  } catch (e) { out.push('DB 건너뜀: ' + e.message); }
+  buildDashboard_(ss);
+  SpreadsheetApp.flush();
+  console.log('하늘꿈교회 정리 완료: ' + out.join(' · '));
 }
