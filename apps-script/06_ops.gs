@@ -88,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { noteHaneul2027W_(); } catch (e) { console.log('하늘꿈 비고 건너뜀: ' + e.message); }
   try { dropOldStatusTab_(); } catch (e) { console.log('현황 탭 정리 건너뜀: ' + e.message); }
   const cache = CacheService.getScriptCache();
   rows_(appSheet_().getSheetByName('프로젝트'))
@@ -412,4 +413,29 @@ function fixHaneul2027W() {
   buildDashboard_(ss);
   SpreadsheetApp.flush();
   console.log('하늘꿈교회 정리 완료: ' + out.join(' · '));
+}
+
+
+/** 하늘꿈교회(G001) 비고를 담당자 대조용으로 다시 씀 — 10분 트리거에서 한 번만 실행 */
+function noteHaneul2027W_() {
+  const P = PropertiesService.getScriptProperties();
+  if (P.getProperty('HANEUL_NOTE_V2')) return;
+  const reg = openOps_().getSheetByName(T.reg), H = reg.getRange(1, 1, 1, reg.getLastColumn()).getValues()[0], c = n => H.indexOf(n);
+  const v = reg.getRange(2, 1, reg.getLastRow() - 1, H.length).getValues();
+  const CHECK = {
+    윤태호: '취소가 맞는지 확인 (11/16 재신청 명단에 없어 취소 처리함, 명찰 출력됨)',
+    서하늘: '이름 확인 (처음 신청 서하을 → 재신청 서하늘로 고침)',
+    김영재: '구분 확인 (처음 신청 20세 대학청년 / 재신청 중고등부 → 처음 신청대로 둠)',
+    박기준: '구분 확인 (처음 신청 20세 대학청년 / 재신청 중고등부 → 처음 신청대로 둠)',
+    김지혁: '구분 확인 (처음 신청 대학청년 / 재신청 교사 → 교사로 고침)',
+  };
+  let n = 0;
+  v.forEach((r, i) => {
+    if (r[c('단체ID')] !== '2027W-G001') return;
+    const who = String(r[c('이름')]);
+    const note = '[담당자 대조 필요] 유해경 전도사와 최종 명단 대조' + (CHECK[who] ? ' · ' + CHECK[who] : '') + ' · 11/16 웹 재신청(G003)과 합침, 중복 22명 삭제';
+    reg.getRange(i + 2, c('비고') + 1).setValue(note); n++;
+  });
+  P.setProperty('HANEUL_NOTE_V2', '1');
+  console.log('하늘꿈 비고 ' + n + '줄');
 }
