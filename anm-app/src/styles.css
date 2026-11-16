@@ -608,3 +608,19 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 /* 홈 상단: 버튼·내 등록 상자 너비를 제목 너비에 맞춤 (제목만 폭을 정하고 나머지는 그 폭을 따름) */
 .facts dd.venue { white-space: pre-line; }
 .invite:not(:lang(ko)) p { word-break: normal; }
+
+/* 시간표 — 과정 선택 · 날짜 · 일정 (디자인 키트: 와인 한 색, 헤어라인) */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.chips button { padding: 7px 14px; border: 1px solid var(--hair); background: #fff; border-radius: 999px; font: 500 13.5px var(--sans, inherit); color: var(--sub); cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--deep); border-color: var(--deep); color: #fff; }
+.day-cap { margin: 18px 0 2px; font: 600 12px/1 var(--latin, serif); letter-spacing: 0.22em; text-transform: uppercase; color: var(--wine, #6E1F3A); }
+.slots .slot { grid-template-columns: 64px 1fr; padding: 13px 0; align-items: start; }
+.slots .slot .time { font-size: 14.5px; line-height: 1.35; color: var(--ink, #1E1A1D); }
+.slots .slot .time .end { font-size: 12px; color: var(--mute, #A99EA1); }
+.slots .slot .tag { font: 600 10.5px/1.4 var(--latin, serif); letter-spacing: 0.16em; text-transform: uppercase; color: var(--wine, #6E1F3A); margin-bottom: 2px; }
+.slots .slot .what { font-size: 16px; font-weight: 600; line-height: 1.4; }
+.slots .slot.quiet { padding: 8px 0; }
+.slots .slot.quiet .what { font-size: 14px; font-weight: 400; color: var(--sub); }
+.slots .slot.quiet .time { font-size: 13px; color: var(--mute, #A99EA1); }
+.slots .slot.main { background: var(--tint, #F3EEF0); margin: 0 -12px; padding: 15px 12px; border-left: 3px solid var(--wine, #6E1F3A); border-bottom-color: transparent; }
+.slots .slot.main .what { color: var(--deep, #3A1022); }
