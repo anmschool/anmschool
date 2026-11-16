@@ -54,13 +54,29 @@ function dailyReport() {
   const isNew = r => { const d = r.타임스탬프 instanceof Date ? r.타임스탬프 : new Date(r.타임스탬프); return !isNaN(d) && d.getTime() >= since; };
   const unpaid = live.filter(r => !/^O/.test(String(r.입금여부 || ''))).length;
   const logSh = ss.getSheetByName(T.log);
-  const fails = logSh ? readTable_(logSh).filter(r => String(r[2]) === '실패' && new Date(r[0]).getTime() >= since).length : 0;
+  const logs = logSh ? readTable_(logSh).filter(r => new Date(r[0]).getTime() >= since) : [];
+  const fails = logs.filter(r => String(r[2]) === '실패').length, dupes = logs.filter(r => String(r[2]) === '중복');
+  const grpSh = ss.getSheetByName(T.grp);
+  const empty = grpSh ? readTable_(grpSh).filter(r => /명단 0명/.test(String(r[11] || ''))).length : 0;
   const byTrack = {};
   live.forEach(r => { const k = r['경배와찬양학교 구분'] || '기타'; byTrack[k] = (byTrack[k] || 0) + 1; });
   tg_('📋 ANM 일일 요약 (' + Utilities.formatDate(new Date(), 'Asia/Seoul', 'M/d') + ')\n' +
     '어제 새 신청 ' + live.filter(isNew).length + '명 · 전체 ' + live.length + '명 · 미입금 ' + unpaid + '명\n' +
     Object.keys(byTrack).map(k => '· ' + k + ' ' + byTrack[k]).join('\n') +
-    (fails ? '\n⚠️ 처리 실패 ' + fails + '건 (처리 로그 확인)' : '\n동기화 정상'));
+    '\n어제 중복 ' + dupes.length + '건 · 실패 ' + fails + '건' +
+    (dupes.length ? '\n· 중복: ' + dupes.slice(0, 5).map(r => String(r[3] || '').split(' → ')[0]).join(', ') + (dupes.length > 5 ? ' 외' : '') : '') +
+    (empty ? '\n⚠️ 단체 명단 0명 ' + empty + '건 → 단체교회별 확인 표에서 수기 입력' : '') +
+    (fails ? '\n⚠️ 실패는 접수 로그 확인' : ''));
+  dropOldStatusTab_(ss);
+}
+
+/** 예전 '현황' 탭(#N/A로 깨짐, 지금은 '등록현황'이 대신함)을 한 번 지움 */
+function dropOldStatusTab_(ss) {
+  const p = PropertiesService.getScriptProperties();
+  if (p.getProperty('OLD_STATUS_DROPPED')) return;
+  const sh = (ss || openOps_()).getSheetByName('현황');
+  if (sh && T.dash !== '현황') { sh.getParent().deleteSheet(sh); console.log("예전 '현황' 탭 삭제"); }
+  p.setProperty('OLD_STATUS_DROPPED', '1');
 }
 
 /* ───────────── ② 로그인 캐시 ───────────── */
@@ -72,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { dropOldStatusTab_(); } catch (e) { console.log('현황 탭 정리 건너뜀: ' + e.message); }
   const cache = CacheService.getScriptCache();
   rows_(appSheet_().getSheetByName('프로젝트'))
     .filter(r => String(r.로그인).toUpperCase() === 'ON' && String(r['운영 시트 ID'] || '').trim())
