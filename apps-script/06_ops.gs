@@ -66,7 +66,7 @@ function dailyReport() {
     '\n어제 중복 ' + dupes.length + '건 · 실패 ' + fails + '건' +
     (dupes.length ? '\n· 중복: ' + dupes.slice(0, 5).map(r => String(r[3] || '').split(' → ')[0]).join(', ') + (dupes.length > 5 ? ' 외' : '') : '') +
     (empty ? '\n⚠️ 단체 명단 0명 ' + empty + '건 → 단체교회별 확인 표에서 수기 입력' : '') +
-    (fails ? '\n⚠️ 실패는 접수 로그 확인' : ''));
+    (fails ? '\n⚠️ 실패는 접수 로그 확인' : '') + funnelLine_(since));
   dropOldStatusTab_(ss);
 }
 
@@ -438,4 +438,22 @@ function noteHaneul2027W_() {
   });
   P.setProperty('HANEUL_NOTE_V2', '1');
   console.log('하늘꿈 비고 ' + n + '줄');
+}
+
+
+/** 어제 신청서 흐름: 열람 → 입력 시작 → 빈 칸 안내 → 접수 성공/실패 (앱 시트 '접속 로그') */
+function funnelLine_(since) {
+  try {
+    const sh = appSheet_().getSheetByName('접속 로그'); if (!sh || sh.getLastRow() < 2) return '';
+    const n = Math.min(sh.getLastRow() - 1, 5000);
+    const v = sh.getRange(sh.getLastRow() - n + 1, 1, n, 4).getValues().filter(r => new Date(r[0]).getTime() >= since);
+    const k = x => v.filter(r => String(r[2]).indexOf(x) === 0);
+    const blocks = {}; k('신청단계:block').forEach(r => { const f = String(r[3]).split(' [')[0]; blocks[f] = (blocks[f] || 0) + 1; });
+    const top = Object.keys(blocks).sort((a, b) => blocks[b] - blocks[a]).slice(0, 3).map(f => f + ' ' + blocks[f]).join(', ');
+    const fail = k('신청:실패');
+    return '\n\n📝 신청서 흐름(어제): 열람 ' + k('신청단계:view').length + ' → 입력 시작 ' + k('신청단계:start').length +
+      ' → 접수 ' + k('신청:성공').length + (fail.length ? ' · 서버 실패 ' + fail.length : '') +
+      (k('신청단계:neterr').length ? ' · 전송 실패 ' + k('신청단계:neterr').length : '') +
+      (top ? '\n· 많이 막힌 칸: ' + top : '');
+  } catch (e) { return ''; }
 }

@@ -759,11 +759,27 @@
       }
     }
 
+    /** 신청 단계 기록(개인정보 없음: 단계·칸 이름만) → 앱 시트 '접속 로그'. 어디서 그만두는지 보려고 */
+    function track(e, f) {
+      try {
+        const body = JSON.stringify({ action: 'evt', project: '2027W', e: e, f: f || '', lang: currentLang });
+        const url = "https://script.google.com/macros/s/AKfycbx0Ax91iMfBomb-KHNsf88DrHm9t3qpMLm-ng8QUYANxwkMmDF9kU6haQlJmm5rgXYx/exec";
+        if (navigator.sendBeacon) navigator.sendBeacon(url, new Blob([body], { type: 'text/plain' }));
+        else fetch(url, { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' } }).catch(() => {});
+      } catch (x) {}
+    }
+    (function () {
+      try { if (!sessionStorage.getItem('anm_v')) { sessionStorage.setItem('anm_v', '1'); track('view'); } } catch (x) { track('view'); }
+      let started = false;
+      document.addEventListener('input', () => { if (!started) { started = true; track('start'); } }, true);
+    })();
+    const fieldKey = el => (el && (el.id || el.name || (el.className || '').split(' ')[0])) || '';
+
     /** 빠진 칸 안내: 어떤 칸인지 이름으로 알려 주고, 그 칸으로 이동해 빨갛게 표시 */
     function labelOf(el) { const g = el.closest('.input-group'); const l = g && g.querySelector('label'); return l ? l.textContent.replace(/\(.*?\)/g, '').replace('*', '').trim() : ''; }
     function mark(el) { const box = el.closest('.input-group') || el.closest('td'); if (box) { box.classList.add('err'); el.addEventListener('input', () => box.classList.remove('err'), { once: true }); el.addEventListener('change', () => box.classList.remove('err'), { once: true }); } el.scrollIntoView({ behavior: 'smooth', block: 'center' }); setTimeout(() => el.focus({ preventScroll: true }), 350); }
-    function need(el, label) { alert(T().need_field.replace('{f}', label || labelOf(el))); mark(el); }
-    function needMem(no, name, col, el) { alert(T().need_mem.replace('{n}', no).replace('{name}', name).replace('{f}', col)); mark(el); }
+    function need(el, label) { track('block', fieldKey(el)); alert(T().need_field.replace('{f}', label || labelOf(el))); mark(el); }
+    function needMem(no, name, col, el) { track('block', 'member.' + fieldKey(el)); alert(T().need_mem.replace('{n}', no).replace('{name}', name).replace('{f}', col)); mark(el); }
 
     function doneSending() { const b = document.getElementById('submitBtn'); b.disabled = false; b.classList.remove('loading'); b.textContent = T().submit; const ov = document.getElementById('sending'); if (ov) ov.hidden = true; }
 
@@ -809,12 +825,12 @@
           if (miss) return needMem(i + 1, name, T()[miss[0]], rows[i].querySelector(miss[2]));
           payload.members.push({ name: name, gender: gender, phone: phone, email: email, birth: birth, category: cat, training: trn, note: note });
         }
-        if(!hasMember) { const el = rows[0] && rows[0].querySelector('.m-name'); alert(T().need_member); if (el) { el.closest('td').classList.add('err'); el.focus(); } return; }
+        if(!hasMember) { const el = rows[0] && rows[0].querySelector('.m-name'); track('block', 'no_member'); alert(T().need_member); if (el) { el.closest('td').classList.add('err'); el.focus(); } return; }
       }
 
-      if(!document.getElementById('consent').checked) { alert(T().alert_consent); return; }
+      if(!document.getElementById('consent').checked) { track('block', 'consent'); alert(T().alert_consent); return; }
       const mode = document.getElementById('global-mode').value;
-      if (!mode) { const el = document.getElementById('global-mode'); alert(T().sel_mode); el.focus(); return; }
+      if (!mode) { const el = document.getElementById('global-mode'); track('block', 'mode'); alert(T().sel_mode); el.focus(); return; }
       payload.mode = mode; payload.consent = true;
       const btn = document.getElementById('submitBtn');
       btn.disabled = true; btn.classList.add('loading'); btn.innerHTML = '<span class="spin" aria-hidden="true"></span>' + T().sending;
@@ -843,7 +859,7 @@
       })
       .catch(error => {
         console.error(error);
-        doneSending(); alert(T().err_net + "\n" + error.message);
+        track('neterr', String(error && error.message || '').slice(0, 80)); doneSending(); alert(T().err_net + "\n" + error.message);
       });
     }
   </script>

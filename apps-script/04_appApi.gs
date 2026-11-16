@@ -150,7 +150,8 @@ function doPost(e) {
     if (body.action === 'admin') return json_(apiAdmin_(body));
     if (body.action === 'content') return json_({ ok: true, data: getContent_() });
     if (body.action === 'apply') return json_(apiApply_(body));
-    if (body.action === 'register') return json_(apiRegister_(body));
+    if (body.action === 'register') { const res = apiRegister_(body); logReg_(body.project, res); return json_(res); }
+    if (body.action === 'evt') { logEvt_(body); return json_({ ok: true }); }
     return json_({ ok: false, error: 'unknown_action' });
   } catch (err) { alert_('앱 API ' + (body.action || ''), String(err.message || err)); return json_({ ok: false, error: 'server', message: String(err.message || err) }); }
 }
@@ -412,6 +413,19 @@ function rows_(sh) {
   if (v.length < 2) return [];
   const h = v[0].map(x => String(x).trim());
   return v.slice(1).filter(r => r.some(x => x !== '' && x !== null)).map(r => { const o = {}; h.forEach((k, i) => { if (k && !(k in o)) o[k] = r[i]; }); return o; });
+}
+
+/** 신청서 단계 기록: view(열람) · start(입력 시작) · block(빈 칸 안내) · neterr(전송 실패). 칸 이름만, 개인정보 없음 */
+function logEvt_(b) {
+  const e = String(b.e || ''), f = String(b.f || '').replace(/[^\w.,:\- ]/g, '').slice(0, 120);
+  if (!/^(view|start|block|neterr)$/.test(e)) return;
+  appLog_(String(b.project || '').slice(0, 20), '신청단계:' + e, f + (b.lang ? ' [' + String(b.lang).slice(0, 2) + ']' : ''));
+}
+/** 서버 접수 결과 기록: 성공(접수번호) / 실패(이유·막힌 칸) */
+function logReg_(project, res) {
+  if (!res || res.receipt === '-') return;
+  if (res.ok) appLog_(project, res.duplicate ? '신청:중복클릭' : '신청:성공', res.receipt);
+  else appLog_(project, '신청:실패 ' + res.error, (res.fields || []).join(',').slice(0, 200));
 }
 
 function appLog_(project, result, code) {
