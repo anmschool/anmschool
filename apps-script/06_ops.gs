@@ -38,7 +38,7 @@ function tg_(text) {
 
 /** 같은 오류가 10분 안에 반복되면 한 번만 보냄 */
 function alert_(where, msg) {
-  const key = 'al_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, where + msg)).slice(0, 20);
+  const key = 'al_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, where + msg, Utilities.Charset.UTF_8)).slice(0, 20);
   const c = CacheService.getScriptCache();
   if (c.get(key)) return;
   c.put(key, '1', 600);
@@ -83,7 +83,7 @@ function dropOldStatusTab_(ss) {
 
 const LC_TTL = 21600; // 6시간 (10분마다 갱신)
 function lcKey_(proj, name, phone) {
-  return 'lk_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, proj + '|' + name + '|' + phone));
+  return 'lk_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, proj + '|' + name + '|' + phone, Utilities.Charset.UTF_8));
 }
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */

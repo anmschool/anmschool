@@ -233,7 +233,7 @@ function apiLogin_(b) {
   const name = normName_(b.name), phone = normDigits_(b.phone);
   if (!name || phone.length < 9) return { ok: false, error: 'invalid_input' };
   const cache = CacheService.getScriptCache();
-  const fk = 'fail_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, name + '|' + b.project)).slice(0, 20);
+  const fk = 'fail_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, name + '|' + b.project, Utilities.Charset.UTF_8)).slice(0, 20);
   const fails = Number(cache.get(fk) || 0);
   if (fails >= 8) return { ok: false, error: 'too_many' };
   const proj = projectRow_(b.project);
@@ -447,7 +447,7 @@ function apiRegister_(b) {
   const cnt = Number(cache.get(rk) || 0);
   if (cnt >= 5) return { ok: false, error: 'too_many' };
   // 같은 내용 연속 제출(두 번 클릭) → 같은 접수번호
-  const dk = 'regdup_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(f))).slice(0, 22);
+  const dk = 'regdup_' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, JSON.stringify(f), Utilities.Charset.UTF_8)).slice(0, 22);
   const prev = cache.get(dk);
   if (prev) return { ok: true, receipt: prev, duplicate: true };
 
