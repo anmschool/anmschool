@@ -1,5 +1,5 @@
 import { THEME_2027W } from "../theme2027W";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLang, type Lang, trackName } from "../i18n";
 import type { Me } from "../types";
@@ -178,6 +178,24 @@ export default function Home() {
   const s = useSeason();
   const { t, lang } = useLang();
   const { me, loggedIn } = useMe(s?.id);
+  // 제목 아래 상자들(주제·날짜·버튼·내 신청)의 너비를 제목 글줄 중 가장 긴 줄에 맞춤
+  const mastRef = useRef<HTMLDivElement>(null), titleRef = useRef<HTMLHeadingElement>(null);
+  useLayoutEffect(() => {
+    const fit = () => {
+      const box = mastRef.current, h = titleRef.current;
+      if (!box || !h) return;
+      box.style.width = "";
+      // 글자(텍스트 노드)만 재야 블록 상자 너비가 안 섞임
+      const tw = document.createTreeWalker(h, NodeFilter.SHOW_TEXT), ws: number[] = [];
+      for (let n = tw.nextNode(); n; n = tw.nextNode()) { const rg = document.createRange(); rg.selectNodeContents(n); Array.from(rg.getClientRects()).forEach(r => ws.push(r.width)); }
+      const w = Math.ceil(Math.max(0, ...ws));
+      if (w >= 240 && w < box.parentElement!.clientWidth) box.style.width = w + "px";
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [s?.id, lang, loggedIn]);
   const [year, season] = (s?.title.match(/^(\d{4})\s+(\w+)/)?.slice(1) ?? [s?.start?.slice(0, 4) ?? "", ""]) as [string, string];
   const title = s?.title.replace(/^\d{4}\s+\w+\s*/, "") ?? "";
   const T27 = s?.id === "2027W" ? THEME_2027W : null;
@@ -224,12 +242,12 @@ export default function Home() {
       </header>
 
       <section className="masthead">
-        <div className="cover-paper mast-text">
+        <div className="cover-paper mast-text" ref={mastRef}>
           {!s && loading && <div id="boot"><b>ANM</b><i></i></div>}
           {s && (
             <>
               <span className="label">{year} {season.toUpperCase()}{dday && <span className="dday">{dday}</span>}</span>
-              <h1 className="cover-title">
+              <h1 className="cover-title" ref={titleRef}>
                 {lead ? <><span className="lead">{lead[1]}</span>{lead[2]}</> : (title || s.title)}
               </h1>
               {themeText && (

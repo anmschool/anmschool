@@ -23,6 +23,12 @@ const LINKS: Record<string, [string, string]> = {
   "명덕관": ["https://naver.me/x9BeSraH", "https://www.google.com/maps/search/?api=1&query=37.224062,127.181884"],
 };
 /** 시트 이름이 언어별로 번역돼도 맞도록 종류·이름 일부로 지도 찾기 */
+/** 장소마다 네이버·구글 지도 둘 다. 정해 둔 링크가 없으면 시트 링크(네이버) + 이름으로 찾는 구글 링크 — 한·영·중 모두 같은 링크 */
+function mapsOf(p: { name: string; kind?: string; map?: string; ko?: { name: string; kind?: string } }): [string, string] {
+  const o = p.ko ?? p, q = encodeURIComponent("명지대학교 자연캠퍼스 " + o.name);
+  const fixed = linksOf(o) ?? linksOf(p);
+  return fixed ?? [p.map || `https://map.naver.com/p/search/${q}`, `https://www.google.com/maps/search/?api=1&query=${q}`];
+}
 function linksOf(p: { name: string; kind?: string }): [string, string] | undefined {
   const n = p.name, k = p.kind ?? "";
   if (/예배|강의/.test(k) || /채플|Chapel|礼拜/i.test(n)) return LINKS["60주년 기념 채플관"];
@@ -144,8 +150,8 @@ export default function Places() {
                     </figure>
                   )}
                   <div className="pl-btns">
-                    {(linksOf(p)?.[0] || p.map) && <a className="pill" href={linksOf(p)?.[0] || p.map} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>}
-                    {linksOf(p)?.[1] && <a className="pill" href={linksOf(p)![1]} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a>}
+                    <a className="pill" href={mapsOf(p)[0]} target="_blank" rel="noreferrer">{MAPS[lang]} ↗</a>
+                    <a className="pill" href={mapsOf(p)[1]} target="_blank" rel="noreferrer">{GMAP[lang]} ↗</a>
                   </div>
                 </article>
               ))}

@@ -22,7 +22,8 @@ function pickSeason(c: Content | null): Project | undefined {
 type Tr = { tr?: Partial<Record<Lang, Record<string, string>>> };
 function localize(c: Content | null, lang: Lang): Content | null {
   if (!c || lang === "ko") return c;
-  const m = <T extends Tr>(xs: T[]) => xs.map(x => (x.tr?.[lang] ? { ...x, ...x.tr[lang] } : x));
+  // ko: 번역 전 원래 값(지도 링크 찾기 등 이름으로 맞춰야 하는 곳에서 씀)
+  const m = <T extends Tr>(xs: T[]) => xs.map(x => (x.tr?.[lang] ? { ...x, ...x.tr[lang], ko: x } : x));
   return { ...c, projects: m(c.projects), notices: m(c.notices), schedule: m(c.schedule), guides: m(c.guides), places: m(c.places) };
 }
 

@@ -368,10 +368,12 @@ a, button { -webkit-touch-callout: none; }
 }
 
 /* 11/04 홈 머리: 한 줄(세로) 정리 + 버튼 두 개 나란히, 컴퓨터는 오른쪽에 예배 사진 */
-.mast-text { gap: 10px; }
+.mast-text { gap: 10px; box-sizing: content-box; }
+.mast-text > * { min-width: 0; max-width: 100%; }
 .mast-text .facts { margin-top: 12px; }
 .cta { flex-direction: row; gap: 8px; margin-top: 18px; }
-.cta .btn { flex: 1 1 0; min-height: 50px; font-size: 15px; padding: 0 12px; }
+.cta .btn { flex: 1 1 0; min-height: 50px; font-size: 15px; padding: 0 8px; white-space: nowrap; }
+@media (max-width: 420px) { .cta .btn { font-size: 14px; letter-spacing: -0.01em; } }
 @media (min-width: 768px) {
   .top { background: linear-gradient(to bottom, rgba(251, 251, 247, 0) 0%, var(--paper) 62%), var(--hero, url(/images/season-2027w-hero.jpg)) center 20% / cover no-repeat, var(--paper); }
   .masthead { padding: 132px 40px 64px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: stretch; color: var(--ink); }
@@ -385,7 +387,7 @@ a, button { -webkit-touch-callout: none; }
   .masthead .btn { background: var(--deep); color: #fff; }
   .masthead .btn.line { background: transparent; color: var(--deep); border: 1px solid var(--deep); }
   .mast-text { justify-content: flex-end; }
-  .mast-text { width: fit-content; max-width: 100%; min-width: 360px; }
+  .mast-text { max-width: 100%; }
   .mast-text > .theme, .mast-text > .facts, .mast-text > .cta, .mast-text > .pass { contain: inline-size; }
   .masthead .pass { box-sizing: border-box; } /* 너비는 제목에 맞춤 (.mast-text) */
   .slides { aspect-ratio: auto; min-height: 380px; }
