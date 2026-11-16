@@ -89,16 +89,18 @@ export function LangToggle() {
 /** 아이패드·컴퓨터용 상단 내비 (폰에서는 숨김) */
 export function SiteNav() {
   const s = useSeason();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const loggedIn = !!(s && getToken(s.id));
   const me = s ? cachedMe(s.id) : null;
+  // 위 바는 한 줄 유지: 영어는 메뉴 이름을 짧게
+  const short = lang === "en" ? { notices: "Notices", places: "Places", my: "My page" } : null;
   const [solid, setSolid] = useState(false);
   useEffect(() => {
     const on = () => setSolid(window.scrollY > 24);
     on(); window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
-  const links: [string, string][] = [["/invitation", t("invitation")], ["/notices", t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", t("places")]];
+  const links: [string, string][] = [["/invitation", t("invitation")], ["/notices", short?.notices ?? t("noticesMinistries")], ["/schedule", t("schedule")], ["/guide", t("guide")], ["/places", short?.places ?? t("places")]];
   return (
     <nav className={"sitenav" + (solid ? " solid" : "")} aria-label="site">
       <div className="sitenav-in">
@@ -106,7 +108,7 @@ export function SiteNav() {
         <div className="sitenav-links">{links.map(([to, label]) => <NavLink key={to} to={to}>{label}</NavLink>)}</div>
         <div className="sitenav-right">
           <LangToggle />
-          <Link to={loggedIn ? "/me" : "/login"} className="btn small">{loggedIn && me ? me.name : t("myInfo")}</Link>
+          <Link to={loggedIn ? "/me" : "/login"} className="btn small">{loggedIn && me ? me.name : short?.my ?? t("myInfo")}</Link>
         </div>
       </div>
     </nav>

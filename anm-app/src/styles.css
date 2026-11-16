@@ -647,3 +647,6 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 @media (prefers-reduced-motion: no-preference) { .tt td.live { animation: ttpulse 2.4s ease-in-out infinite; } }
 @keyframes ttpulse { 50% { background: #efe3e8; } }
 @media (min-width: 768px) { .tt-wrap { margin: 0; padding: 0; } .tt { font-size: 14px; } }
+
+/* 위 바 메뉴는 줄바꿈 없이 한 줄 */
+.sitenav-links a, .sitenav-right .btn, .sitenav-brand .season { white-space: nowrap; }
