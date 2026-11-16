@@ -96,17 +96,19 @@ function ntNotify_(msg, f) {
 function ntSyncTab_() {
   const ss = openOps_(), reg = ss.getSheetByName(T.reg);
   const v = reg.getDataRange().getValues(), h = v[0], c = n => h.indexOf(n);
-  const I = { code: c('코드'), track: c('경배와찬양학교 구분'), church: c('교회'), name: c('이름'), gender: c('성별'), kind: c('구분'), pay: c('입금여부') };
+  const I = { code: c('코드'), track: c('경배와찬양학교 구분'), church: c('교회'), name: c('이름'), gender: c('성별'), kind: c('구분'), pay: c('입금여부'), state: c('상태') };
   let sh = ss.getSheetByName(NT.tab);
   if (!sh) { sh = ss.insertSheet(NT.tab); sh.getRange(1, 1, 1, NT_HEAD.length).setValues([NT_HEAD]).setFontWeight('bold'); sh.setFrozenRows(1); }
-  const prev = {}; readTable_(sh).forEach(r => (prev[r[0]] = [r[6], r[7]]));
+  const prev = {}; readTable_(sh).forEach(r => (prev[r[0]] = [r[6], r[7], r[4]]));
   const rows = v.slice(1).filter(r => {
     const code = String(r[I.code] || ''), pay = String(r[I.pay] || ''), track = String(r[I.track] || '');
-    return code && /^O/.test(pay) && track.indexOf('온라인') !== 0;
+    return code && /^O/.test(pay) && track.indexOf('온라인') !== 0 && String(r[I.state] || '') !== '취소';   // 취소자는 빼고
   }).map(r => {
     const tag = ntTag_(r[I.name], r[I.gender], r[I.kind], r[I.church]);
-    const code = String(r[I.code]), p = prev[code] || ['', ''];
-    return { code, track: String(r[I.track]), church: String(r[I.church] || ''), name: String(r[I.name] || ''), pay: String(r[I.pay]), printed: p[0], file: p[1], tag };
+    const code = String(r[I.code]), name = String(r[I.name] || '');
+    let p = prev[code] || ['', '', ''];
+    if (p[2] && p[2] !== name) p = ['', '', ''];   // 이름이 바뀌면 다시 출력 대상으로
+    return { code, track: String(r[I.track]), church: String(r[I.church] || ''), name, pay: String(r[I.pay]), printed: p[0], file: p[1], tag };
   }).sort((a, b) => ntOrd_(a.track) - ntOrd_(b.track) || a.church.localeCompare(b.church, 'ko') || a.name.localeCompare(b.name, 'ko'));
   if (sh.getLastRow() > 1) sh.getRange(2, 1, sh.getLastRow() - 1, NT_HEAD.length).clearContent();
   if (rows.length) sh.getRange(2, 1, rows.length, NT_HEAD.length).setValues(rows.map(r => [r.code, r.track, r.church, r.tag.label.replace(/ /g, ''), r.name, r.pay, r.printed, r.file]));

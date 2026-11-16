@@ -399,7 +399,7 @@ function isLeader_(r, g) {
   const lp = normDigits_(g['인솔자 연락처']);
   return !lp || String(r.연락처 || '').split('/').map(normDigits_).indexOf(lp) !== -1;
 }
-function normName_(s) { return String(s || '').replace(/\s/g, '').trim(); }
+function normName_(s) { return String(s || '').normalize('NFC').replace(/\s/g, '').trim(); }   // 맥·엑셀 한글(NFD)도 같은 이름으로
 function normDigits_(s) {
   let d = String(s == null ? '' : (typeof s === 'number' ? Math.round(s) : s)).replace(/\(?\+82\)?/, '').replace(/\D/g, '');
   if (d && d[0] !== '0') d = '0' + d;

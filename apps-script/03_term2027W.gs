@@ -798,12 +798,12 @@ function normBirth_(v) {
 /** 중복 판정 키: 이름+전화(숫자) → 전화가 없으면 이름+생년월일 → 둘 다 없으면 판정 안 함 */
 /** 전화·생년월일이 없을 때 쓰는 키: 이름+교회 (공백 무시) */
 function churchKey_(name, church) {
-  const n = String(name || '').replace(/\s/g, ''), ch = String(church || '').replace(/\s/g, '');
+  const n = String(name || '').normalize('NFC').replace(/\s/g, ''), ch = String(church || '').normalize('NFC').replace(/\s/g, '');
   return n && ch && ch !== '.' ? n + '_c' + ch : '';
 }
 
 function personKey_(name, phone, birth) {
-  const n = String(name || '').replace(/\s/g, '');
+  const n = String(name || '').normalize('NFC').replace(/\s/g, '');
   if (!n) return '';
   let d = String(phone || '').split('/')[0].replace(/\D/g, '');
   if (d && d[0] !== '0') d = '0' + d;
@@ -812,7 +812,7 @@ function personKey_(name, phone, birth) {
   return b.length >= 6 ? n + '_b' + b : '';
 }
 
-function str_(v) { return v == null ? '' : String(v).trim(); }
+function str_(v) { return v == null ? '' : String(v).normalize('NFC').trim(); }   // 엑셀·맥에서 온 한글(NFD)을 일반형으로
 
 function getSetting_(ss, key, def) {
   const r = readTable_(ss.getSheetByName(T.cfg)).find(x => x[0] === key);
