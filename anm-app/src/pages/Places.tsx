@@ -53,18 +53,20 @@ const ROADS = [
   "M65 912 L80 960 L110 1072",
   "M20 1080 L60 1074 L300 1062 L400 1060 L460 1090 L500 1135",
   "M140 935 L135 1068",
+  "M468 1016 L140 1016",   // 온실 앞(P2)에서 식당·생활관 앞으로 가는 길
 ];
-/** 주 이동 동선: 정문 → 채플관 → 온실 앞 → (아랫길) 식당·생활관 5동 → 명덕관은 서쪽으로 크게 돌아 올라감.
- *  채플관에서 서쪽 윗길(온실 앞 ~ 식당 위)은 다닐 수 없는 길이라 동선에서 뺌 */
-const ROUTE = "M729 812 L722 905 L700 903 L628 901 L560 912 L520 930 L462 950 L470 1035 L460 1062 L400 1060 L300 1062 L140 1068 L110 1072 L80 960 L70 935";
-const SPURS = ["M628 901 L628 948", "M225 1063 L225 1000", "M138 1068 L137 958 L172 958"];
+/** 주 이동 동선: 정문 → 채플관 → 온실 앞(P2) → 식당·생활관 5동 앞 길.
+ *  명덕관은 온실 앞에서 아랫길로 내려가 서쪽 끝에서 크게 돌아 올라감. 채플관 서쪽 윗길은 다닐 수 없어 뺌 */
+const ROUTE = "M729 812 L722 905 L700 903 L628 901 L560 912 L520 930 L462 950 L468 1016 L150 1016";
+const SPURS = ["M628 901 L628 948", "M225 1016 L225 1000", "M180 1016 L180 966",
+  "M468 1016 L470 1035 L460 1062 L400 1060 L300 1062 L140 1068 L110 1072 L80 960 L70 935"];
 const PTS: { id: string; x: number; y: number; t: L; kind: "b" | "p" | "g"; dx: number; dy: number; go: string }[] = [
   { id: "gate", x: 729, y: 812, kind: "g", t: { ko: "정문", en: "Main Gate", zh: "正门" }, dx: -58, dy: 0, go: "" },
   { id: "chapel", x: 628, y: 962, kind: "b", t: { ko: "60주년 채플관", en: "Chapel", zh: "礼拜堂" }, dx: 30, dy: 44, go: "worship" },
   { id: "p1", x: 621, y: 925, kind: "p", t: { ko: "", en: "", zh: "" }, dx: 0, dy: 0, go: "parking" },
   { id: "p2", x: 497, y: 990, kind: "p", t: { ko: "온실 앞", en: "Greenhouse", zh: "温室前" }, dx: 0, dy: 50, go: "parking" },
-  { id: "dining", x: 219, y: 972, kind: "b", t: { ko: "식당", en: "Dining", zh: "食堂" }, dx: 40, dy: 46, go: "dining" },
-  { id: "dorm5", x: 180, y: 970, kind: "b", t: { ko: "생활관 5동", en: "Dorm 5", zh: "宿舍5栋" }, dx: -40, dy: 46, go: "lodging" },
+  { id: "dining", x: 219, y: 972, kind: "b", t: { ko: "식당", en: "Dining", zh: "食堂" }, dx: 50, dy: -44, go: "dining" },
+  { id: "dorm5", x: 180, y: 970, kind: "b", t: { ko: "생활관 5동", en: "Dorm 5", zh: "宿舍5栋" }, dx: -30, dy: -50, go: "lodging" },
   { id: "md", x: 92, y: 930, kind: "b", t: { ko: "명덕관", en: "Myeongdeok", zh: "明德馆" }, dx: 20, dy: -50, go: "lodging" },
 ];
 const tw = (s: string) => [...s].reduce((n, c) => n + (/[\x00-\x7f]/.test(c) ? 11 : 19), 0) + 26;
