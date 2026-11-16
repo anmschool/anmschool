@@ -24,7 +24,7 @@ function putPlan2027W() {
   log('2/4 탭 찾는 중…');
   const doc = DocumentApp.openById(MEMO_ID);
   const tabs = allTabs_(doc.getTabs());
-  const tab = tabs.find(t => /미래세대/.test(t.getTitle()) && /(대학|일반인)/.test(t.getTitle()));
+  const tab = tabs.find(t => /(미래세대|십대)/.test(t.getTitle()) && /(대학|일반인)/.test(t.getTitle()));
   if (!tab) throw new Error('「미래세대/대학청년 및 일반인」 탭을 못 찾음. 탭 목록: ' + tabs.map(t => t.getTitle()).join(' | '));
   log(`   탭: ${tab.getTitle()}`);
 
