@@ -466,6 +466,13 @@ a, button { -webkit-touch-callout: none; }
 .fee-tg summary::after { content: "+"; font: 400 20px/1 var(--num); }
 .fee-tg[open] summary::after { content: "−"; }
 .more-link { color: var(--wine); font-size: 13.5px; font-weight: 500; }
+.fee-row { margin-top: 14px; position: relative; }
+.fee-row .fee-tg { margin-top: 0; }
+.fee-row.two .fee-tg > summary { padding-right: calc(50% + 14px); white-space: nowrap; font-size: 14px; line-height: 1.6; }
+.fee-row.two .fee-me { white-space: nowrap; }
+@media (max-width: 420px) { .fee-row.two .fee-tg > summary, .fee-row.two .fee-me { font-size: 13px; letter-spacing: -0.3px; } }
+.fee-me { position: absolute; top: 0; right: 0; width: calc(50% - 6px); display: flex; align-items: center; justify-content: space-between; padding: 14px 0 14px 14px; border-left: 1px solid var(--hair); font-weight: 600; color: var(--wine); font-size: 14px; line-height: 1.6; }
+.tt-note { margin: -4px 0 14px; font-size: 13px; color: var(--wine); }
 .home-sec > .more-link { margin-top: 12px; align-self: flex-start; }
 
 /* 안내 — 다 펼쳐 두고 목차로 이동 */
@@ -586,8 +593,8 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 @media (min-width: 768px) { .min-about.gitem, .pl-sec { scroll-margin-top: 96px; } }
 @media (min-width: 768px) { .app:has(.guide-body) .head-in { max-width: 960px; } }
 /* 약도 v2 — 도로 따라 그림 */
-.cmap-wrap { overflow-x: auto; border: 1px solid var(--hair); border-radius: 10px; -webkit-overflow-scrolling: touch; }
-.cmap .cmap-wrap svg { display: block; min-width: 540px; border: 0; border-radius: 0; background: none; }
+.cmap-wrap { overflow: hidden; border: 1px solid var(--hair); border-radius: 10px; -webkit-overflow-scrolling: touch; }
+.cmap .cmap-wrap svg { display: block; border: 0; border-radius: 0; background: none; }
 .cmap-bg { fill: #f3f1ec; }
 .cmap-campus { fill: #ece6ea; }
 .cmap-road-c { fill: none; stroke: #d9d2d6; stroke-width: 14; stroke-linecap: round; stroke-linejoin: round; }
@@ -631,7 +638,7 @@ html[lang="en"] :is(h1, h2, h3, .gidx-a, .gidx-h, .gidx-m .chip, .pl-nav a)::fir
 /* 시간표 표 — 홍보물 시간표와 같은 규칙 (프로그램이 바뀌면 진한 선, 시간만 나뉘면 연한 선) */
 .tt-sec .sub { margin: -8px 0 0; }
 .tt-sec h2 .mine { margin-left: 10px; vertical-align: 3px; }
-.tt-wrap { overflow-x: auto; margin: 0 -20px; padding: 0 20px; -webkit-overflow-scrolling: touch; }
+.tt-wrap { overflow-x: auto; margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
 .tt { width: 100%; min-width: 560px; border-collapse: collapse; table-layout: fixed; font: 400 13px/1.4 var(--sans); color: var(--ink); }
 .tt th, .tt td { font-family: var(--sans); letter-spacing: normal; text-transform: none; white-space: normal; overflow-wrap: anywhere; padding: 9px 6px; text-align: center; vertical-align: middle; border-bottom: 1px solid #aba1a5; border-right: 1px solid #d3cbce; word-break: keep-all; }
 .tt tr > :last-child { border-right: 0; }

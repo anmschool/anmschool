@@ -82,7 +82,8 @@ export default function Notices() {
   const s = useSeason();
   const { t, lang } = useLang();
   const loc = useLocation();
-  const others = (content?.projects ?? []).filter(p => p.id !== s?.id && p.id !== "매주예배");
+  // 다른 사역은 올라간 공지나 일정이 있을 때만 보여 줌 (준비 중·빈 사역은 숨김)
+  const others = (content?.projects ?? []).filter(p => p.id !== s?.id && p.id !== "매주예배" && [...(content?.notices ?? []), ...(content?.schedule ?? [])].some(x => x.project === p.id));
 
   useEffect(() => {
     if (loc.hash === "#ministries") document.getElementById("ministries")?.scrollIntoView({ behavior: "smooth" });

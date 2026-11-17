@@ -164,7 +164,7 @@ export function RichText({ text }: { text?: string }) {
   const flush = () => { if (list.length) { blocks.push(<ul key={blocks.length}>{list.map((l, i) => <li key={i}>{l}</li>)}</ul>); list = []; } };
   text.split("\n").forEach(line => {
     const s = line.trim();
-    if (/^[-•·]\s*/.test(s)) list.push(s.replace(/^[-•·]\s*/, ""));
+    if (/^[-•·]\s*/.test(s)) list.push(...s.replace(/^[-•·]\s*/, "").split(/\s+-\s+(?=\S)/)); // 한 줄에 " - "로 이어 쓴 항목도 나눔
     else { flush(); if (s) blocks.push(<p key={blocks.length}>{s}</p>); }
   });
   flush();

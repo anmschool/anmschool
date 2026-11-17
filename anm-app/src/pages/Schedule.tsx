@@ -71,15 +71,16 @@ export default function Schedule() {
   const isMine = (k: string) => !!mine && trackName(mine, "ko") === trackName(k, "ko");
   // 행사 기간이면 오늘 표로, 아니면 내 트랙 표로 처음 이동
   const first = tables.find(tb => tb.days.includes(now.date) && (isMine(tb.key) || !mine)) ?? tables.find(tb => isMine(tb.key));
-  useEffect(() => { if (first) setTimeout(() => document.getElementById(first.id)?.scrollIntoView({ block: "start" }), 0); }, [first?.id]);
+  const [pick, setPick] = useState<string>();
+  const sel = tables.find(tb => tb.id === pick) ?? first ?? tables[0];
 
   return (
     <div className="app">
       <Head label="Schedule" title={t("schedule")} />
       <main className="body guide-body">
         {tables.length === 0 ? <div className="empty">{t("noSchedule")}</div> : (
-          <IndexLayout items={tables.map(tb => ({ id: tb.id, title: trackName(tb.key, lang) }))}>
-            {tables.map(tb => {
+          <IndexLayout items={tables.map(tb => ({ id: tb.id, title: trackName(tb.key, lang) }))} select={sel?.id} onSelect={setPick}>
+            {tables.filter(tb => tb === sel).map(tb => {
               const ti = tb.days.indexOf(now.date);
               const cur = now.min;
               const rowNow = ti < 0 ? -1 : tb.span.findIndex(([a, b]) => cur >= a && cur < b);
@@ -87,6 +88,7 @@ export default function Schedule() {
                 <section key={tb.id} id={tb.id} className="pl-sec tt-sec">
                   <h2>{trackName(tb.key, lang)}{isMine(tb.key) && <span className="mine">My</span>}</h2>
                   <p className="sub">{dayLabel(tb.days[0], lang)} – {dayLabel(tb.days[tb.days.length - 1], lang)}</p>
+                  <p className="tt-note">{t("stewardTT")}</p>
                   <div className="tt-wrap">
                     <table className="tt">
                       <thead><tr><th className="tm">{TIME[lang]}</th>{tb.days.map((d, i) => <th key={d} className={i === ti ? "today" : ""}>{dayLabel(d, lang)}</th>)}</tr></thead>

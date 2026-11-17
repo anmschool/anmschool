@@ -78,9 +78,11 @@ const PTS: { id: string; x: number; y: number; t: L; kind: "b" | "p" | "g"; dx: 
 const tw = (s: string) => [...s].reduce((n, c) => n + (/[\x00-\x7f]/.test(c) ? 11 : 19), 0) + 26;
 function CampusMap({ lang }: { lang: Lang }) {
   const jump = (id: string) => id && document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const k = typeof window !== "undefined" && window.innerWidth < 600 ? 1.4 : 1; // 폰: 지도 전체가 화면 너비에 들어가므로 이름표를 키움
+  const MOB: Record<string, [number, number]> = { dining: [80, -44], md: [20, -62] };
   return (
     <figure className="cmap">
-      <div className="cmap-wrap" ref={el => { if (el && !el.dataset.c) { el.dataset.c = "1"; el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2; } }}>
+      <div className="cmap-wrap">
       <svg viewBox="10 770 790 340" role="img" aria-label={MAPT[lang]}>
         <rect x="10" y="770" width="790" height="340" className="cmap-bg" />
         <path className="cmap-campus" d="M20 900 L150 905 L300 928 L460 936 L560 902 L700 893 L760 880 L800 870 L800 1160 L20 1160 Z" />
@@ -93,19 +95,19 @@ function CampusMap({ lang }: { lang: Lang }) {
         <g className="cmap-s" transform="translate(30 1092)"><path d="M0 -6 V0 H130 V-6" /><text x="138" y="0">100m</text></g>
         <g className="cmap-lg" transform="translate(600 1092)"><path d="M0 -5 H34" className="cmap-route" /><text x="42" y="0">{({ ko: "주요 동선", en: "Main route", zh: "主要动线" } as L)[lang]}</text></g>
         {PTS.map(p => {
-          const { x, y } = p, cx = x + p.dx, cy = y + p.dy, w = tw(p.t[lang]);
+          const { x, y } = p, [dx, dy] = k > 1 && MOB[p.id] ? MOB[p.id] : [p.dx, p.dy], cx = x + dx, cy = y + dy, w = tw(p.t[lang]) * k;
           return (
             <g key={p.id} className={"cmap-pt " + p.kind} onClick={() => jump(p.go)} style={{ cursor: p.go ? "pointer" : undefined }}>
-              {p.t[lang] && (p.dx || p.dy) ? <line x1={x} y1={y} x2={cx} y2={cy} /> : null}
-              {p.kind === "p" ? <circle cx={x} cy={y} r="15" /> : <circle className="dot" cx={x} cy={y} r="7" />}
-              {p.kind === "p" && <text x={x} y={y + 5} className="pin">P{p.id.slice(1)}</text>}
-              {p.t[lang] && <><rect x={cx - w / 2} y={cy - 16} width={w} height="32" rx="16" /><text x={cx} y={cy + 6}>{p.t[lang]}</text></>}
+              {p.t[lang] && (dx || dy) ? <line x1={x} y1={y} x2={cx} y2={cy} /> : null}
+              {p.kind === "p" ? <circle cx={x} cy={y} r={15 * k} /> : <circle className="dot" cx={x} cy={y} r="7" />}
+              {p.kind === "p" && <text x={x} y={y + 5 * k} className="pin" style={{ fontSize: 15 * k }}>P{p.id.slice(1)}</text>}
+              {p.t[lang] && <><rect x={cx - w / 2} y={cy - 16 * k} width={w} height={32 * k} rx={16 * k} /><text x={cx} y={cy + 6 * k} style={{ fontSize: 19 * k }}>{p.t[lang]}</text></>}
             </g>
           );
         })}
       </svg>
       </div>
-      <figcaption>{({ ko: "네이버 지도를 따라 그린 약도입니다. 이름을 누르면 해당 안내로 이동하고, 폰에서는 좌우로 밀어 볼 수 있어요.", en: "Traced from Naver Map. Tap a name to jump to its section; swipe sideways on a phone.", zh: "依据Naver地图绘制，点击名称可跳转到对应说明；手机上可左右滑动查看。" } as L)[lang]}</figcaption>
+      <figcaption>{({ ko: "네이버 지도를 따라 그린 약도입니다. 이름을 누르면 해당 안내로 이동합니다.", en: "Traced from Naver Map. Tap a name to jump to its section.", zh: "依据Naver地图绘制，点击名称可跳转到对应说明。" } as L)[lang]}</figcaption>
     </figure>
   );
 }

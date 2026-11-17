@@ -119,6 +119,12 @@ const WEEKLY: { name: L; when: L; where: L }[] = [
   { name: { ko: "목요모임", en: "Thursday Worship", zh: "周四聚会" },
     when: { ko: "매주 목요일 오후 7시", en: "Every Thursday, 7:00 PM", zh: "每周四 下午7:00" },
     where: { ko: "온누리교회", en: "Onnuri Church", zh: "온누리教会" } },
+  { name: { ko: "7000훈련학교", en: "7000 Training School", zh: "7000训练学校" },
+    when: { ko: "매주 토요일 오전 9시", en: "Every Saturday, 9:00 AM", zh: "每周六 上午9:00" },
+    where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
+  { name: { ko: "어린이·십대 훈련", en: "Children & Teen Training", zh: "儿童·青少年训练" },
+    when: { ko: "매주 토요일 오후 2시", en: "Every Saturday, 2:00 PM", zh: "每周六 下午2:00" },
+    where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
   { name: { ko: "7000모임", en: "7000 Gathering", zh: "7000聚会" },
     when: { ko: "매주 토요일 오후 4시", en: "Every Saturday, 4:00 PM", zh: "每周六 下午4:00" },
     where: { ko: "서빙고 경배와찬양 훈련원", en: "Seobinggo Worship & Praise Training Center", zh: "西冰库敬拜赞美训练院" } },
@@ -207,7 +213,6 @@ export default function Home() {
     ...(T27 ? [["/invitation", "Invitation", t("invitation"), t("capInvite")] as [string, string, string, string]] : []),
     ["/notices", "Notices", t("noticesMinistries"), t("capNoticesMin")],
     ["/schedule", "Schedule", t("schedule"), schedCount ? (me ? trackName(me.track, lang) : t("capSchedule")) : t("capSoon")],
-    ...(loggedIn ? [["/me", "Room & Fee", t("myInfo"), t("capMe")] as [string, string, string, string]] : [["/login", "My Page", t("myInfo"), t("capLogin")] as [string, string, string, string]]),
     ["/guide", "Guide", t("guide"), t("capGuide")],
     ["/places", "Campus", t("places"), t("capPlaces")],
   ];
@@ -267,7 +272,7 @@ export default function Home() {
               </dl>
               <div className="cta">
                 {s.applyUrl && s.status !== "종료" && <a className="btn" href={s.applyUrl}>{t("apply")}</a>}
-                <Link className="btn line" to={loggedIn ? "/me" : "/login"}>{t("checkReg")}</Link>
+                {!loggedIn && <Link className="btn line" to="/login">{t("checkReg")}</Link>}
               </div>
               {me && <Pass me={me} />}
             </>
@@ -355,11 +360,13 @@ export default function Home() {
               })}
             </div>
             <p className="acc-note">ⓘ {t("copyAccHint")} · {t("family")}</p>
-            <details className="fee-tg">
-              <summary>{t("feeToggle")}</summary>
-              <FeeBoard info={content?.tracks?.[s.id]} lang={lang} t={t} />
-            </details>
-            {loggedIn && <Link to="/me" className="more-link">{t("myFee")} →</Link>}
+            <div className={"fee-row" + (loggedIn ? " two" : "")}>
+              <details className="fee-tg">
+                <summary>{t("feeToggle")}</summary>
+                <FeeBoard info={content?.tracks?.[s.id]} lang={lang} t={t} />
+              </details>
+              {loggedIn && <Link to="/me" className="fee-me">{t("myFee")} →</Link>}
+            </div>
           </section>
         )}
         <section className="home-sec">

@@ -4,14 +4,17 @@ import { useLang } from "../i18n";
 export type IndexItem = { id: string; title: string; group?: string };
 
 /** 목차형 화면(안내·공지·장소 공통): 컴퓨터는 왼쪽 목차, 폰은 위쪽 탭. 스크롤하면 지금 읽는 곳 표시 */
-export function IndexLayout({ items, children }: { items: IndexItem[]; children: ReactNode }) {
+/** select·onSelect를 주면 탭처럼 동작: 고른 항목만 보여 주고(보여 주기는 부모가), 스크롤 추적은 하지 않음 */
+export function IndexLayout({ items, children, select, onSelect }: { items: IndexItem[]; children: ReactNode; select?: string; onSelect?: (id: string) => void }) {
   const { t } = useLang();
-  const [active, setActive] = useState(items[0]?.id ?? "");
+  const [spyActive, setActive] = useState(items[0]?.id ?? "");
+  const active = onSelect ? (select ?? "") : spyActive;
   const lock = useRef(0);
   const groups = Array.from(new Set(items.map(i => i.group ?? "")));
   const key = items.map(i => i.id).join("|");
 
   useEffect(() => {
+    if (onSelect) return;
     const ids = key.split("|");
     const spy = () => {
       if (Date.now() < lock.current) return;
@@ -22,7 +25,7 @@ export function IndexLayout({ items, children }: { items: IndexItem[]; children:
     window.addEventListener("scroll", spy, { passive: true });
     spy();
     return () => window.removeEventListener("scroll", spy);
-  }, [key]);
+  }, [key, onSelect]);
 
   useEffect(() => {
     const a = document.querySelector<HTMLElement>(`.gidx-m a[data-id="${active}"]`), bar = a?.parentElement;
@@ -30,6 +33,7 @@ export function IndexLayout({ items, children }: { items: IndexItem[]; children:
   }, [active]);
 
   const go = (id: string) => {
+    if (onSelect) { onSelect(id); window.scrollTo({ top: 0 }); return; }
     setActive(id);
     lock.current = Date.now() + 900;
     document.getElementById(id)?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
