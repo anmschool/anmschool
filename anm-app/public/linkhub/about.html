@@ -33,8 +33,7 @@ section{padding-top:64px;scroll-margin-top:70px}
 .sec-en::after{content:"";flex:1;height:1px;background:var(--hair)}
 h2{font:700 21px/1.4 Pretendard,sans-serif;letter-spacing:-.5px;margin:12px 0 18px;color:var(--ink)}
 p{font-size:14.5px;line-height:1.85;color:var(--body);margin:0 0 14px}
-.item{padding:24px 0;border-top:1px solid var(--hair)}
-.item:last-child{border-bottom:1px solid var(--hair)}
+.item{padding:20px 0}
 .item .n{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;margin-right:10px;border-radius:50%;background:var(--wine-soft);font:600 15px 'Cormorant Garamond',serif;color:var(--wine);vertical-align:2px}
 .item h3{display:inline;font:700 16.5px Pretendard,sans-serif;letter-spacing:-.3px;color:var(--ink);margin:0}
 .item p{margin:10px 0 0;font-size:14.5px}
@@ -42,8 +41,10 @@ p{font-size:14.5px;line-height:1.85;color:var(--body);margin:0 0 14px}
 p.ref{margin-top:12px;padding:10px 12px;background:var(--wine-soft);color:var(--ink);font-size:13px;line-height:1.6}
 .verse{font:15.5px/1.8 'Gowun Batang',serif;color:var(--ink);margin:4px 0 14px}
 .trio{display:flex;flex-direction:column;gap:4px;margin:12px 0 14px;padding-left:14px;border-left:2px solid var(--wine);font:15px/1.8 'Gowun Batang',serif;color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 16px}
-.chips span{font-size:13.5px;font-weight:600;padding:8px 14px;border:1px solid var(--wine);color:var(--wine);background:#fff}
+.chips{display:flex;gap:6px;margin:4px 0 16px}
+.chips span{flex:1 1 0;min-width:0;text-align:center;font-size:13px;font-weight:600;padding:8px 6px;border:1px solid var(--wine);color:var(--wine);background:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:360px){.chips span{font-size:12px;padding:8px 4px}}
+html:lang(zh) *{word-break:normal!important;overflow-wrap:anywhere}
 figure{margin:16px 0 4px}
 figure img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
 figcaption{padding:8px 0 0;font-size:12.5px;color:var(--sub)}
@@ -138,7 +139,7 @@ footer{margin-top:44px;text-align:center;font:600 10px Montserrat,sans-serif;let
     <div class="trio" style="margin-top:10px"><span>하나님의 임재를 경험하는 예배</span><span>영적 회복과 치유가 있는 예배</span><span>십자가의 길과 순교자의 삶을 살기로 결단하는 예배</span></div>
     <p>하나님께서는 이 세대에 ‘교회는 선교’임을 깨닫고 부르심을 따라갈 사람들을 찾고 계십니다. 주님을 위해 생명을 바치겠다는 결단으로 열방을 향해 행진하기 원하는 모든 이를 초대합니다.</p>
     <p class="ref">매주 목요일 오후 7시 · 온누리교회 (오후 5–6시 중보기도로 예배를 준비합니다)</p></div>
-  <div class="item"><h3>7000모임 <span class="ref">7000 Gathering</span></h3>
+  <div class="item"><h3>7000모임</h3>
     <p style="margin-top:10px">7000모임은 영감예술 시대에 천상의 예배를 드리면서 “재헌신”을 하기 위한 경배와찬양의 시대적인 모임입니다. 하나님의 약속의 말씀 학개 2장, 열왕기상 19장 및 빌립보서 3장을 통하여 ‘청지기의 삶’과 ‘고난의 축복’ 가운데 살아갈 수 있도록 사명을 주셨습니다. 빛의 갑옷을 입은 7000 청지기들을 통하여 새 예루살렘을 향한 기대감을 가지고 하나님의 선한 뜻을 이루는 통로가 되기를 기도합니다.</p>
     <p class="ref">매주 토요일 오후 4시 · 서빙고 경배와찬양 훈련원 (서울 용산구 서빙고로59길 21-2)</p></div>
   <div class="item"><h3>큰잔치</h3><p>청년·청소년·어린이와 가정, 지역 교회를 초청해 하나님을 높이는 선교 축제입니다. 나라와 민족을 위해 중보하며 장애인과 함께하는 모임, 성탄절·부활절 큰잔치 등을 이어 왔습니다.</p></div>
