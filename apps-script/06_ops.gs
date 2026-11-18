@@ -88,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { dropTestGroup1118_(); } catch (e) { console.log('테스트 단체 삭제 건너뜀: ' + e.message); }
   try { cleanAppSheet1118_(); } catch (e) { console.log('앱 시트 정리 건너뜀: ' + e.message); }
   try { dropTests2027W_(); } catch (e) { console.log('테스트 신청 삭제 건너뜀: ' + e.message); }
   try { noteHaneul2027W_(); } catch (e) { console.log('하늘꿈 비고 건너뜀: ' + e.message); }
@@ -564,4 +565,25 @@ function cleanAppSheet1118_() {
   CacheService.getScriptCache().remove('content_v1');
   PROP.setProperty('APP_CLEAN_1118', new Date().toISOString());
   try { tg_('🧽 앱 시트 정리: ' + out.join(' · ')); } catch (e) {}
+}
+
+
+/** 11/18: 남은 테스트 단체 줄(2027W-G003, 명단 0명) 삭제 — 머리글로 열을 찾아서. 한 번만 */
+function dropTestGroup1118_() {
+  const PROP = PropertiesService.getScriptProperties();
+  if (PROP.getProperty('TESTGRP_1118')) return;
+  const ss = openOps_(), g = ss.getSheetByName(T.grp), reg = ss.getSheetByName(T.reg);
+  const h = g.getRange(1, 1, 1, g.getLastColumn()).getValues()[0].map(String);
+  const v = g.getRange(2, 1, g.getLastRow() - 1, h.length).getValues();
+  const rh = reg.getRange(1, 1, 1, reg.getLastColumn()).getValues()[0].map(String), gi = rh.indexOf('단체ID');
+  const members = reg.getRange(2, gi + 1, reg.getLastRow() - 1, 1).getValues().filter(r => r[0] === '2027W-G003').length;
+  let n = 0, name = '';
+  for (let i = v.length - 1; i >= 0; i--) {
+    if (v[i][h.indexOf('단체ID')] !== '2027W-G003') continue;
+    name = String(v[i][h.indexOf('교회/단체명')]);
+    if (members === 0) { g.deleteRow(i + 2); n++; }
+  }
+  buildDashboard_(ss);
+  PROP.setProperty('TESTGRP_1118', new Date().toISOString());
+  try { tg_('🧹 테스트 단체 G003(' + name + ') 삭제 ' + n + '줄 · 남은 명단 ' + members + '명'); } catch (e) {}
 }
