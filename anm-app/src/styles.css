@@ -449,7 +449,8 @@ a, button { -webkit-touch-callout: none; }
 .prog:hover .go, .prog:focus-visible .go { background: var(--wine); color: #fff; }
 .prog-online { margin: 14px 0 0; padding: 13px 16px; background: var(--tint); font-size: 13.5px; color: var(--sub); line-height: 1.6; }
 .prog-online b { color: var(--ink); font-weight: 600; }
-@media (max-width: 520px) { .prog { gap: 12px; padding: 16px 4px; } .prog .go-t { display: none; } .prog .go { padding: 6px; } }
+.prog .go-s { display: none; }
+@media (max-width: 520px) { .prog { gap: 12px; padding: 16px 4px; } .prog .go-t { display: none; } .prog .go-s { display: inline; font-size: 12px; } .prog .go { padding: 5px 8px 5px 10px; gap: 2px; } }
 @media (min-width: 768px) { .prog { padding: 20px 16px; } .prog-main .t { font-size: 18px; } }
 
 /* 입금 안내 — 입금자명 먼저, 계좌는 크게, 금액은 펼쳐 보기 */

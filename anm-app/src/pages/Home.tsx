@@ -329,7 +329,7 @@ export default function Home() {
                     <span className="d">{segs.length ? spanText(segs, lang) : x.dates[lang]} · {segs.length ? nightsText(segs, lang) : x.nights[lang]}</span>
                     {x.key === "청지기" && <span className="w">{t("withAll")}</span>}
                   </span>
-                  <span className="go"><span className="go-t">{t("seeTT")}</span>{Icon.arrow}</span>
+                  <span className="go"><span className="go-t">{t("seeTT")}</span><span className="go-s">{t("seeTTs")}</span>{Icon.arrow}</span>
                 </Link>
                 );
               })}
