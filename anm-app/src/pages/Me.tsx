@@ -51,7 +51,7 @@ export default function MePage() {
             : <div>{me.lodging.map(l => (
               <div key={l.segment} className="stay">
                 <span className="small num">{me.lodging.length > 1 ? `${t("segment")} ${l.segment} · ` : ""}{fmtRange(l.checkIn, l.checkOut)}</span>
-                {l.room ? <div className="room"><span className="b">{l.building}</span><span className="n">{l.room}</span><span className="sub">호</span></div>
+                {l.room ? <div className="room"><span className="b">{l.building}</span><span className="n">{l.room}호</span></div>
                   : <span className="state dim">{t("pendingNote")}</span>}
               </div>
             ))}<Link to="/places" className="btn text">{t("places")} →</Link></div>}

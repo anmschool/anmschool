@@ -185,9 +185,9 @@ details.acc .prose { padding: 0 0 16px; }
 .rows { display: grid; grid-template-columns: 92px 1fr; gap: 10px 14px; font-size: 14.5px; }
 .rows dt { color: var(--sub); }
 .rows dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.room { display: flex; align-items: baseline; gap: 8px; }
+.room { display: flex; align-items: baseline; gap: 4px; }
 .room .b { font: 700 18px var(--sans); letter-spacing: -0.3px; }
-.room .n { font: 500 40px/1 var(--num); }
+.room .n { font: 700 18px var(--sans); letter-spacing: -0.3px; }
 .stay { padding: 16px 0; border-bottom: 1px solid var(--hair); display: flex; flex-direction: column; gap: 8px; }
 .qr { background: #fff; border: 1px solid var(--hair); padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .qr svg { width: 188px; height: 188px; }
