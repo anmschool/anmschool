@@ -270,7 +270,11 @@ function apiAdmin_(b) {
   if (a.프로젝트 !== '전체' && String(a.프로젝트) !== String(b.project)) return { ok: false, error: 'forbidden' };
   const proj = projectRow_(b.project);
   if (!proj || !proj.opsId) return { ok: false, error: 'no_project' };
-  return { ok: true, admin: a.이름, stats: buildStats_(readOps_(proj.opsId)) };
+  // 최근 신청 기록(성공·실패·단계) 40줄 — 관리자 확인용
+  const lg = ss.getSheetByName('접속 로그'), n = lg ? lg.getLastRow() : 0;
+  const log = n < 2 ? [] : lg.getRange(Math.max(2, n - 399), 1, Math.min(399, n - 1), 4).getValues()
+    .filter(r => /^신청/.test(r[2])).slice(-40).map(r => [Utilities.formatDate(new Date(r[0]), 'Asia/Seoul', 'MM-dd HH:mm'), String(r[2]), String(r[3])]);
+  return { ok: true, admin: a.이름, stats: buildStats_(readOps_(proj.opsId)), log };
 }
 
 function projectRow_(id) {
