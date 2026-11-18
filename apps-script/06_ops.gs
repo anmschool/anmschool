@@ -88,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { cleanAppSheet1118_(); } catch (e) { console.log('앱 시트 정리 건너뜀: ' + e.message); }
   try { dropTests2027W_(); } catch (e) { console.log('테스트 신청 삭제 건너뜀: ' + e.message); }
   try { noteHaneul2027W_(); } catch (e) { console.log('하늘꿈 비고 건너뜀: ' + e.message); }
   try { dropOldStatusTab_(); } catch (e) { console.log('현황 탭 정리 건너뜀: ' + e.message); }
@@ -494,4 +495,73 @@ function dropTests2027W_() {
   PROP.setProperty('TESTS_1117_DROPPED', new Date().toISOString());
   console.log('테스트 신청 삭제: ' + out.join(' · '));
   try { tg_('🧹 11/17 테스트 신청 삭제: ' + out.join(' · ')); } catch (e) {}
+}
+
+/** 11/18: 'ANM 앱' 시트 정리 — 2027W 소개·부제(옛 날짜, 고전 6:12 → 히 12:1), 안내·장소·시간표의 어색한 번역, 환불 규정 줄바꿈.
+ *  + 11/17 테스트 신청의 웹 원본 줄(W20~W22) 비우기. 10분 트리거에서 한 번만 실행 */
+function cleanAppSheet1118_() {
+  const PROP = PropertiesService.getScriptProperties();
+  if (PROP.getProperty('APP_CLEAN_1118')) return;
+  const ss = appSheet_(), out = [];
+  const edit = (tab, find, set) => {          // find: {열: 값} 이 모두 맞는 줄에 set: {열: 새 값}
+    const sh = ss.getSheetByName(tab); if (!sh) return 0;
+    const v = sh.getDataRange().getValues(), h = v[0].map(String); let n = 0;
+    v.forEach((r, i) => {
+      if (!i || !Object.keys(find).every(k => String(r[h.indexOf(k)]).trim() === find[k])) return;
+      Object.keys(set).forEach(k => { const c = h.indexOf(k); if (c > -1) { sh.getRange(i + 1, c + 1).setValue(set[k]); n++; } });
+    });
+    return n;
+  };
+  const D = [
+    ['청지기를 위한 경배와찬양학교', '1월 6일(수) – 9일(토), 11일(월) – 16일(토)', 'Worship & Praise School for Stewards', 'Jan 6 (Wed) – 9 (Sat), Jan 11 (Mon) – 16 (Sat)', '管家敬拜赞美学校', '1月6日（周三）– 9日（周六），11日（周一）– 16日（周六）'],
+    ['대학청년 및 일반인을 위한 경배와찬양학교', '1월 6일(수) – 9일(토)', 'Worship & Praise School for Young Adults & Adults', 'Jan 6 (Wed) – 9 (Sat)', '大学青年及一般成人敬拜赞美学校', '1月6日（周三）– 9日（周六）'],
+    ['미래세대를 위한 경배와찬양학교', '1월 11일(월) – 14일(목)', 'Worship & Praise School for the Next Generation (Teens)', 'Jan 11 (Mon) – 14 (Thu)', '下一代敬拜赞美学校', '1月11日（周一）– 14日（周四）'],
+    ['어린이를 위한 경배와찬양학교', '1월 14일(목) – 16일(토)', 'Worship & Praise School for Children', 'Jan 14 (Thu) – 16 (Sat)', '儿童敬拜赞美学校', '1月14日（周四）– 16日（周六）'],
+  ];
+  out.push('프로젝트 ' + edit('프로젝트', { ID: '2027W' }, {
+    '소개': '하스데반 선교사와 경배와찬양 국제사역팀이 인도합니다.\n' + D.map(d => '- ' + d[0] + ': ' + d[1]).join('\n'),
+    '소개(en)': 'Led by Missionary Stephen Ha and the Worship & Praise International Ministry Team.\n' + D.map(d => '- ' + d[2] + ': ' + d[3]).join('\n'),
+    '소개(zh)': '由 Stephen Ha（하스데반）宣教士与敬拜赞美国际事工团队带领。\n' + D.map(d => '- ' + d[4] + '：' + d[5]).join('\n'),
+    '부제(en)': 'An Unbound Life (Hebrews 12:1)', '부제(zh)': '不被辖制的生活（希伯来书 12:1）',
+  }));
+  const G = [
+    ['복장', { '제목(en)': 'Dress Code', '제목(zh)': '服装' }],
+    ['식사예절', { '제목(en)': 'Dining Etiquette' }],
+    ['숙소에서', { '제목(en)': 'In the Dormitory', '제목(zh)': '宿舍须知' }],
+    ['입금 계좌', { '제목(en)': 'Bank Account', '제목(zh)': '汇款账户', '섹션(en)': 'Training Fee' }],
+    ['환불 규정', { '내용': '- 훈련 시작 2주 전까지 100% 환불\n- 훈련 시작 2주 전부터 전날까지 50% 환불\n- 훈련 당일 환불 불가\n- 모든 환불은 훈련이 마무리된 후 계좌이체로 진행됩니다. (수수료 공제)', '섹션(en)': 'Training Fee' }],
+    ['연락처', { '제목(en)': 'Contact', '제목(zh)': '联系方式', '섹션(en)': 'Contact', '섹션(zh)': '咨询' }],
+  ];
+  out.push('안내 ' + G.reduce((n, [t, s]) => n + edit('안내', { 프로젝트ID: '2027W', 제목: t }, s), 0));
+  const P = [
+    ['60주년 기념 채플관', { '이름(zh)': '60周年纪念礼拜堂' }],
+    ['식당', { '이름(en)': 'Dining Hall' }],
+    ['5동', { '이름(en)': 'Dorm 5', '이름(zh)': '宿舍5栋' }],
+    ['명덕관', { '이름(zh)': '明德馆' }],
+  ];
+  out.push('장소 ' + P.reduce((n, [t, s]) => n + edit('장소', { 프로젝트ID: '2027W', 이름: t }, s), 0));
+  // 시간표: 영어 첫 글자 대문자, 몇 가지 중국어 다듬기
+  const sh = ss.getSheetByName('시간표'), v = sh.getDataRange().getValues(), h = v[0].map(String);
+  const ZH = { '准备睡觉': '就寝', '登记': '报到', '个人祈祷': '个人祷告' }, EN = { 'going to bed': 'Bedtime', 'registration': 'Registration' };
+  let tn = 0;
+  ['제목(en)', '메모(en)', '제목(zh)'].forEach(col => {
+    const c = h.indexOf(col); if (c < 0) return;
+    const rg = sh.getRange(2, c + 1, v.length - 1, 1), cv = rg.getValues();
+    cv.forEach(r => {
+      const s = String(r[0]); let t = s;
+      if (/\(en\)/.test(col)) t = EN[s] || (s ? s.charAt(0).toUpperCase() + s.slice(1) : s); else t = ZH[s] || s;
+      if (t !== s) { r[0] = t; tn++; }
+    });
+    rg.setValues(cv);
+  });
+  out.push('시간표 ' + tn);
+  // 11/17 테스트 신청 웹 원본 줄 비우기
+  try {
+    const web = openOps_().getSheetByName(WEB_TAB);
+    [20, 21, 22].forEach(n => web.getRange(n, 1, 1, web.getLastColumn()).clearContent());
+    out.push('웹 원본 비움 3');
+  } catch (e) { out.push('웹 원본 건너뜀: ' + e.message); }
+  CacheService.getScriptCache().remove('content_v1');
+  PROP.setProperty('APP_CLEAN_1118', new Date().toISOString());
+  try { tg_('🧽 앱 시트 정리: ' + out.join(' · ')); } catch (e) {}
 }
