@@ -88,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { dropTests2027W_(); } catch (e) { console.log('테스트 신청 삭제 건너뜀: ' + e.message); }
   try { noteHaneul2027W_(); } catch (e) { console.log('하늘꿈 비고 건너뜀: ' + e.message); }
   try { dropOldStatusTab_(); } catch (e) { console.log('현황 탭 정리 건너뜀: ' + e.message); }
   const cache = CacheService.getScriptCache();
@@ -456,4 +457,41 @@ function funnelLine_(since) {
       (k('신청단계:neterr').length ? ' · 전송 실패 ' + k('신청단계:neterr').length : '') +
       (top ? '\n· 많이 막힌 칸: ' + top : '');
   } catch (e) { return ''; }
+}
+
+
+/** 11/18: 11/17 테스트 신청 4명(+단체 G003) 삭제 — 등록·숙소·단체·ANM_DB(참석·사람·교회). 10분 트리거에서 한 번만 실행 */
+function dropTests2027W_() {
+  const PROP = PropertiesService.getScriptProperties();
+  if (PROP.getProperty('TESTS_1117_DROPPED')) return;
+  const CODES = { '2027W-청지기-0006': 1, '2027W-어린이-0001': 1, '2027W-어린이-0002': 1, '2027W-미래세대-0029': 1 };
+  const PCS = { P00042: 1, P00043: 1, P00044: 1, P00045: 1 }, CHS = ['C0346', 'C0350'], out = [];
+  const ss = openOps_(), reg = ss.getSheetByName(T.reg);
+  const H = reg.getRange(1, 1, 1, reg.getLastColumn()).getValues()[0];
+  // 안전장치: 코드·이름·개인코드가 모두 맞을 때만 지움
+  const NAMES = { '2027W-청지기-0006': '도서영', '2027W-어린이-0001': 'ㅁㄴ', '2027W-어린이-0002': 'ㅇ', '2027W-미래세대-0029': 'd' };
+  const ok = r => CODES[r[0]] && String(r[H.indexOf('이름')]).trim() === NAMES[r[0]] && PCS[r[H.indexOf('DB개인코드')]];
+  const delRows = (sh, kill) => {
+    if (!sh || sh.getLastRow() < 2) return 0;
+    const d = sh.getRange(2, 1, sh.getLastRow() - 1, sh.getLastColumn()).getValues(); let n = 0;
+    for (let i = d.length - 1; i >= 0; i--) if (kill(d[i])) { sh.deleteRow(i + 2); n++; }
+    return n;
+  };
+  out.push('등록 ' + delRows(reg, ok));
+  out.push('숙소 ' + delRows(ss.getSheetByName(T.lod), r => CODES[r[0]]));
+  out.push('단체 ' + delRows(ss.getSheetByName(T.grp), r => r[0] === '2027W-G003' && /^anm$/i.test(String(r[1]).trim())));
+  try {
+    const db = openDb_();
+    out.push('DB참석 ' + delRows(db.getSheetByName('참석'), r => PCS[r[3]] && String(r[1]) === '2027W'));
+    out.push('DB사람 ' + delRows(db.getSheetByName('사람'), r => PCS[r[0]]));
+    // 교회: 남은 사람·참석이 하나도 없을 때만
+    const used = {};
+    ['사람', '참석'].forEach(n => { const sh = db.getSheetByName(n), col = n === '사람' ? 6 : 2; if (sh.getLastRow() > 1) sh.getRange(2, col + 1, sh.getLastRow() - 1, 1).getValues().forEach(r => (used[r[0]] = 1)); });
+    out.push('DB교회 ' + delRows(db.getSheetByName('교회'), r => CHS.indexOf(r[0]) >= 0 && !used[r[0]]));
+  } catch (e) { out.push('DB 건너뜀: ' + e.message); }
+  buildDashboard_(ss);
+  SpreadsheetApp.flush();
+  PROP.setProperty('TESTS_1117_DROPPED', new Date().toISOString());
+  console.log('테스트 신청 삭제: ' + out.join(' · '));
+  try { tg_('🧹 11/17 테스트 신청 삭제: ' + out.join(' · ')); } catch (e) {}
 }
