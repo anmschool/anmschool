@@ -88,6 +88,7 @@ function lcKey_(proj, name, phone) {
 
 /** 로그인용 요약본을 캐시에 미리 만들어 둠 (개인정보 원본은 넣지 않음: 해시 키 + 화면용 정보만) */
 function buildLoginCache() {
+  try { fixStewardStay1118_(); } catch (e) { console.log('청지기 숙소 기간 건너뜀: ' + e.message); }
   try { dropTestGroup1118_(); } catch (e) { console.log('테스트 단체 삭제 건너뜀: ' + e.message); }
   try { cleanAppSheet1118_(); } catch (e) { console.log('앱 시트 정리 건너뜀: ' + e.message); }
   try { dropTests2027W_(); } catch (e) { console.log('테스트 신청 삭제 건너뜀: ' + e.message); }
@@ -586,4 +587,34 @@ function dropTestGroup1118_() {
   buildDashboard_(ss);
   PROP.setProperty('TESTGRP_1118', new Date().toISOString());
   try { tg_('🧹 테스트 단체 G003(' + name + ') 삭제 ' + n + '줄 · 남은 명단 ' + members + '명'); } catch (e) {}
+}
+
+
+/** 11/18: 청지기 숙소 구간 1이 1/6–1/16으로 잡혀 있던 것 → 1/6–1/9 (구간 2는 1/11–1/16). 트랙 탭과 숙소 탭 모두. 한 번만 */
+function fixStewardStay1118_() {
+  const PROP = PropertiesService.getScriptProperties();
+  if (PROP.getProperty('STEWARD_STAY_1118')) return;
+  const ss = openOps_(), out = [], ymd = x => x instanceof Date ? Utilities.formatDate(x, 'Asia/Seoul', 'yyyy-MM-dd') : String(x).trim();
+  const D = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  // 1) 트랙 탭
+  const tk = ss.getSheetByName(T.trk), th = tk.getRange(1, 1, 1, tk.getLastColumn()).getValues()[0].map(String);
+  const tv = tk.getRange(2, 1, tk.getLastRow() - 1, th.length).getValues();
+  tv.forEach((r, i) => {
+    if (String(r[0]).trim() !== '청지기') return;
+    tk.getRange(i + 2, th.indexOf('퇴실1') + 1).setValue(D('2027-01-09'));
+    tk.getRange(i + 2, th.indexOf('입실2') + 1).setValue(D('2027-01-11'));
+    tk.getRange(i + 2, th.indexOf('퇴실2') + 1).setValue(D('2027-01-16'));
+    out.push('트랙 고침');
+  });
+  // 2) 숙소 탭: 청지기 구간 1 중 퇴실이 1/16인 줄
+  const lo = ss.getSheetByName(T.lod), lh = lo.getRange(1, 1, 1, lo.getLastColumn()).getValues()[0].map(String);
+  let n = 0;
+  if (lo.getLastRow() > 1) lo.getRange(2, 1, lo.getLastRow() - 1, lh.length).getValues().forEach((r, i) => {
+    if (String(r[lh.indexOf('경배와찬양학교 구분')]).indexOf('청지기') < 0 || String(r[lh.indexOf('구간')] || '1') !== '1') return;
+    if (ymd(r[lh.indexOf('퇴실')]) === '2027-01-16' && ymd(r[lh.indexOf('입실')]) === '2027-01-06') { lo.getRange(i + 2, lh.indexOf('퇴실') + 1).setValue(D('2027-01-09')); n++; }
+  });
+  out.push('숙소 ' + n + '줄');
+  SpreadsheetApp.flush();
+  PROP.setProperty('STEWARD_STAY_1118', new Date().toISOString());
+  try { tg_('🛏 청지기 숙소 구간 1 → 1/6–1/9: ' + out.join(' · ')); } catch (e) {}
 }

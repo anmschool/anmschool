@@ -139,11 +139,12 @@ export const DEMO_CONTENT: Content = {
 const DEMO_ME: Me = {
   project: "2027W", projectTitle: "2027 WINTER 경배와찬양학교 및 7000학교", code: "2027W-청지기-0001", name: "홍길동", church: "예시교회",
   track: "청지기", kind: "대학청년", gender: "형제", online: false,
-  period: [["2027-01-06", "2027-01-16"]],
+  period: [["2027-01-06", "2027-01-09"], ["2027-01-11", "2027-01-16"]],
   payment: { state: "partial", label: "부분", fee: 190000, account: "우리 1005-604-700231", depositorHint: "홍길동(예시교회)", groupPaid: false },
   group: null,
   lodging: [
-    { segment: "1", checkIn: "2027-01-06", checkOut: "2027-01-16", building: "5동", room: "301" },
+    { segment: "1", checkIn: "2027-01-06", checkOut: "2027-01-09", building: "5동", room: "301" },
+    { segment: "2", checkIn: "2027-01-11", checkOut: "2027-01-16", building: "", room: "" },
   ],
   checkedIn: false, cancelled: false,
 };

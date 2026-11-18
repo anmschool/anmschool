@@ -308,7 +308,7 @@ export default function Home() {
         </div>
         {s?.id === "2027W" && (
           <section className="home-sec">
-            <div className="col-head"><span className="label">Worship &amp; Praise School</span></div>
+            <div className="col-head"><span className="label">Schedule</span></div>
             <div className="prog-list">
               {TRACKS.map(x => {
                 const r = content?.tracks?.[s.id]?.list.find(t => t.name === x.key && t.mode !== "온라인");
@@ -329,7 +329,7 @@ export default function Home() {
                     <span className="d">{segs.length ? spanText(segs, lang) : x.dates[lang]} · {segs.length ? nightsText(segs, lang) : x.nights[lang]}</span>
                     {x.key === "청지기" && <span className="w">{t("withAll")}</span>}
                   </span>
-                  <span className="go"><span className="go-t">{t("seeTT")}</span><span className="go-s">{t("seeTTs")}</span>{Icon.arrow}</span>
+                  <span className="go"><span className="go-t">{t("seeTT")}</span>{Icon.arrow}</span>
                 </Link>
                 );
               })}
