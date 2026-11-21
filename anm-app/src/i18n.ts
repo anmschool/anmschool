@@ -95,7 +95,7 @@ export function kindName(k: string | undefined, l: Lang) {
 
 /** 로그인·관리 오류 문구 */
 const ERR: Record<string, [string, string, string]> = {
-  not_found: ["일치하는 등록 정보가 없습니다. 신청할 때 적은 이름과 전화번호를 확인해 주세요. 단체로 신청했다면 인솔자 전화번호로도 들어올 수 있습니다.", "No matching registration. Please check the name and phone number you applied with. Group members can also use the leader's phone number.", "找不到相符的报名信息。请确认报名时填写的姓名和电话号码。团体报名者也可使用领队的电话号码。"],
+  not_found: ["일치하는 등록 정보가 없습니다. 신청할 때 적은 이름과 전화번호를 확인해 주세요. 단체로 신청했다면 인솔자 전화번호로도 들어올 수 있습니다. 신청 직후에는 등록이 확인되기까지 약 5분 정도 걸릴 수 있습니다.", "No matching registration. Please check the name and phone number you applied with. Group members can also use the leader's phone number. Right after applying, it may take about 5 minutes for your registration to appear.", "找不到相符的报名信息。请确认报名时填写的姓名和电话号码。团体报名者也可使用领队的电话号码。刚提交报名后，可能需要约5分钟才能查到报名信息。"],
   cancelled: ["취소된 등록입니다. 문의: 7000school@gmail.com", "This registration was cancelled. Contact: 7000school@gmail.com", "该报名已取消。咨询：7000school@gmail.com"],
   too_many: ["시도가 너무 많습니다. 10분 뒤에 다시 해 주세요.", "Too many attempts. Please try again in 10 minutes.", "尝试次数过多，请10分钟后再试。"],
   invalid_input: ["이름과 전화번호(숫자 전체)를 입력해 주세요.", "Please enter your name and full phone number.", "请输入姓名和完整电话号码。"],

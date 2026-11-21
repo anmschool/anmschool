@@ -720,6 +720,7 @@
     const MAP_URL = { ko: 'https://naver.me/GyYWndK8', other: 'https://maps.app.goo.gl/hWTqtiVA4nRn2QhR7' };
     function setLang(lang) {
       currentLang = lang;
+      try { localStorage.setItem('anm.lang', lang); } catch (e) {}
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.getAttribute('onclick') === "setLang('" + lang + "')"));
       document.getElementById('map-link').href = lang === 'ko' ? MAP_URL.ko : MAP_URL.other;
 
@@ -728,7 +729,7 @@
       document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
       renderDyn();
     }
-    document.addEventListener('DOMContentLoaded', () => { renderDyn(); restoreSuccess(); });
+    document.addEventListener('DOMContentLoaded', () => { let l = ''; try { l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('anm.lang') || ''; } catch (e) {} if (l === 'en' || l === 'zh') setLang(l); else renderDyn(); restoreSuccess(); });
 
     const tbody = document.getElementById('members-body');
     let rowCount = 0;
